@@ -34,6 +34,7 @@ class SiginIn extends Component {
         {...injectFormProps("email")}
         email
         ref={this.email}
+        borderRadius={5}
         nextInput={this.password}
         borderBottomWidth={1}
         leftItems={
@@ -80,9 +81,9 @@ class SiginIn extends Component {
           marginBottom={1}
           transparent
           onPress={() => {
-            // AppNavigation.push({
-            //   name: "signUp"
-            // });
+            AppNavigation.push({
+              name: "signUp"
+            });
           }}
           title={I18n.t("dont-have-an-account")}
           size={5}

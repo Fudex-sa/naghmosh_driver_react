@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { View as RNView, TouchableOpacity } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { connect } from "react-redux";
-// import LinearGradient from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 import {
   BasePropTypes,
@@ -75,7 +75,7 @@ class View extends PureComponent {
     );
 
     const ViewContainer =
-      // linearBackgroundGradient ? LinearGradient :
+      linearBackgroundGradient ? LinearGradient :
       RNView;
 
     return (

@@ -10,7 +10,7 @@ import AboutBalsam from "./aboutBalsam/AboutBalsam";
 
 import PhotoSelection from "./photoSelection/PhotoSelection";
 import SignUp from "./signUp/SignUp";
-import SignIn from "./signIn/SignIn";
+// import SignIn from "./signIn/SignIn";
 
 import MapScreen from "./mapScreen/MapScreen";
 
@@ -45,7 +45,7 @@ export default function() {
 
   Navigation.registerComponent("photoSelection", createScene(PhotoSelection));
   Navigation.registerComponent("signUp", createScene(SignUp));
-  Navigation.registerComponent("signIn", createScene(SignIn));
+  // Navigation.registerComponent("signIn", createScene(SignIn));
 
   Navigation.registerComponent("mapScreen", createScene(MapScreen));
 

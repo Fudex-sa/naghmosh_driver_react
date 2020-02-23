@@ -48,7 +48,7 @@ export default {
     pv: 3,
     bc: "inputBorderColor",
     bw: 0.5,
-    // borderRadius: 5,
+    borderRadius: 5,
     height: 7
   },
   formInputFrame: {

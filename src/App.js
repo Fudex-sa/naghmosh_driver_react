@@ -61,10 +61,16 @@ export const startApp = () => {
 
     console.log("%%%%%%%%%%%%%", exist);
     initInternetConnection(store.dispatch);
-    nv.init("MAIN_STACK", {
-      // rtl: store.getState().lang.rtl,
-      name: "homeScreen"
-      // sideMenu: "menu"
-    });
+    if (!exist) {
+      nv.init("MAIN_STACK", {
+        // rtl: store.getState().lang.rtl,
+        name: "homeScreen"
+        // sideMenu: "menu"
+      });
+    } else {
+      nv.init("MAIN_STACK", {
+        name: "SignInScreen"
+      });
+    }
   });
 };

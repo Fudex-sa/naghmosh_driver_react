@@ -12,6 +12,7 @@ class Home extends Component {
       label,
       hint,
       notification,
+      source,
       ...rest
     } = this.props;
     return (
@@ -19,7 +20,7 @@ class Home extends Component {
         stretch
         height={12}
         row
-        backgroundColor="rgba(111, 176, 80, 0.5)"
+        linearBackgroundGradient={{ colors: ['#23A636', '#88C80A'], start: { x: 1, y: 1 }, end: { x: 0, y: 0 } }}
         marginHorizontal={10}
         paddingHorizontal={10}
         // elevation={1.5}
@@ -28,13 +29,13 @@ class Home extends Component {
         {...rest}
       >
         <AppView flex>
-          <AppIcon name={iconName} type={iconType} color="white" size={15} />
+          <AppImage source={source} width={10} height={10} resizeMode={'contain'} />
         </AppView>
         <AppView flex={4}>
-          <AppText color="white" bold>
+          <AppText color="white" bold size={7}>
             {label}
           </AppText>
-          <AppText color="white" size={4.3} numberOfLines={1}>
+          <AppText color="white" size={5} >
             {hint}
           </AppText>
         </AppView>
@@ -50,7 +51,7 @@ class Home extends Component {
             </AppView>
           )}
         </AppView>
-      </AppView>
+      </AppView >
     );
   }
 }

@@ -21,7 +21,7 @@ import { showError } from "../../common/utils/localNotifications";
 import { signUp } from "../../actions/AuthActions";
 import colors from "../../common/defaults/colors";
 import { ACCESS_DATA } from "../../utils/Network";
-import logo from "../../assets/imgs/logo.png";
+// import logo from "../../assets/imgs/logo.png";
 
 class SignUp extends Component {
   constructor(props) {
@@ -157,9 +157,9 @@ class SignUp extends Component {
     validateField
   }) => (
     <AppScrollView flex stretch paddingBottom={10}>
-      <AppView stretch centerX marginTop={20}>
+      {/* <AppView stretch centerX marginTop={20}>
         <AppImage source={logo} equalSize={50} />
-      </AppView>
+      </AppView> */}
       <AppView
         flex
         center

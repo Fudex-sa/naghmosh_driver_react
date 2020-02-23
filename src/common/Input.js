@@ -304,7 +304,7 @@ class Input extends PureComponent {
 
   renderItems = items => {
     const { size } = this.props;
-
+    const assignedColor = this.getColor();
     const nodes = items.map(item => {
       if (
         item.type.WrappedComponent &&
@@ -362,6 +362,9 @@ class Input extends PureComponent {
   };
 
   getColor = () => {
+    if (this.state.isFocused) {
+      return '#23A636'
+    }
     if (this.props.borderColor) {
       return this.props.borderColor;
     }
