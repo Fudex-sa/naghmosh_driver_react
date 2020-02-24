@@ -120,7 +120,7 @@ class Header extends Component {
     return (
       <AppButton
         leftIcon={
-          <AppIcon name="ios-arrow-forward" type="ion" size={12} color="grey" />
+          <AppIcon name="md-arrow-forward" type="ion" size={12} color="grey" />
         }
         onPress={this.goBack}
         paddingHorizontal={8}

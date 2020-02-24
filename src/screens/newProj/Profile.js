@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import I18n from "react-native-i18n";
 import {
   AppView,
@@ -10,18 +9,49 @@ import {
   AppButton,
   AppIcon
 } from "../../common";
-
 import { AppHeader } from "../../components";
-import HomeCard from "./HomeCard";
-import profile from "../../assets/imgs/profile.png";
 
-class Home extends Component {
+class Profile extends Component {
   render() {
     return (
       <AppView flex stretch>
-        <AppHeader title="الرئيسية" transparent />
+        <AppHeader title={I18n.t('personalPage')} transparent />
         <AppScrollView stretch>
-          <AppImage source={profile} stretch height={22} />
+          <AppView
+            stretch
+            row
+            height={12}
+            margin={10}
+            borderRadius={5}
+          >
+            <AppView
+              stretch flex={1} center
+              backgroundColor={'#E95B06'}
+              paddingHorizontal={5}
+            >
+              <AppText color='white' size={7} >
+                {`${'1,235'}`}
+                <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
+              </AppText>
+              <AppText color='white' size={5} >{`${I18n.t('Applications received')}`}</AppText>
+
+            </AppView>
+            <AppView
+              stretch flex={2} center row spaceBetween
+              linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
+            >
+              <AppView stretch flex center>
+                <AppText color='white' size={7} >
+                  {`${'1,235'}`}
+                  <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
+                </AppText>
+                <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText>
+              </AppView>
+              <AppView stretch flex>
+                <AppImage source={require('../../assets/imgs/cc.png')} flex stretch resizeMode={'contain'} />
+              </AppView>
+            </AppView>
+          </AppView>
           <AppView
             row
             stretch
@@ -29,29 +59,29 @@ class Home extends Component {
             paddingHorizontal={7}
             marginBottom={10}
           >
-            <AppText>معلومات الحساب الشخصي</AppText>
+            <AppText>{I18n.t('Personal account information')}</AppText>
 
             <AppButton
-              title="حفظ"
-              color="foreground"
+              title={I18n.t('save')}
+              color="primary"
               transparent
               stretch
               paddingHorizontal={0}
             />
           </AppView>
           <AppInput
-            placeholder="اسم السائق"
+            placeholder={I18n.t('The driver name')}
             marginBottom={5}
             marginHorizontal={7}
             borderRadius={7}
-            leftItems={<AppIcon name="md-person" type="ion" />}
+            leftItems={<AppIcon name="user-o" type="font-awesome" />}
           />
           <AppInput
-            placeholder="رقم الهاتف"
+            placeholder={I18n.t('signup-phone')}
             marginBottom={5}
             marginHorizontal={7}
             borderRadius={7}
-            leftItems={<AppIcon name="phone" type="ant" flip />}
+            leftItems={<AppIcon name="phone" type="ant" flip size={8} />}
           />
           <AppInput
             placeholder={I18n.t("signup-email")}
@@ -63,15 +93,13 @@ class Home extends Component {
             }
           />
           <AppView
-            stretch
-            height={7}
-            elevation={1}
+            stretch borderWidth={1.5} borderColor={'#E95B06'} padding={5}
             row
-            spaceBetween
-            paddingHorizontal={7}
+            spaceBetween borderRadius={7}
+            marginHorizontal={7}
             marginTop={15}
           >
-            <AppText>تغيرر كلمة المرور</AppText>
+            <AppText>{I18n.t('change-password')}</AppText>
             <AppIcon name="ios-arrow-forward" type="ion" flip color="grey" />
           </AppView>
         </AppScrollView>
@@ -80,4 +108,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Profile;

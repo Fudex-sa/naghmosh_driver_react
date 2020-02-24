@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 export default {
   statusBar: Platform.Version < 23 ? "#6EA842" : "transparent",
   foreground: "#6FB050",
-  primary: "white",
+  primary: "#23A636",
   background: "#A6E478",
   secondary: "#FFDD00",
   thirdly: "#ee4037",
