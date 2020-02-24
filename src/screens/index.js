@@ -26,6 +26,7 @@ import OrderDetails from "./newProj/OrderDetails";
 import FollowOrder from "./newProj/FollowOrder";
 import AppSetting from "./newProj/AppSetting";
 import ForgetPassword from "./newProj/ForgetPassword/ForgetPassword";
+import ChangePassword from "./newProj/ChangePassword/ChangePassword";
 
 export default function() {
   const createScene = InternalComponent => () =>
@@ -70,5 +71,6 @@ export default function() {
   Navigation.registerComponent("FollowOrder", createScene(FollowOrder));
   Navigation.registerComponent("AppSetting", createScene(AppSetting));
   Navigation.registerComponent("ForgetPassword", createScene(ForgetPassword));
+  Navigation.registerComponent("ChangePassword", createScene(ChangePassword));
 
 }

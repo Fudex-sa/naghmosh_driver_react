@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppForm, AppInput, AppButton, showError, showSuccess } from "../../../common";
+import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppForm, AppInput, AppButton, showError, showSuccess, AppIcon } from "../../../common";
 import logo from "../../../assets/imgs/logo.png";
 import { validationSchema } from './validation';
 import I18n from "react-native-i18n";
@@ -44,7 +44,8 @@ export default ForgetPassword = props => {
                     size={7}
                     email
                     paddingHorizontal={10}
-                    borderRadius={70}
+                    borderRadius={5}
+                    leftItems={<AppIcon name="email-open-outline" type="material-community" />}
                 />
                 <AppButton
                     title={I18n.t("Submit a new password")}

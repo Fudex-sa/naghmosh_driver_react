@@ -99,7 +99,7 @@ class Profile extends Component {
             spaceBetween borderRadius={7}
             marginHorizontal={7}
             marginTop={15}
-            onPress={() => { AppNavigation.push('ForgetPassword') }}
+            onPress={() => { AppNavigation.push('ChangePassword') }}
           >
             <AppText>{I18n.t('change-password')}</AppText>
             <AppIcon name="ios-arrow-forward" type="ion" flip color="grey" />

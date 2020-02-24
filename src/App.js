@@ -61,7 +61,7 @@ export const startApp = () => {
 
     console.log("%%%%%%%%%%%%%", exist);
     initInternetConnection(store.dispatch);
-    if (exist) {
+    if (!exist) {
       nv.init("MAIN_STACK", {
         // rtl: store.getState().lang.rtl,
         name: "homeScreen"

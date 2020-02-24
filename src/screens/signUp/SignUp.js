@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import I18n from "react-native-i18n";
-import Navigation from "react-native-navigation";
 import {
   AppView,
   AppButton,
@@ -10,19 +9,11 @@ import {
   AppInput,
   AppText,
   AppForm,
-  AppPicker,
-  AppNavigation,
-  AppFormLocation,
-  AppImage,
   AppIcon
 } from "../../common";
 import { AppHeader } from "../../components";
-import { validationSchemaSAUDIA, validationSchemaEGY } from "./validation";
-import { showError } from "../../common/utils/localNotifications";
+import { validationSchemaEGY } from "./validation";
 import { signUp } from "../../actions/AuthActions";
-import colors from "../../common/defaults/colors";
-import { ACCESS_DATA } from "../../utils/Network";
-// import logo from "../../assets/imgs/logo.png";
 
 class SignUp extends Component {
   constructor(props) {
@@ -44,26 +35,12 @@ class SignUp extends Component {
   renderFirstNameRefInput = injectFormProps => (
     <AppInput
       {...injectFormProps("firstName")}
+      placeholder={I18n.t('The driver name')}
+      marginBottom={5}
+      borderRadius={7}
       ref={this.firstNameRef}
-      nextInput={this.lastNameRef}
-      borderWidth={1}
-      borderRadius={5}
-      label={I18n.t("signup-firstName")}
-      noBorder
+      nextInput={this.phoneRef}
       leftItems={<AppIcon name="user-o" type="font-awesome" />}
-    />
-  );
-
-  renderLastNameRefInput = injectFormProps => (
-    <AppInput
-      {...injectFormProps("lastName")}
-      ref={this.lastNameRef}
-      nextInput={this.emailRef}
-      borderWidth={1}
-      leftItems={<AppIcon name="user-o" type="font-awesome" />}
-      borderRadius={5}
-      label={I18n.t("signup-lastName")}
-      noBorder
     />
   );
 
@@ -71,7 +48,7 @@ class SignUp extends Component {
     <AppInput
       {...injectFormProps("email")}
       ref={this.emailRef}
-      nextInput={this.phoneRef}
+      nextInput={this.passwordRef}
       email
       leftItems={<AppIcon name="email-open-outline" type="material-community" />}
       borderWidth={1}
@@ -125,7 +102,7 @@ class SignUp extends Component {
         <AppInput
           {...injectFormProps("mobile")}
           ref={this.phoneRef}
-          nextInput={this.passwordRef}
+          nextInput={this.emailRef}
           phone
           leftItems={<AppIcon name="phone" type="ant" flip size={8} />}
           borderWidth={1}
@@ -175,9 +152,9 @@ class SignUp extends Component {
           </AppText>
 
           {this.renderFirstNameRefInput(injectFormProps)}
-          {this.renderLastNameRefInput(injectFormProps)}
-          {this.renderEmailInput(injectFormProps)}
           {this.renderPhoneInput(injectFormProps)}
+          {this.renderEmailInput(injectFormProps)}
+
           {this.renderPasswordInput({
             injectFormProps,
             setFieldValue,
