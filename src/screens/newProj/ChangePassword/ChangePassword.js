@@ -4,20 +4,19 @@ import {
     showSuccess, showError, AppInput, AppButton, AppIcon
 } from "../../../common";
 import { AppHeader } from "../../../components";
-import { ImageBackground } from "react-native";
-// import backgroundImg from '../../../assets/imgs/background.png';
 import I18n from "react-native-i18n";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import Axios from 'axios';
 import { validationSchema } from './validation';
 import { setUserData } from '../../../actions/AuthActions';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
-export default ChangePassword = props => {
-    const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
+ChangePassword = props => {
+    // const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
+    const { user } = props
     const [loading, setLoading] = useState(false);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const onSubmit = (values, { setSubmitting }) => {
         setLoading(true)
@@ -30,7 +29,7 @@ export default ChangePassword = props => {
             .then(async (res) => {
                 showSuccess(res.data.message)
                 setLoading(false)
-                await dispatch(setUserData(res.data));
+                // await dispatch(setUserData(res.data));
                 try {
                     await AsyncStorage.setItem("@UserData", JSON.stringify(res.data));
                 } catch (error) {
@@ -59,8 +58,6 @@ export default ChangePassword = props => {
                 <AppInput
                     {...injectFormProps("password")}
                     placeholder={I18n.t("password")}
-                    height={7}
-                    size={7}
                     secure
                     showSecureEye
                     paddingHorizontal={10}
@@ -71,8 +68,6 @@ export default ChangePassword = props => {
                 <AppInput
                     {...injectFormProps("password_confirmation")}
                     placeholder={I18n.t("confirm-password")}
-                    height={7}
-                    size={7}
                     showSecureEye
                     secure
                     paddingHorizontal={10}
@@ -82,10 +77,8 @@ export default ChangePassword = props => {
                 <AppButton
                     title={I18n.t("save")}
                     stretch
-                    size={7}
-                    borderRadius={25}
+                    borderRadius={5}
                     marginTop={10}
-                    height={7}
                     onPress={handleSubmit}
                     center
                     processing={loading}
@@ -113,3 +106,15 @@ export default ChangePassword = props => {
         </AppView>
     );
 }
+const mapStateToProps = state => ({
+    connected: state.network.isConnected
+    // loadingOverlay: state.loadingOverlay.socialSignin
+});
+
+const mapDispatchToProps = dispatch => ({
+    // signUp: bindActionCreators(signUp, dispatch)
+});
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ChangePassword);

@@ -17,7 +17,7 @@ import MapScreen from "./mapScreen/MapScreen";
 // new proj
 
 import HomeScreen from "./newProj/Home";
-import ProfileScreen from "./newProj/Profile";
+import ProfileScreen from "./newProj/Profile/Profile";
 import NotificationScreen from "./newProj/Notification";
 import SignInScreen from "./newProj/signIn/SignIn";
 import FinishedOrderScreen from "./newProj/FinishedOrder";
