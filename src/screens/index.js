@@ -25,6 +25,7 @@ import DeliverOrderScreen from "./newProj/DeliverOrder";
 import OrderDetails from "./newProj/OrderDetails";
 import FollowOrder from "./newProj/FollowOrder";
 import AppSetting from "./newProj/AppSetting";
+import ForgetPassword from "./newProj/ForgetPassword/ForgetPassword";
 
 export default function() {
   const createScene = InternalComponent => () =>
@@ -68,4 +69,6 @@ export default function() {
   Navigation.registerComponent("OrderDetails", createScene(OrderDetails));
   Navigation.registerComponent("FollowOrder", createScene(FollowOrder));
   Navigation.registerComponent("AppSetting", createScene(AppSetting));
+  Navigation.registerComponent("ForgetPassword", createScene(ForgetPassword));
+
 }

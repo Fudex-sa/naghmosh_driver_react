@@ -17,7 +17,7 @@ import {
 import Colors from "../../../common/defaults/colors";
 
 import { validationSchema } from "./validation";
-// import { signIn, resetLoginError } from "../../actions/AuthActions";
+import { signIn } from "../../../actions/AuthActions";
 import logo from "../../../assets/imgs/login.png";
 
 class SiginIn extends Component {
@@ -26,6 +26,11 @@ class SiginIn extends Component {
     this.email = React.createRef();
     this.password = React.createRef();
   }
+
+  onSubmit = async (values, { setSubmitting }) => {
+    this.props.signIn(values, setSubmitting);
+    // AppNavigation.setStackRoot("homeScreen");
+  };
 
   renderForm = ({ injectFormProps, handleSubmit, isSubmitting }) => (
     <AppView stretch marginTop={12} marginBottom={10}>
@@ -37,9 +42,7 @@ class SiginIn extends Component {
         borderRadius={5}
         nextInput={this.password}
         borderBottomWidth={1}
-        leftItems={
-          <AppIcon name="email-open-outline" type="material-community" />
-        }
+        leftItems={<AppIcon name="email-open-outline" type="material-community" />}
       />
       <AppInput
         label={I18n.t("signup-password")}
@@ -48,7 +51,7 @@ class SiginIn extends Component {
         ref={this.password}
         {...injectFormProps("password")}
         borderBottomWidth={1}
-        leftItems={<AppIcon name="phone" type="ant" flip />}
+        leftItems={<AppIcon name="lock" type="simple-line" />}
       />
       <AppButton
         paddingVertical={1}
@@ -56,9 +59,9 @@ class SiginIn extends Component {
         marginBottom={1}
         transparent
         onPress={() => {
-          // AppNavigation.push({
-          //   name: "forgetPassword"
-          // });
+          AppNavigation.push({
+            name: "ForgetPassword"
+          });
         }}
         title={I18n.t("forget-password")}
         size={5}
@@ -74,12 +77,13 @@ class SiginIn extends Component {
         backgroundColor="#23A636"
       />
       <AppView stretch marginTop={10} center>
-        <AppText> لست عضوا مسجلا ؟</AppText>
+        <AppText> {I18n.t('Not a registered member?')}</AppText>
         <AppButton
           paddingVertical={1}
           paddingHorizontal={0}
           marginBottom={1}
           transparent
+          color={'#E3000F'}
           onPress={() => {
             AppNavigation.push({
               name: "signUp"
@@ -91,31 +95,6 @@ class SiginIn extends Component {
       </AppView>
     </AppView>
   );
-
-  renderSignUpButton = () => (
-    <AppView row marginBottom={5}>
-      <AppText size={5} bold>
-        {I18n.t("new-user")}
-      </AppText>
-      <AppButton
-        transparent
-        onPress={() => {
-          // AppNavigation.push({
-          //   name: "signUp"
-          // });
-        }}
-      >
-        <AppText size={5} bold color={Colors.primary}>
-          {I18n.t("create-account")}
-        </AppText>
-      </AppButton>
-    </AppView>
-  );
-
-  onSubmit = async (values, { setSubmitting }) => {
-    // this.props.onSignIn(values, setSubmitting);
-    AppNavigation.setStackRoot("homeScreen");
-  };
 
   render() {
     return (
@@ -152,11 +131,5 @@ class SiginIn extends Component {
 const mapStateToProps = state => ({
   // loadingOverlay: state.loadingOverlay.socialSignin
 });
-const mapDispatchToProps = dispatch => ({
-  // onResetLoginError: bindActionCreators(resetLoginError, dispatch)
-});
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SiginIn);
+export default connect(mapStateToProps, { signIn })(SiginIn);

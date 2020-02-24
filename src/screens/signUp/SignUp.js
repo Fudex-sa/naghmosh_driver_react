@@ -13,7 +13,8 @@ import {
   AppPicker,
   AppNavigation,
   AppFormLocation,
-  AppImage
+  AppImage,
+  AppIcon
 } from "../../common";
 import { AppHeader } from "../../components";
 import { validationSchemaSAUDIA, validationSchemaEGY } from "./validation";
@@ -35,14 +36,6 @@ class SignUp extends Component {
     this.phoneRef = React.createRef();
   }
 
-  state = {
-    dialCode: "",
-    selectedCountryId: null
-  };
-
-  componentDidMount() {
-    // AppNavigation.disableMenu();
-  }
 
   onSubmit = async (values, { setSubmitting }) => {
     this.props.signUp(values, setSubmitting);
@@ -53,10 +46,11 @@ class SignUp extends Component {
       {...injectFormProps("firstName")}
       ref={this.firstNameRef}
       nextInput={this.lastNameRef}
-      borderBottomWidth={1}
+      borderWidth={1}
       borderRadius={5}
       label={I18n.t("signup-firstName")}
       noBorder
+      leftItems={<AppIcon name="user-o" type="font-awesome" />}
     />
   );
 
@@ -65,7 +59,8 @@ class SignUp extends Component {
       {...injectFormProps("lastName")}
       ref={this.lastNameRef}
       nextInput={this.emailRef}
-      borderBottomWidth={1}
+      borderWidth={1}
+      leftItems={<AppIcon name="user-o" type="font-awesome" />}
       borderRadius={5}
       label={I18n.t("signup-lastName")}
       noBorder
@@ -76,9 +71,10 @@ class SignUp extends Component {
     <AppInput
       {...injectFormProps("email")}
       ref={this.emailRef}
-      nextInput={this.passwordRef}
+      nextInput={this.phoneRef}
       email
-      borderBottomWidth={1}
+      leftItems={<AppIcon name="email-open-outline" type="material-community" />}
+      borderWidth={1}
       borderRadius={5}
       label={I18n.t("signup-email")}
       noBorder
@@ -99,9 +95,10 @@ class SignUp extends Component {
       }}
       secure
       showSecureEye
+      leftItems={<AppIcon name="lock" type="simple-line" />}
       ref={this.passwordRef}
       nextInput={this.confirmPasswordRef}
-      borderBottomWidth={1}
+      borderWidth={1}
       borderRadius={5}
       label={I18n.t("signup-password")}
       noBorder
@@ -114,8 +111,8 @@ class SignUp extends Component {
       secure
       showSecureEye
       ref={this.confirmPasswordRef}
-      nextInput={this.phoneRef}
-      borderBottomWidth={1}
+      borderWidth={1}
+      leftItems={<AppIcon name="lock" type="simple-line" />}
       borderRadius={5}
       label={I18n.t("signup-confirmPassword")}
       noBorder
@@ -128,8 +125,10 @@ class SignUp extends Component {
         <AppInput
           {...injectFormProps("mobile")}
           ref={this.phoneRef}
+          nextInput={this.passwordRef}
           phone
-          borderBottomWidth={1}
+          leftItems={<AppIcon name="phone" type="ant" flip size={8} />}
+          borderWidth={1}
           borderRadius={5}
           label={I18n.t("signup-phone")}
           noBorder
@@ -156,40 +155,40 @@ class SignUp extends Component {
     setFieldValue,
     validateField
   }) => (
-    <AppScrollView flex stretch paddingBottom={10}>
-      {/* <AppView stretch centerX marginTop={20}>
+      <AppScrollView flex stretch paddingBottom={10}>
+        {/* <AppView stretch centerX marginTop={20}>
         <AppImage source={logo} equalSize={50} />
       </AppView> */}
-      <AppView
-        flex
-        center
-        stretch
-        paddingHorizontal={5}
-        borderTopWidth={1}
-        borderTopColor="grey"
-      >
-        <AppText marginTop={10} bold size={8} color="darkgrey">
-          {I18n.t("sign-up-new-account")}
-        </AppText>
-        <AppText marginTop={1} color="darkgrey">
-          {I18n.t("sign-up-hint")}
-        </AppText>
+        <AppView
+          flex
+          center
+          stretch
+          paddingHorizontal={5}
+          borderTopWidth={1}
+          borderTopColor="grey"
+        >
+          <AppText marginTop={10} bold size={8} color="darkgrey">
+            {I18n.t("dont-have-an-account")}
+          </AppText>
+          <AppText marginTop={1} color="darkgrey" size={7} marginBottom={15}>
+            {I18n.t("sign-up-hint")}
+          </AppText>
 
-        {this.renderFirstNameRefInput(injectFormProps)}
-        {this.renderLastNameRefInput(injectFormProps)}
-        {this.renderEmailInput(injectFormProps)}
-        {this.renderPasswordInput({
-          injectFormProps,
-          setFieldValue,
-          validateField
-        })}
-        {this.renderConfirmPassInput(injectFormProps, validateField)}
+          {this.renderFirstNameRefInput(injectFormProps)}
+          {this.renderLastNameRefInput(injectFormProps)}
+          {this.renderEmailInput(injectFormProps)}
+          {this.renderPhoneInput(injectFormProps)}
+          {this.renderPasswordInput({
+            injectFormProps,
+            setFieldValue,
+            validateField
+          })}
+          {this.renderConfirmPassInput(injectFormProps, validateField)}
 
-        {this.renderPhoneInput(injectFormProps)}
-        {this.renderSubmitButton(isSubmitting, handleSubmit)}
-      </AppView>
-    </AppScrollView>
-  );
+          {this.renderSubmitButton(isSubmitting, handleSubmit)}
+        </AppView>
+      </AppScrollView>
+    );
 
   render() {
     const { connected } = this.props;
@@ -207,13 +206,11 @@ class SignUp extends Component {
 
         <AppForm
           schema={{
-            ...ACCESS_DATA,
             firstName: "",
             lastName: "",
             email: "",
             password: "",
             passwordConfirmation: "",
-
             mobile: ""
           }}
           validationSchema={validationSchemaEGY}
