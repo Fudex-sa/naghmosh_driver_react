@@ -3,13 +3,13 @@ import I18n from "react-native-i18n";
 
 export const validationSchemaEGY = values =>
   yup.object().shape({
-    firstName: yup
+    first_name: yup
       .string()
       .required(I18n.t("signup-field-required"))
 
       .min(3, I18n.t("field-must-be-larger-than-one-chars")),
 
-    lastName: yup
+      last_name: yup
       .string()
       .required(I18n.t("signup-field-required"))
 

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "56743868961",
+    "firebase_url": "https://naghmosh-f9e37.firebaseio.com",
+    "project_id": "naghmosh-f9e37",
+    "storage_bucket": "naghmosh-f9e37.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56743868961:android:e06f5fe30c656fcd448160",
+        "android_client_info": {
+          "package_name": "com.naghmoshdriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56743868961-ehfnpimn5qm4cub10rnq6ej474ntdnk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxLXHx_ObOqFkYCsB0c25Cpxtlj-V8HtE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "56743868961-ehfnpimn5qm4cub10rnq6ej474ntdnk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

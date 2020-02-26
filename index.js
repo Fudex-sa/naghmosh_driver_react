@@ -6,7 +6,7 @@ import ar from './src/translations/ar.json';
 import en from './src/translations/en.json';
 
 import { startApp } from './src/App';
-
+console.log("0130320")
 I18nManager.allowRTL(false);
 
 I18n.translations = {

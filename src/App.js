@@ -51,7 +51,9 @@ export const startApp = () => {
         animate: false
       }
     });
+    console.log("000000000000")
     await initLang("ar", true)(store.dispatch);
+    console.log("11111111111111")
     initInternetConnection(store.dispatch);
 
     checkLocationPermission(true, () => {
@@ -60,7 +62,7 @@ export const startApp = () => {
     const { exist } = await autoLogin(store.dispatch);
 
     console.log("%%%%%%%%%%%%%", exist);
-    initInternetConnection(store.dispatch);
+    // initInternetConnection(store.dispatch);
     if (!exist) {
       nv.init("MAIN_STACK", {
         // rtl: store.getState().lang.rtl,

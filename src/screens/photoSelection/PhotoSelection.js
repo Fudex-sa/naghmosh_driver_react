@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Platform, PermissionsAndroid } from "react-native";
 import I18n from "react-native-i18n";
-import CameraRollPicker from "react-native-camera-roll-picker";
+// import CameraRollPicker from "react-native-camera-roll-picker";
 import { AppView, AppNavigation, AppSpinner, showError } from "../../common";
 
 import { AppHeader } from "../../components";
@@ -53,7 +53,7 @@ class PhotoSelection extends Component {
           title={this.props.headerTitle || I18n.t("chooseImage")}
           showCart={false}
         />
-        {this.state.granted && (
+        {/* {this.state.granted && (
           <CameraRollPicker
             maximum={1}
             backgroundColor="white"
@@ -62,7 +62,7 @@ class PhotoSelection extends Component {
             callback={this.getSelectedImages}
             selectSingleItem={false}
           />
-        )}
+        )} */}
       </AppView>
     );
   }

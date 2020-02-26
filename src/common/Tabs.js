@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {
   View as NativeView,
   StyleSheet,
-  ViewPagerAndroid,
+  // ViewPagerAndroid,
   Animated,
   Platform,
   InteractionManager,
@@ -11,7 +11,9 @@ import {
   ScrollView,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import ViewPagerAndroid from '@react-native-community/viewpager';
+
+// import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import DefaultTabBar from './DefaultTabBar';
 import { responsiveWidth, AppText, AppView, responsiveHeight } from '.';
@@ -92,19 +94,19 @@ class Tabs extends Component {
       });
     }
 
-    this.sceneMap = {};
-    if (props.panGesture) {
-      let childs = [...props.children];
-      childs = props.rtl ? childs.reverse() : childs;
-      childs.forEach((c, index) => {
-        this.sceneMap[c.type.displayName + index] = () => c;
-      });
+    // this.sceneMap = {};
+    // if (props.panGesture) {
+    //   let childs = [...props.children];
+    //   childs = props.rtl ? childs.reverse() : childs;
+    //   childs.forEach((c, index) => {
+    //     this.sceneMap[c.type.displayName + index] = () => c;
+    //   });
 
-      this.routes = childs.map((c, index) => ({
-        key: c.type.displayName + index,
-        title: c.props.tabLabel,
-      }));
-    }
+    //   this.routes = childs.map((c, index) => ({
+    //     key: c.type.displayName + index,
+    //     title: c.props.tabLabel,
+    //   }));
+    // }
 
     this.state = {
       activePage: props.initialPage,
@@ -120,7 +122,7 @@ class Tabs extends Component {
       scrollValue,
       index: props.rtl ? props.children.length - 1 : 0,
       routes: this.routes,
-      sceneMap: this.sceneMap,
+      // sceneMap: this.sceneMap,
     };
 
     this.scrollRef = React.createRef();
@@ -147,17 +149,17 @@ class Tabs extends Component {
         }
       });
 
-      if (doRerender) {
-        this.sceneMap = {};
-        let childs = [...nextProps.children];
-        childs = this.props.rtl ? childs.reverse() : childs;
-        childs.forEach((c, index) => {
-          this.sceneMap[c.type.displayName + index] = () => c;
-        });
-        this.setState({
-          sceneMap: this.sceneMap,
-        });
-      }
+      // if (doRerender) {
+      //   this.sceneMap = {};
+      //   let childs = [...nextProps.children];
+      //   childs = this.props.rtl ? childs.reverse() : childs;
+      //   childs.forEach((c, index) => {
+      //     this.sceneMap[c.type.displayName + index] = () => c;
+      //   });
+      //   this.setState({
+      //     sceneMap: this.sceneMap,
+      //   });
+      // }
     }
   }
 
@@ -301,32 +303,32 @@ class Tabs extends Component {
   renderTabBar = (tabBar, props) =>
     this.props.panGesture
       ? React.cloneElement(tabBar, {
-          tabs: this.getTabsInfo(),
-          activePage: this.props.rtl
-            ? this.props.children.length - 1 - this.state.index
-            : this.state.index,
-          goToPage: i => {
-            const index = this.props.rtl
-              ? this.props.children.length - 1 - i
-              : i;
-            this.setState({
-              index,
-            });
-            if (this.props.onIndexChange) {
-              this.props.onIndexChange(index);
-            }
-          },
-          containerWidth: this.state.parentContainerWidth,
-          scrollValue: props.position,
-          panGesture: true,
-        })
+        tabs: this.getTabsInfo(),
+        activePage: this.props.rtl
+          ? this.props.children.length - 1 - this.state.index
+          : this.state.index,
+        goToPage: i => {
+          const index = this.props.rtl
+            ? this.props.children.length - 1 - i
+            : i;
+          this.setState({
+            index,
+          });
+          if (this.props.onIndexChange) {
+            this.props.onIndexChange(index);
+          }
+        },
+        containerWidth: this.state.parentContainerWidth,
+        scrollValue: props.position,
+        panGesture: true,
+      })
       : React.cloneElement(tabBar, {
-          tabs: this.getTabsInfo(),
-          activePage: this.state.activePage,
-          goToPage: this.goToPage,
-          containerWidth: this.state.parentContainerWidth,
-          scrollValue: this.state.scrollValue,
-        });
+        tabs: this.getTabsInfo(),
+        activePage: this.state.activePage,
+        goToPage: this.goToPage,
+        containerWidth: this.state.parentContainerWidth,
+        scrollValue: this.state.scrollValue,
+      });
 
   renderPage = (page, index) => (
     <NativeView
@@ -358,21 +360,21 @@ class Tabs extends Component {
   renderScrollableContent = () => {
     const { children, rtl } = this.props;
 
-    return (
-      <TabView
-        lazy
-        navigationState={this.state}
-        renderScene={SceneMap(this.state.sceneMap)}
-        onIndexChange={index => {
-          if (this.props.onIndexChange) {
-            this.props.onIndexChange(index);
-          }
-          this.setState({ index });
-        }}
-        renderTabBar={props =>
-          this.renderTabBar(this.props.customTabBar, props)
-        }
-      />
+    return (<></>
+      // <TabView
+      //   lazy
+      //   navigationState={this.state}
+      //   renderScene={SceneMap(this.state.sceneMap)}
+      //   onIndexChange={index => {
+      //     if (this.props.onIndexChange) {
+      //       this.props.onIndexChange(index);
+      //     }
+      //     this.setState({ index });
+      //   }}
+      //   renderTabBar={props =>
+      //     this.renderTabBar(this.props.customTabBar, props)
+      //   }
+      // />
     );
   };
 
@@ -461,16 +463,16 @@ class Tabs extends Component {
           ) : Platform.OS === 'ios' ? (
             this.renderScrollableContentIOS()
           ) : (
-            this.renderScrollableContentAndroid()
-          )
+                this.renderScrollableContentAndroid()
+              )
         ) : (
-          <NativeView style={styles.full} onLayout={this.handleLayout}>
-            {this.renderPage(this.props.children[this.state.activePage])}
-            {this.state.ready
-              ? this.renderPage(this.props.children[this.state.activePage])
-              : null}
-          </NativeView>
-        )}
+            <NativeView style={styles.full} onLayout={this.handleLayout}>
+              {this.renderPage(this.props.children[this.state.activePage])}
+              {this.state.ready
+                ? this.renderPage(this.props.children[this.state.activePage])
+                : null}
+            </NativeView>
+          )}
       </NativeView>
     );
   }

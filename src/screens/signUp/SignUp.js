@@ -34,8 +34,19 @@ class SignUp extends Component {
 
   renderFirstNameRefInput = injectFormProps => (
     <AppInput
-      {...injectFormProps("firstName")}
-      placeholder={I18n.t('The driver name')}
+      {...injectFormProps("first_name")}
+      placeholder={I18n.t('signup-firstName')}
+      marginBottom={5}
+      borderRadius={7}
+      ref={this.firstNameRef}
+      nextInput={this.phoneRef}
+      leftItems={<AppIcon name="user-o" type="font-awesome" />}
+    />
+  );
+  renderLastNameRefInput = injectFormProps => (
+    <AppInput
+      {...injectFormProps("last_name")}
+      placeholder={I18n.t('signup-lastName')}
       marginBottom={5}
       borderRadius={7}
       ref={this.firstNameRef}
@@ -183,8 +194,8 @@ class SignUp extends Component {
 
         <AppForm
           schema={{
-            firstName: "",
-            lastName: "",
+            first_name: "",
+            last_name: "",
             email: "",
             password: "",
             passwordConfirmation: "",

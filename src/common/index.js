@@ -16,7 +16,7 @@ export { default as AppFormLocation } from './FormLocation';
 export { default as AppTextArea } from './TextArea';
 export { default as AppPicker } from './Picker';
 export { default as AppDatePicker } from './DatePicker';
-export { default as AppWheelPicker } from './WheelPicker';
+// export { default as AppWheelPicker } from './WheelPicker';
 export { default as AppRadioGroup } from './RadioGroup';
 export { default as AppRadioButton } from './RadioButton';
 export { default as CheckBoxGroup } from './CheckBoxGroup';

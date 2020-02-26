@@ -3,7 +3,7 @@ import { Platform, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 import NativeModal from 'react-native-modal';
 
-const ExtraDimensions = require('react-native-extra-dimensions-android');
+// const ExtraDimensions = require('react-native-extra-dimensions-android');
 
 const height = Dimensions.get('screen').height;
 // Platform.OS === 'android'
