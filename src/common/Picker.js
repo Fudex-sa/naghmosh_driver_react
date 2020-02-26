@@ -1,34 +1,20 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
-import { connect } from "react-redux";
-import { Navigation } from "react-native-navigation";
-import I18n from "react-native-i18n";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
+import { connect } from 'react-redux';
+import { Navigation } from 'react-native-navigation';
+import I18n from 'react-native-i18n';
 
-import { BasePropTypes } from "./Base";
-import Network from "./Base/Network";
-import View from "./View";
-import Text from "./Text";
-import Indicator from "./Indicator";
-import InputError from "./micro/InputError";
-import { getTheme } from "./Theme";
-import { AppView, AppText } from ".";
-import { responsiveHeight } from "./utils/responsiveDimensions";
-
-const styles = StyleSheet.create({
-  modalReset: {
-    padding: 0,
-    margin: 0,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
+import { BasePropTypes } from './Base';
+import Network from './Base/Network';
+import View from './View';
+import Text from './Text';
+import Indicator from './Indicator';
+import InputError from './micro/InputError';
+import { getTheme } from './Theme';
+import { AppView, AppText, AppIcon } from '.';
+import { responsiveHeight } from './utils/responsiveDimensions';
 
 class Picker extends Network {
   static propTypes = {
@@ -46,21 +32,21 @@ class Picker extends Network {
     setInitialValueAfterFetch: PropTypes.oneOfType([
       PropTypes.bool,
       PropTypes.number,
-      PropTypes.string
+      PropTypes.string,
     ]),
-    loadingIndicator: PropTypes.bool
+    loadingIndicator: PropTypes.bool,
   };
 
   static defaultProps = {
     ...Network.defaultProps,
     ...getTheme().picker,
-    placeholder: "",
+    placeholder: '',
     paging: false,
     farArrow: true,
     data: [],
     leftItems: [],
     rightItems: [],
-    loadingIndicator: false
+    loadingIndicator: false,
   };
 
   constructor(props) {
@@ -71,14 +57,14 @@ class Picker extends Network {
     //   : null;
 
     // const label = obj ? obj.label : props.placeholder;
-    this.mainIndicator = "loading";
+    this.mainIndicator = 'loading';
 
     this.state = {
       label: props.placeholder,
       data: props.data,
       loading: false,
       networkError: false,
-      filterText: ""
+      filterText: '',
     };
   }
 
@@ -94,12 +80,9 @@ class Picker extends Network {
 
   componentWillReceiveProps(nextProps) {
     super.componentWillReceiveProps(nextProps, () => {
-      this.onChange({ label: this.props.placeholder, value: "" }, true);
+      this.onChange({ label: this.props.placeholder, value: '' }, true);
     });
 
-    if (this.props.data !== nextProps.data) {
-      this.setEndFetching(nextProps.data);
-    }
     if (nextProps.reset !== this.props.reset) {
       this.clear();
     }
@@ -111,7 +94,7 @@ class Picker extends Network {
 
   setStartFetching() {
     this.setState({
-      networkError: false
+      networkError: false,
     });
   }
 
@@ -121,7 +104,7 @@ class Picker extends Network {
 
   setError = errorLabel => {
     this.setState({
-      networkError: true
+      networkError: true,
     });
   };
 
@@ -131,9 +114,9 @@ class Picker extends Network {
     if (setInitialValueAfterFetch && data.length) {
       let { label, value } = data[0];
 
-      if (typeof setInitialValueAfterFetch === "number") {
+      if (typeof setInitialValueAfterFetch !== "boolean") {
         const target = data.find(
-          item => item.value === setInitialValueAfterFetch
+          item => item.value === setInitialValueAfterFetch,
         );
         if (target) {
           label = target.label;
@@ -144,7 +127,7 @@ class Picker extends Network {
       this.onChange({ label, value });
     } else if (!data.length) {
       this.setState({
-        label: this.props.noResultsLabel || I18n.t("ui-noResultsFound")
+        label: this.props.noResultsLabel || I18n.t('ui-noResultsFound'),
       });
     }
   }
@@ -153,7 +136,7 @@ class Picker extends Network {
     const { name, onChange } = this.props;
 
     this.setState({
-      label
+      label,
     });
 
     if (onChange) {
@@ -163,7 +146,7 @@ class Picker extends Network {
   };
 
   clear = () => {
-    this.onChange({ label: this.props.placeholder || "", value: "" }, true);
+    this.onChange({ label: this.props.placeholder || '', value: '' }, true);
   };
 
   renderItems = items => {
@@ -172,22 +155,22 @@ class Picker extends Network {
     const nodes = items.map(item => {
       if (
         item.type.WrappedComponent &&
-        (item.type.WrappedComponent.displayName === "Button" ||
-          item.type.WrappedComponent.displayName === "Icon")
+        (item.type.WrappedComponent.displayName === 'Button' ||
+          item.type.WrappedComponent.displayName === 'Icon')
       ) {
         return React.cloneElement(item, {
           key: String(Math.random()),
           transparent: true,
-          stretch: item.type.WrappedComponent.displayName === "Button",
+          stretch: item.type.WrappedComponent.displayName === 'Button',
           color: item.props.color || color,
           size: item.props.size || size * 1.5,
-          backgroundColor: "transparent",
+          backgroundColor: 'transparent',
           ph: item.props.ph || size / 1.5,
-          pv: 0
+          pv: 0,
         });
       }
       return React.cloneElement(item, {
-        key: String(Math.random())
+        key: String(Math.random()),
       });
     });
 
@@ -241,7 +224,7 @@ class Picker extends Network {
       iconType,
       iconName,
       touchableOpacity,
-      disable
+      disable,
     } = this.props;
 
     let { leftItems, rightItems } = this.props;
@@ -288,31 +271,31 @@ class Picker extends Network {
           bbc={bbc}
           blc={blc}
           brc={brc}
-          style={{ overflow: "visible" }}
+          style={{ overflow: 'visible' }}
+          ph={8}
         >
-          {this.state.label !== this.props.placeholder && (
+          {/* {this.state.label !== this.props.placeholder && (
             <AppView
+              marginHorizontal={4}
               paddingHorizontal={3}
               borderRadius={10}
               style={{
-                position: "absolute",
-                top: 1,
-                left: 0,
-                right: 0
+                position: 'absolute',
+                top: -responsiveHeight(3.5) / 2,
               }}
               height={3.5}
               center
               backgroundColor={
                 this.props.backgroundColorLabel
                   ? this.props.backgroundColorLabel
-                  : "transparent"
+                  : 'white'
               }
             >
-              <AppText color="#8A8A8A" size={size}>
+              <AppText color="#8A8A8A" size={0.8 * size}>
                 {this.props.placeholder}
               </AppText>
             </AppView>
-          )}
+          )} */}
           {leftItems.length && !this.state.loading
             ? this.renderItems(leftItems)
             : null}
@@ -320,121 +303,119 @@ class Picker extends Network {
             <AppView
               style={[
                 {
-                  flexDirection: rtl ? "row-reverse" : "row",
-                  alignItems: "center",
+                  flexDirection: rtl ? 'row-reverse' : 'row',
+                  alignItems: 'center',
                   justifyContent:
                     this.state.loading || this.state.networkError
-                      ? "center"
+                      ? 'center'
                       : farArrow
-                      ? "space-between"
-                      : center
-                      ? "center"
-                      : "flex-start",
+                        ? 'space-between'
+                        : center
+                          ? 'center'
+                          : 'flex-start',
                   flex: 1,
-                  alignSelf: "stretch",
-                  padding: 0
-                }
+                  alignSelf: 'stretch',
+                  padding: 0,
+                },
               ]}
             >
               {this.state.loading ? (
                 <Indicator size={size} />
               ) : this.state.networkError ? (
-                <Text size={size}>{I18n.t("ui-error")}</Text>
+                <Text size={size}>{I18n.t('ui-error')}</Text>
               ) : (
-                <React.Fragment>
-                  {this.props.loadingIndicator ? (
-                    <Indicator size={size} />
-                  ) : (
-                    <Text color={color} size={size} mh={3}>
-                      {this.state.label}
-                    </Text>
+                    <React.Fragment>
+                      {this.props.loadingIndicator ? (
+                        <Indicator size={size} />
+                      ) : (
+                          <Text color={color} size={size} mh={3}>
+                            {this.state.label}
+                          </Text>
+                        )}
+                    </React.Fragment>
                   )}
-                </React.Fragment>
-              )}
             </AppView>
           ) : (
-            <ButtonContainer
-              onPress={() => {
-                console.log(this.state.data);
-                // if (this.state.loading || this.state.networkError) return;
-
-                Navigation.showModal({
-                  stack: {
-                    children: [
-                      {
-                        component: {
-                          name: "appPickerModal",
-                          passProps: {
-                            hideSearch,
-                            title,
-                            searchTitle,
-                            data: this.state.data,
-                            iconType,
-                            iconName,
-                            onSelect: v => {
-                              this.onChange(v);
-                            }
-                          }
-                        }
-                      }
-                    ]
-                  }
-                });
-              }}
-              style={[
-                {
-                  flexDirection: rtl ? "row-reverse" : "row",
-                  alignItems: "center",
-                  justifyContent:
-                    this.state.loading || this.state.networkError
-                      ? "center"
-                      : farArrow
-                      ? "space-between"
-                      : center
-                      ? "center"
-                      : "flex-start",
-                  flex: 1,
-                  alignSelf: "stretch",
-                  padding: 0
-                }
-              ]}
-            >
-              {this.state.loading ? (
-                <Indicator size={size} />
-              ) : this.state.networkError ? (
-                <Text size={size}>{I18n.t("ui-error")}</Text>
-              ) : (
-                <React.Fragment>
-                  {this.props.loadingIndicator ? (
-                    <Indicator size={size} />
-                  ) : (
-                    <Text color={color} size={size} mh={3}>
-                      {this.state.label}
-                    </Text>
-                  )}
-                  {/* <Icon
-                  name="arrow-drop-down"
-                  type="material"
-                  size={size * 1.3}
-                  color={color}
-                /> */}
-                </React.Fragment>
-              )}
-            </ButtonContainer>
-          )}
+              <ButtonContainer
+                onPress={() => {
+                  // if (this.state.loading || this.state.networkError) return;
+                  Navigation.showModal({
+                    stack: {
+                      children: [
+                        {
+                          component: {
+                            name: 'appPickerModal',
+                            passProps: {
+                              hideSearch,
+                              title,
+                              searchTitle,
+                              data: this.state.data,
+                              iconType,
+                              iconName,
+                              label: this.state.label,
+                              onChange: v => {
+                                this.onChange(v);
+                              },
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  });
+                }}
+                style={[
+                  {
+                    flexDirection: rtl ? 'row-reverse' : 'row',
+                    alignItems: 'center',
+                    justifyContent:
+                      this.state.loading || this.state.networkError
+                        ? 'center'
+                        : farArrow
+                          ? 'space-between'
+                          : center
+                            ? 'center'
+                            : 'flex-start',
+                    flex: 1,
+                    alignSelf: 'stretch',
+                    padding: 0,
+                  },
+                ]}
+              >
+                {this.state.loading ? (
+                  <Indicator size={size} />
+                ) : this.state.networkError ? (
+                  <Text size={size}>{I18n.t('ui-error')}</Text>
+                ) : (
+                      <React.Fragment>
+                        {this.props.loadingIndicator ? (
+                          <Indicator size={size} />
+                        ) : (
+                            <Text color={color} size={size} mh={3}>
+                              {this.state.label}
+                            </Text>
+                          )}
+                        <AppIcon
+                          name="chevron-down"
+                          type="feather"
+                          color="#000"
+                        />
+                      </React.Fragment>
+                    )}
+              </ButtonContainer>
+            )}
           {rightItems.length && !this.state.loading
             ? this.renderItems(rightItems)
             : null}
         </View>
 
-        {!noValidation ? <InputError error={error} size={size} /> : null}
+        {!noValidation && <InputError error={error} size={size} />}
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  rtl: state.lang.rtl
+  rtl: state.lang.rtl,
 });
 
 export default connect(mapStateToProps)(Picker);

@@ -1,10 +1,18 @@
-import { BackHandler, Platform, StatusBar } from "react-native";
+import { BackHandler, Platform } from "react-native";
 import { Navigation as NativeNavigation } from "react-native-navigation";
-
-let INITED = false;
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import store from "../store/store";
+import { Provider } from "react-redux";
+import colors from "./defaults/colors";
+import I18n from 'react-native-i18n'
+import { CHANGE_MENU_STATUS } from "../actions/types";
 
 class Navigation {
+  static MAIN_STACK = "MAIN_STACK";
+  static ORDER_STACK = "ORDER_STACK";
   static menuComponentId = 0;
+
+  static INITED = false;
 
   static lastCommand = "";
 
@@ -14,9 +22,127 @@ class Navigation {
 
   static prevScreen = "";
 
+  static backHandler;
+
+  static didAppearListener;
+
+  static commandCompletedListener;
+
+  static didDisappearListener;
+
   constructor() {
     throw new Error("Cannot construct singleton");
   }
+
+  static setNavigationDefaultOptions = () => {
+    NativeNavigation.setDefaultOptions({
+      statusBar: {
+        visible: true,
+        // style: Platform.Version < 23 ? "light" : "dark",
+        backgroundColor: colors.statusBar
+      },
+      topBar: {
+        drawBehind: true,
+        visible: false,
+        animate: false
+      },
+      layout: {
+        backgroundColor: "white",
+        orientation: ["portrait"],
+      },
+      bottomTab: {
+        selectedIconColor: colors.primaryAccent,
+        selectedTextColor: colors.primaryAccent,
+      },
+      bottomTabs: {
+        titleDisplayMode: 'showWhenActive',//alwaysHide
+      }
+      // animations: {
+      //   push: {
+      //     waitForRender: true
+      //   },
+      //   showModal: {
+      //     waitForRender: true
+      //   }
+      // }
+    });
+  };
+
+  // register screen with  gesturHandler
+  static registerScreen(name, component) {
+    NativeNavigation.registerComponentWithRedux(
+      name,
+      () => gestureHandlerRootHOC(component),
+      Provider,
+      store
+    );
+  }
+
+  static registerBackHandlerListener = () => {
+    Navigation.backHandler = BackHandler;
+    Navigation.backHandler.addEventListener("hardwareBackPress", async () => {
+      try {
+        await Navigation.pop();
+      } catch (error) {
+        BackHandler.exitApp();
+        return false;
+      }
+
+      return true;
+    });
+  };
+
+  static clearBackHandlerListener = () => {
+    if (Navigation.backHandler) this.backHandler.removeEventListener();
+  };
+
+  static registerDidAppearListener = () => {
+    Navigation.didAppearListener = NativeNavigation.events().registerComponentDidAppearListener(
+      ({ componentId, componentName }) => {
+        Navigation.currentScreen = componentName;
+        this.currentComponentId = componentId;
+      }
+    );
+  };
+
+  static clearDidAppearListener = () => {
+    if (Navigation.didAppearListener) Navigation.didAppearListener.remove();
+  };
+
+  static registerDidDisappearListener = () => {
+    Navigation.didDisappearListener = NativeNavigation.events().registerComponentDidDisappearListener(
+      ({ componentName }) => {
+        Navigation.prevScreen = componentName;
+      }
+    );
+  };
+
+  static clearDidDisappearListener = () => {
+    if (Navigation.didDisappearListener)
+      Navigation.didDisappearListener.remove();
+  };
+
+  static registerCommandCompletedListener = () => {
+    Navigation.commandCompletedListener = NativeNavigation.events().registerCommandCompletedListener(
+      ({ commandId }) => {
+        Navigation.lastCommand = commandId.replace(/[0-9]/g, "");
+
+        if (Navigation.lastCommand === "showModal") {
+          Navigation.modalIsOn = true;
+        } else if (
+          Navigation.lastCommand === "dismissModal" ||
+          Navigation.lastCommand === "dismissAllModals"
+        ) {
+          Navigation.modalIsOn = false;
+        }
+      }
+    );
+  };
+
+  static clearCommandCompletedListener = () => {
+    if (Navigation.commandCompletedListener)
+      Navigation.commandCompletedListener.remove();
+  };
 
   static getScreenLayout = layout => {
     // cosnt screenName = '';
@@ -42,22 +168,42 @@ class Navigation {
     if (typeof layout !== "object") return null;
     if (!layout.bottomTabs) return null;
 
-    const children = layout.bottomTabs.map(tab => ({
-      component: {
-        name: tab.screen,
-        passProps: tab.passProps,
-        options: {
-          bottomTab: {
-            text: tab.label,
-            icon: tab.icon
+    const children = layout.bottomTabs.map((tab, index) => {
+      if (index === 0)
+        return ({
+          stack: {
+            children: [{
+              component: {
+                name: tab.screen,
+              }
+            }],
+            options: {
+              bottomTab: {
+                text: tab.label,
+                icon: tab.icon,
+              }
+            }
           }
-        }
-      }
-    }));
+        });
+      else
+        return ({
+          component: {
+            name: tab.screen,
+            passProps: tab.passProps,
+            options: {
+              bottomTab: {
+                text: tab.label,
+                icon: tab.icon
+              }
+            }
+          }
+        })
+    });
 
     return {
       bottomTabs: {
-        children
+        id: "bottomTabs",
+        children: children
       }
     };
   };
@@ -112,54 +258,23 @@ class Navigation {
   };
 
   static init = (initialStack, layout) => {
-    if (!INITED) {
-      this.initialStack = initialStack;
-      this.currentStack = initialStack;
-      this.mainLayout = null;
-      this.mainStack = initialStack;
-
-      BackHandler.addEventListener("hardwareBackPress", async () => {
-        try {
-          await Navigation.pop();
-        } catch (error) {
-          BackHandler.exitApp();
-          return false;
-        }
-
-        return true;
-      });
-
-      NativeNavigation.events().registerComponentDidAppearListener(
-        ({ componentId, componentName }) => {
-          StatusBar.setBackgroundColor("transparent", true);
-          StatusBar.setTranslucent(true);
-
-          Navigation.currentScreen = componentName;
-          this.currentComponentId = componentId;
-        }
-      );
-
-      NativeNavigation.events().registerComponentDidDisappearListener(
-        ({ componentName }) => {
-          Navigation.prevScreen = componentName;
-        }
-      );
-
-      NativeNavigation.events().registerCommandCompletedListener(
-        ({ commandId }) => {
-          Navigation.lastCommand = commandId.replace(/[0-9]/g, "");
-
-          if (Navigation.lastCommand === "showModal") {
-            Navigation.modalIsOn = true;
-          } else if (
-            Navigation.lastCommand === "dismissModal" ||
-            Navigation.lastCommand === "dismissAllModals"
-          ) {
-            Navigation.modalIsOn = false;
-          }
-        }
-      );
+    if (this.INITED) {
+      this.clearBackHandlerListener();
+      this.clearCommandCompletedListener();
+      this.clearDidAppearListener();
+      this.clearDidDisappearListener();
     }
+    Navigation.modalIsOn = false;
+    this.initialStack = initialStack;
+    this.currentStack = initialStack;
+    this.mainLayout = null;
+    this.mainStack = initialStack;
+
+    // /listener
+    this.registerBackHandlerListener();
+    this.registerCommandCompletedListener();
+    this.registerDidAppearListener();
+    this.registerDidDisappearListener();
 
     this.mainLayoutRaw = layout;
     this.mainLayout = Navigation.getLayout(layout);
@@ -174,7 +289,7 @@ class Navigation {
       }
     });
 
-    INITED = true;
+    this.INITED = true;
   };
 
   // if setMainLayout = true, layout must be defined
@@ -184,9 +299,12 @@ class Navigation {
         throw new Error("Navigation.setStackRoott() ERROR");
       }
     } catch (error) {
-      console.log(error);
       return;
     }
+
+    // const newLayout = layout
+    //   ? Navigation.getLayout(layout)
+    //   : Navigation.getLayout(this.mainLayoutRaw);
 
     const newLayout = layout
       ? Navigation.getLayout(layout)
@@ -214,13 +332,7 @@ class Navigation {
     const passProps = typeof layout === "string" ? {} : layout.passProps;
     const stackName = typeof layout === "object" ? layout.stackName : null;
 
-    // if (screenName === Navigation.currentScreen) Navigation.pop();
-    if (
-      screenName === Navigation.currentScreen &&
-      screenName !== "productDetails"
-    )
-      return;
-
+    // if (screenName === Navigation.currentScreen) return;
     Navigation.currentScreen = screenName;
 
     if (stackName) {
@@ -268,8 +380,6 @@ class Navigation {
     try {
       await NativeNavigation.pop(componentId);
     } catch (error) {
-      // console.log(error);
-
       if (Navigation.modalIsOn) {
         this.currentStack = this.initialStack;
         NativeNavigation.dismissAllModals();
@@ -376,29 +486,109 @@ class Navigation {
   };
 
   static disableMenu = async () => {
-    await NativeNavigation.mergeOptions(
-      `MAIN_SIDE_MENU${Navigation.menuComponentId}`,
-      {
-        sideMenu: {
-          right: {
-            visible: false,
-            enabled: false
+    if (Navigation.menuDirection === "right") {
+      await NativeNavigation.mergeOptions(
+        `MAIN_SIDE_MENU${Navigation.menuComponentId}`,
+        {
+          sideMenu: {
+            right: {
+              visible: false,
+              enabled: false
+            }
           }
         }
-      }
-    );
+      );
+    } else if (Navigation.menuDirection === "left") {
+      await NativeNavigation.mergeOptions(
+        `MAIN_SIDE_MENU${Navigation.menuComponentId}`,
+        {
+          sideMenu: {
+            left: {
+              visible: false,
+              enabled: false
+            }
+          }
+        }
+      );
+    }
+  };
 
-    await NativeNavigation.mergeOptions(
-      `MAIN_SIDE_MENU${Navigation.menuComponentId}`,
-      {
-        sideMenu: {
-          left: {
-            visible: false,
-            enabled: false
-          }
-        }
-      }
-    );
+  static navigateToHome = () => {
+    Navigation.init('MainStack', {
+      bottomTabs: [
+        {
+          screen: 'home',
+          label: I18n.t('home'),
+          icon: require('../assets/imgs/menu.png'),
+        },
+        {
+          screen: 'cart',
+          label: I18n.t('cart'),
+          icon: require('../assets/imgs/cart.png'),
+        },
+        {
+          screen: 'offers',
+          label: I18n.t('offers'),
+          icon: require('../assets/imgs/percent.png'),
+        },
+        {
+          screen: 'fav',
+          label: I18n.t('fav'),
+          icon: require('../assets/imgs/fav.png'),
+        },
+        {
+          screen: 'settings',
+          label: I18n.t('settings'),
+          icon: require('../assets/imgs/settings.png'),
+        },
+      ]
+    });
+    NativeNavigation.mergeOptions('bottomTabs', {
+      bottomTabs: {
+        currentTabIndex: 0,
+      },
+    });
+  };
+
+  static navigateToHomeAr = () => {
+    Navigation.init('MainStack', {
+      bottomTabs: [
+        {
+          screen: 'settings',
+          label: I18n.t('settings'),
+          icon: require('../assets/imgs/settings.png'),
+        },
+        {
+          screen: 'fav',
+          label: I18n.t('fav'),
+          icon: require('../assets/imgs/fav.png'),
+        },
+        {
+          screen: 'offers',
+          label: I18n.t('offers'),
+          icon: require('../assets/imgs/percent.png'),
+        },
+        {
+          screen: 'cart',
+          label: I18n.t('cart'),
+          icon: require('../assets/imgs/cartAr.png'),
+        },
+        {
+          screen: 'home',
+          label: I18n.t('home'),
+          icon: require('../assets/imgs/menuAr.png'),
+        },
+      ]
+    });
+    NativeNavigation.mergeOptions('bottomTabs', {
+      bottomTabs: {
+        currentTabIndex: 4,
+      },
+    });
+  };
+
+  static navigateToAuth = () => {
+    Navigation.init(Navigation.MAIN_STACK, "welcome");
   };
 }
 

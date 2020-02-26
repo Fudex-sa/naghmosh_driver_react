@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { AppView, AppText, AppModal, AppButton, AppSpinner } from "../common";
 
 class ConfirmationModal extends Component {
@@ -18,57 +17,58 @@ class ConfirmationModal extends Component {
         lock
         {...rest}
       >
-        <AppView width={75} backgroundColor="white" touchableOpacity>
-          <AppText
-            left
-            color="foreground"
-            bold
-            marginTop={10}
-            size={6}
-            marginHorizontal={5}
-          >
+        <AppView
+          stretch
+          marginHorizontal={7}
+          stretch
+          borderRadius={10}
+          backgroundColor="white"
+          touchableOpacity
+        >
+          <AppText left bold marginVertical={5} size={6} marginHorizontal={5}>
             {this.props.title}
           </AppText>
 
-          {/* <AppView width={70}> */}
-          <AppText
-            marginTop={5}
-            color="#5F5F5F"
-            size={5.5}
-            marginHorizontal={5}
-          >
-            {this.props.desc}
-          </AppText>
-          {/* </AppView> */}
+          <AppView stretch center>
+            <AppText color="#5F5F5F" size={5.5} center marginHorizontal={5}>
+              {this.props.desc}
+            </AppText>
+          </AppView>
 
-          <AppView stretch row height={8} right marginTop={15} paddingLeft={25}>
-            <>
-              <AppButton
-                title={this.props.yesLabel}
-                backgroundColor="foreground"
-                flex
-                stretch
-                margin={3}
-                paddingVertical={0}
-                touchableOpacity
-                onPress={this.props.onConfirm}
-              />
+          <AppView stretch row height={10} center>
+            {this.props.isAsyncConfirmProgress ? (
+              <AppView stretch center flex>
+                <AppSpinner size={12} />
+              </AppView>
+            ) : (
+              <AppView stretch row height={8} center>
+                {this.props.noLabel && this.props.onCancel && (
+                  <AppButton
+                    bold={false}
+                    title={this.props.noLabel}
+                    backgroundColor="white"
+                    color="#000000"
+                    stretch
+                    width={15}
+                    touchableOpacity
+                    onPress={this.props.onCancel}
+                  />
+                )}
 
-              <AppButton
-                title={this.props.noLabel}
-                backgroundColor="red"
-                color="primary"
-                bc="primary"
-                br={1}
-                bw={1}
-                flex
-                stretch
-                margin={3}
-                paddingVertical={0}
-                touchableOpacity
-                onPress={() => this.props.changeState(false)}
-              />
-            </>
+                {this.props.yesLabel && this.props.onConfirm && (
+                  <AppButton
+                    bold={false}
+                    title={this.props.yesLabel}
+                    backgroundColor="white"
+                    color="#000000"
+                    stretch
+                    width={15}
+                    touchableOpacity
+                    onPress={this.props.onConfirm}
+                  />
+                )}
+              </AppView>
+            )}
           </AppView>
         </AppView>
       </AppModal>
@@ -76,8 +76,4 @@ class ConfirmationModal extends Component {
   }
 }
 
-const mapstateToProps = state => ({
-  rtl: state.lang.rtl
-});
-
-export default connect(mapstateToProps)(ConfirmationModal);
+export default ConfirmationModal;

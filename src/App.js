@@ -1,78 +1,36 @@
 import { Navigation } from "react-native-navigation";
-import { Platform, StatusBar } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
-import store from "./store";
-import registerScreens from "./screens";
-import {
-  getColors,
-  AppNavigation as nv,
-  registerCustomIconType
-} from "./common";
-import icoMoonConfig from "./common/utils/selection.json";
-import { initInternetConnection } from "./actions/network";
-import { initLang, setLang } from "./actions/lang";
-import colors from "./common/defaults/colors";
-import { autoLogin } from "./actions/AuthActions";
-import {
-  checkLocationPermission,
-  initBackgroundGeolocation
-} from "./actions/location";
+import splashScreen from "react-native-splash-screen";
+import regterScreens from "./screens";
+import { AppNavigation } from "./common";
+import appLaunchConfig from "./utils/AppLaunchConfig";
+import AuthRepo from "./repo/auth";
+import store from "./store/store";
+import { setUserData } from "./actions/auth";
 
-export const startApp = () => {
-  registerCustomIconType("custom", icoMoonConfig);
-  registerScreens();
-
+export default () => {
+  splashScreen.hide();
+  //appLaunch
   Navigation.events().registerAppLaunchedListener(async () => {
-    Navigation.setDefaultOptions({
-      statusBar: {
-        visible: true,
-        backgroundColor: colors.statusBar,
-        style: "dark"
-      },
-      topBar: {
-        drawBehind: true,
-        visible: false,
-        animate: false
-      },
-      layout: {
-        backgroundColor: "white",
-        orientation: ["portrait"]
-      },
-      animations: {
-        push: {
-          waitForRender: false
-        },
-        showModal: {
-          waitForRender: false
-        }
-      },
-      bottomTabs: {
-        visible: false,
-        animate: false
-      }
-    });
-    console.log("000000000000")
-    await initLang("ar", true)(store.dispatch);
-    console.log("11111111111111")
-    initInternetConnection(store.dispatch);
-
-    checkLocationPermission(true, () => {
-      initBackgroundGeolocation(store.dispatch, store.getState);
-    });
-    const { exist } = await autoLogin(store.dispatch);
-
-    console.log("%%%%%%%%%%%%%", exist);
-    // initInternetConnection(store.dispatch);
-    if (!exist) {
-      nv.init("MAIN_STACK", {
-        // rtl: store.getState().lang.rtl,
-        name: "homeScreen"
-        // sideMenu: "menu"
-      });
+    //navigation config
+    AppNavigation.setNavigationDefaultOptions();
+    //screens
+    regterScreens();
+    //default app config
+    await appLaunchConfig();
+    //navigation
+    const authRepo = new AuthRepo();
+    const userData = await authRepo.checkPrincipalUser();
+    const rtl = store.getState().lang.rtl;
+    if (userData) await store.dispatch(setUserData(userData));
+    if (userData && !userData.isLogout) {
+      // auth
+      if (rtl)
+        AppNavigation.navigateToHomeAr();
+      else
+        AppNavigation.navigateToHome();
     } else {
-      nv.init("MAIN_STACK", {
-        name: "SignInScreen"
-      });
+      // no auth
+      AppNavigation.navigateToAuth();
     }
   });
 };

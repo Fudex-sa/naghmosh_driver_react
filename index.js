@@ -1,17 +1,6 @@
-import { I18nManager } from 'react-native';
-import I18n from 'react-native-i18n';
+import { I18nManager } from "react-native";
+import initApp from './src/App';
 
-import { LocaleEn, LocaleAr } from './src/common';
-import ar from './src/translations/ar.json';
-import en from './src/translations/en.json';
-
-import { startApp } from './src/App';
-console.log("0130320")
 I18nManager.allowRTL(false);
-
-I18n.translations = {
-  ar: Object.assign(LocaleAr, ar),
-  en: Object.assign(LocaleEn, en),
-};
-
-startApp();
+console.disableYellowBox = true
+initApp();

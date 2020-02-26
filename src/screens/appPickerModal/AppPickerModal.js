@@ -1,73 +1,99 @@
-import React, { Component } from "react";
-import { Keyboard, FlatList } from "react-native";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { Keyboard, FlatList } from 'react-native';
+import { connect } from 'react-redux';
 
-import I18n from "react-native-i18n";
+import { Navigation } from 'react-native-navigation';
 import {
   AppView,
   AppIcon,
   AppButton,
   AppInput,
-  AppText,
-  AppNavigation
-} from "../../common";
-import RenderItem from "./RenderItem";
-import { AppHeader } from "../../components";
+  AppRadioButton,
+  AppRadioGroup,
+} from '../../common';
+import AppPickerHeader from './AppPickerHeader';
+import RenderItem from './RenderItem';
 
 class AppPickerModal extends Component {
-  componentDidMount() {
-    console.log("data -->>", this.props.data);
-  }
-
   state = {
-    searchText: "",
-    data: this.props.data
+    searchText: '',
+    data: this.props.data,
   };
 
   renderPickerData = () => (
     <FlatList
       style={{
-        alignSelf: "stretch"
+        alignSelf: 'stretch',
       }}
       data={this.state.data}
       keyExtractor={(item, index) => String(index)}
-      renderItem={({ item }) => (
-        <RenderItem
-          selected={item.label === this.props.label}
-          item={item}
-          onSelect={this.props.onSelect}
-          // dataSet={this.props.newSet}
-          componentId={this.props.componentId}
-          data={this.state.data}
-        />
-      )}
+      renderItem={({ item }) => {
+
+        return (
+          <RenderItem
+            selected={item.label === this.props.label}
+            item={item}
+            onChange={this.props.onChange}
+            componentId={this.props.componentId}
+          />
+          // <AppView
+          //   stretch
+          //   borderBottomColor="grey"
+          //   borderBottomWidth={1}
+          //   backgroundColor="#EEEEEE"
+          //   row
+          //   paddingHorizontal={10}
+          // >
+          //   {/* <AppRadioGroup
+          //     onSelect={() => {
+          //       this.props.onChange(item);
+          //       Navigation.dismissModal(this.props.componentId);
+          //     }}
+          //   >
+          //     <AppRadioButton
+          //       key={item.label}
+          //       value={item.label}
+          //       label={item.label}
+          //       touchableOpacity
+          //       reverse
+          //       stretch
+          //     /> */}
+          //   <AppView
+          //     bc={this.state.selected ? 'grey' : '#ACB5BB'}
+          //     bw={2}
+          //     circle
+          //     circleRadius={6}
+          //     center
+          //   >
+          //     {this.state.selected && item.label ? (
+          //       <AppView circle circleRadius={3} backgroundColor="primary" />
+          //     ) : null}
+          //   </AppView>
+          //   <AppButton
+          //     onPress={() => {
+          //       this.setState({
+          //         selected: true,
+          //       });
+          //       this.props.onChange(item);
+          //       Navigation.dismissModal(this.props.componentId);
+          //     }}
+          //     center={false}
+          //     title={item.label}
+          //     stretch
+          //     flex
+          //     backgroundColor="transparent"
+          //     height={7}
+          //     color="#000"
+          //     // paddingHorizontal={15}
+          //     size={5.5}
+          //     bold
+          //   />
+
+          // </AppView>
+        );
+      }}
     />
   );
-
-  setData = value => {
-    const transformData = {
-      value: value.area,
-      label: value.description,
-      alias: value.alias,
-      ...value
-    };
-    const newData = [...this.state.data, transformData];
-    this.setState({
-      data: newData
-    });
-  };
-
-  addItem = newItem => {
-    let newData = this.state.data.filter(item => item.value != newItem.value);
-    newData = [newItem, ...newData];
-    this.setState({
-      data: newData
-    });
-
-    if (this.props.newSet) {
-      this.props.newSet(newData);
-    }
-  };
 
   renderSearchInput = () => {
     const {} = this.props;
@@ -75,29 +101,35 @@ class AppPickerModal extends Component {
       <AppView
         stretch
         paddingHorizontal={5}
-        paddingTop={6}
+        paddingVertical={6}
         borderBottomWidth={0.1}
         elevation={2}
       >
         <AppInput
-          size={6}
           picker
           stretch
           noValidation
           initialValue={this.state.searchText}
           onChange={text => {
             const filterData = this.props.data.filter(item =>
-              item.label.toLowerCase().includes(text.toString().toLowerCase())
+              item.label.toLowerCase().includes(text.toString().toLowerCase()),
             );
 
             this.setState({
               searchText: text,
-              data: filterData
+              data: filterData,
             });
           }}
-          label={this.props.searchTitle}
+          placeholder={this.props.searchTitle}
           leftItems={[
-            <AppIcon type="custom" name="search" color="#B0B0B0" size={8} />
+            <AppIcon
+              color="#8A8A8A"
+              name={this.props.iconName}
+              type={this.props.iconType}
+              size={8}
+              marginHorizontal={5}
+              flip
+            />,
           ]}
           onSubmitEditing={() => {
             Keyboard.dismiss();
@@ -111,37 +143,26 @@ class AppPickerModal extends Component {
     );
   };
 
-  renderNoResulte = () => (
-    <AppView stretch center flex>
-      <AppText bold>{I18n.t("ui-noResultsFound")}</AppText>
-    </AppView>
-  );
-
-  refresh = () => {};
-
   render() {
     const { title, hideSearch } = this.props;
 
     return (
       <AppView flex stretch>
-        <AppHeader title={title} />
-        {!hideSearch && this.renderSearchInput()}
-
-        {this.state.data.length === 0
-          ? this.renderNoResulte()
-          : this.renderPickerData()}
+        <AppPickerHeader showClose title={title} />
+        {/* {!hideSearch && this.renderSearchInput()} */}
+        {this.renderPickerData()}
       </AppView>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  rtl: state.lang.rtl
+  rtl: state.lang.rtl,
 });
 
 const mapDispatchToProps = dispatch => ({});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(AppPickerModal);

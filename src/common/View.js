@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
-import { View as RNView, TouchableOpacity } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
-import { connect } from "react-redux";
+import React, { PureComponent } from 'react';
+import { View as RNView, TouchableOpacity } from 'react-native';
+import { RectButton } from 'react-native-gesture-handler';
+import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {
@@ -15,12 +15,12 @@ import {
   marginStyles,
   borderStyles,
   borderRadiusStyles,
-  overflowStyles
-} from "./Base";
+  overflowStyles,
+} from './Base';
 
 class View extends PureComponent {
   static propTypes = {
-    ...BasePropTypes
+    ...BasePropTypes,
   };
 
   render() {
@@ -38,14 +38,13 @@ class View extends PureComponent {
       flexInnerTouchable,
       stretch,
       stretchInnerTouchable,
-      linearBackgroundGradient
+      linearBackgroundGradient,
     } = this.props;
 
     const Container = touchableOpacity ? TouchableOpacity : RectButton;
 
     const node = onPress ? (
       <Container
-        activeOpacity={0}
         // borderless={!linearBackgroundGradient}
         onPress={onPress}
         style={[
@@ -63,9 +62,9 @@ class View extends PureComponent {
               width ||
               equalSize ||
               circleRadius
-                ? "stretch"
-                : null
-          }
+                ? 'stretch'
+                : null,
+          },
         ]}
       >
         {children}
@@ -74,9 +73,7 @@ class View extends PureComponent {
       children
     );
 
-    const ViewContainer =
-      linearBackgroundGradient ? LinearGradient :
-      RNView;
+    const ViewContainer = linearBackgroundGradient ? LinearGradient : RNView;
 
     return (
       <ViewContainer
@@ -93,7 +90,7 @@ class View extends PureComponent {
           marginStyles(this.props),
           borderStyles(this.props),
           borderRadiusStyles(this.props),
-          style
+          style,
         ]}
       >
         {node}
@@ -103,7 +100,7 @@ class View extends PureComponent {
 }
 
 const mapStateToProps = state => ({
-  rtl: state.lang.rtl
+  rtl: state.lang.rtl,
 });
 
 export default connect(mapStateToProps)(View);

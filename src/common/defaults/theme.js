@@ -1,25 +1,26 @@
 export default {
   text: {
-    color: "darkgrey",
-    size: 5,
+    color: "#606060",
+    size: 6,
     translateNumbers: false
   },
   indicator: {
     size: 8,
-    color: "secondary"
+    color: "primary"
   },
   icon: {
     size: 7,
-    color: "white",
+    color: "#484848",
     type: "ion"
   },
   button: {
-    size: 5.5,
+    height: 9,
+    size: 7,
     color: "white",
     bold: true,
-    backgroundColor: "foreground",
-    borderRadius: 6,
-    elevation: 0,
+    backgroundColor: "primary",
+    // borderRadius: 4,
+    // elevation: 0,
     paddingVertical: 5,
     paddingHorizontal: 5,
     disabledColor: "#f3f4f5",
@@ -36,20 +37,20 @@ export default {
     sizeScale: 0.7
   },
   input: {
-    size: 5,
-    activeColor: "#8A8A8A",
-    inactiveColor: "grey",
-    color: "#484848",
-    backgroundColor: "white",
-    placeholderColor: "#858F96",
+    size: 7,
+    activeColor: "primary",
+    inactiveColor: "#D0D0D0",
+    color: "#5C5C5C",
+    backgroundColor: "#F3F3F3",
+    placeholderColor: "darkgrey",
     center: false,
     translateNumbers: true,
-    paddingHorizontal: 3,
-    pv: 3,
+    paddingHorizontal: 5,
+    pv: 5,
     bc: "inputBorderColor",
-    bw: 0.5,
+    // bw: 1,
     borderRadius: 5,
-    height: 7
+    height: 8
   },
   formInputFrame: {
     size: 5,
@@ -59,33 +60,33 @@ export default {
     bc: "inputBorderColor",
     bw: 1,
     borderRadius: 4,
-    height: 7.5
+    height: 8
   },
   textArea: {
     size: 6,
     color: "#484848",
-    backgroundColor: "white",
+    backgroundColor: "#F3F3F3",
     placeholderColor: "#858F96",
     height: 20,
     pv: 4,
     ph: 4,
     bc: "grey",
-    bw: 0,
-    borderRadius: 0,
+    bw: 0.5,
+    borderRadius: 4,
     translateNumbers: false,
     underlineColor: "transparent"
   },
   picker: {
     size: 5,
     color: "#484848",
-    backgroundColor: "white",
+    backgroundColor: "#EEEEEE",
     placeholderColor: "#858F96",
-    pv: 5,
+    pv: 3,
     ph: 4,
-    // bc: 'inputBorderColor',
-    // bw: 1,
-    // borderRadius: 4,
-    height: 11
+    bc: "#EEEEEE",
+    bw: 1,
+    borderRadius: 4,
+    height: 8
   },
   wheelPicker: {
     size: 5,
@@ -118,10 +119,12 @@ export default {
   },
   checkBox: {
     activeColor: "primary",
-    normalColor: "#ACB5BB",
-    size: 7.5,
-    labelColor: "black",
-    labelSize: 5.5
+    normalColor: "#F5F5F5",
+    size: 6,
+    elevation: 3,
+    labelColor: "#5C5C5C",
+    labelSize: 5.5,
+    borderColor: "#F5F5F5"
   },
   toggleButtons: {
     activeBackgroundColor: "primary",
@@ -132,23 +135,35 @@ export default {
     inActiveBorderColor: "#979797"
   },
   list: {
-    indicatorColor: "secondary",
+    indicatorColor: "primary",
     errorLabelColor: "error",
     noResultsLabelColor: "black",
-    retryButtonBackgroundColor: "secondary",
+    retryButtonBackgroundColor: "primary",
     retryButtoncolor: "white"
   },
   tabBar: {
     height: 7,
-    backgroundColor: "primary",
-    activeTextColor: "foreground",
+    backgroundColor: "white",
+    activeTextColor: "primary",
     activeTextSize: 5,
     activeTextBold: true,
-    inactiveTextColor: "darkgrey",
+    inactiveTextColor: "#B1B0B0",
     inactiveTextSize: 5,
-    inactiveTextBold: true,
-    underlineColor: "foreground",
-    underlineHeight: 4
+    inactiveTextBold: false,
+    underlineColor: "primary",
+    underlineHeight: 1
+  },
+  tabBar2: {
+    height: 10,
+    backgroundColor: "primary",
+    activeTextColor: "white",
+    activeTextSize: 5,
+    activeTextBold: true,
+    inactiveTextColor: "#B1B0B0",
+    inactiveTextSize: 5,
+    inactiveTextBold: false,
+    underlineColor: "white",
+    underlineHeight: 1
   },
   swiper: {
     indicatorColor: "rgba(255, 255, 255, 0.5)",

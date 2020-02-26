@@ -22,7 +22,7 @@ export default class Indicator extends PureComponent {
   };
 
   render() {
-    const { color, marginVertical, style } = this.props;
+    const { color, marginVertical,marginHorizontal, style } = this.props;
     let { size } = this.props;
     if (Platform.OS === 'ios') {
       size = 'small';
@@ -34,7 +34,7 @@ export default class Indicator extends PureComponent {
       <ActivityIndicator
         size={size}
         color={getThemeColor(color)}
-        style={[style, { marginVertical: moderateScale(marginVertical) || 0 }]}
+        style={[style, { marginVertical: moderateScale(marginVertical) || 0 ,marginHorizontal:moderateScale(marginHorizontal)||0}]}
       />
     );
   }

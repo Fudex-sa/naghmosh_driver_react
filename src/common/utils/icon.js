@@ -12,7 +12,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Octicons from "react-native-vector-icons/Octicons";
 import Zocial from "react-native-vector-icons/Zocial";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
-import Fontisto from "react-native-vector-icons/Fontisto";
 import { createIconSetFromIcoMoon } from "react-native-vector-icons";
 
 const customIcons = {};
@@ -51,8 +50,6 @@ export const getIconType = type => {
       return Zocial;
     case "simple-line":
       return SimpleLineIcons;
-    case "fontisto":
-      return Fontisto;
     default:
       if (Object.prototype.hasOwnProperty.call(customIcons, type)) {
         return customIcons[type];
@@ -89,10 +86,6 @@ export const getIconSizeScaleFix = type => {
       return 0.8;
     case "simple-line":
       return 1.1;
-    case "simple-line":
-      return 1.1;
-    case "fontisto":
-      return .9;
     default:
       return 1;
   }

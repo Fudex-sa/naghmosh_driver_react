@@ -1,15 +1,15 @@
-import { PureComponent } from "react";
-import PropTypes from "prop-types";
-import I18n from "react-native-i18n";
+import { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import I18n from 'react-native-i18n';
 
-import { showError } from "./utils/localNotifications";
+import { showError } from './utils/localNotifications';
 
 class Form extends PureComponent {
   static propTypes = {
     render: PropTypes.func.isRequired,
     schema: PropTypes.objectOf(PropTypes.any).isRequired,
     onSubmit: PropTypes.func,
-    validationSchema: PropTypes.func
+    validationSchema: PropTypes.func,
   };
 
   constructor(props) {
@@ -19,7 +19,7 @@ class Form extends PureComponent {
       isSubmitting: false,
       isValidating: false,
       errors: {},
-      clearToggle: false
+      clearToggle: false,
     };
 
     this.values = props.schema;
@@ -35,7 +35,7 @@ class Form extends PureComponent {
         delete errorsCollection[name];
 
         this.setState({
-          errors: errorsCollection
+          errors: errorsCollection,
         });
         return;
       }
@@ -51,15 +51,15 @@ class Form extends PureComponent {
       this.setState({
         errors: {
           ...this.state.errors,
-          [name]: error[name]
-        }
+          [name]: error[name],
+        },
       });
     } else if (this.state.errors[name]) {
       const errorsCollection = { ...this.state.errors };
       delete errorsCollection[name];
 
       this.setState({
-        errors: errorsCollection
+        errors: errorsCollection,
       });
     }
   };
@@ -68,20 +68,20 @@ class Form extends PureComponent {
     validationError.inner.reverse().reduce(
       (errors, error) => ({
         ...errors,
-        [name || error.path]: error.message
+        [name || error.path]: error.message,
       }),
-      {}
+      {},
     );
 
   setSubmitting = value => {
     this.setState({
-      isSubmitting: value
+      isSubmitting: value,
     });
   };
 
   resetform = () => {
     this.setState(prevState => ({
-      clearToggle: !prevState.clearToggle
+      clearToggle: !prevState.clearToggle,
     }));
   };
 
@@ -94,11 +94,10 @@ class Form extends PureComponent {
 
     try {
       validationSchema.fields[name].validateSync(this.values[name], {
-        abortEarly: false
+        abortEarly: false,
       });
       return {};
     } catch (error) {
-      // console.log(error);
       return this.getErrorsFromValidationError(error, name);
     }
   };
@@ -127,8 +126,8 @@ class Form extends PureComponent {
 
     this.setState({
       errors: {
-        ...errorsCollection
-      }
+        ...errorsCollection,
+      },
     });
   };
 
@@ -137,15 +136,15 @@ class Form extends PureComponent {
     this.setState(prevState => ({
       errors: {
         ...prevState.errors,
-        ...errors
-      }
+        ...errors,
+      },
     }));
   };
 
   setErrorState = (name, v) => {
     this.inputErrorsState = {
       ...this.inputErrorsState,
-      [name]: v
+      [name]: v,
     };
   };
 
@@ -160,8 +159,8 @@ class Form extends PureComponent {
         isSubmitting: false,
         errors: {
           ...errors,
-          ...prevState.errors
-        }
+          ...prevState.errors,
+        },
       }));
       return;
     }
@@ -170,7 +169,7 @@ class Form extends PureComponent {
     if (Object.keys(this.state.errors).length > 0) {
       this.setState({
         isValidating: false,
-        isSubmitting: false
+        isSubmitting: false,
       });
       return;
     }
@@ -183,7 +182,7 @@ class Form extends PureComponent {
     if (isInputsValidating) {
       this.setState({
         isValidating: false,
-        isSubmitting: false
+        isSubmitting: false,
       });
       return;
     }
@@ -194,12 +193,12 @@ class Form extends PureComponent {
       this.props.onSubmit(this.values, {
         setSubmitting: this.setSubmitting,
         resetForm: this.resetform,
-        setErrors: this.setErrors
+        setErrors: this.setErrors,
       });
     }
   };
 
-  injectFormProps = (name, changeValueCallbackName = "onChange") => ({
+  injectFormProps = (name, changeValueCallbackName = 'onChange') => ({
     name,
     initialValue: this.values[name],
     [changeValueCallbackName]: this.setFieldValue,
@@ -208,7 +207,7 @@ class Form extends PureComponent {
     reset: this.state.clearToggle,
     setError: this.setError,
     setErrorState: this.setErrorState,
-    editable: !this.state.isSubmitting
+    editable: !this.state.isSubmitting,
   });
 
   render() {
@@ -223,8 +222,6 @@ class Form extends PureComponent {
       errors: this.state.errors,
       setError: this.setError,
       validateField: this.validateFormField,
-      values: this.values,
-      setSubmitting: this.setSubmitting
     });
   }
 }

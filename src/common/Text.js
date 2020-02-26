@@ -16,6 +16,7 @@ import {
   borderRadiusStyles,
   paddingStyles,
   marginStyles,
+  dimensionsStyles,
 } from './Base';
 import { responsiveFontSize } from './utils/responsiveDimensions';
 import { isASCII } from './utils/text';
@@ -45,6 +46,7 @@ class Text extends PureComponent {
           borderRadiusStyles(this.props),
           paddingStyles(this.props),
           marginStyles(this.props),
+          dimensionsStyles(this.props),
           {
             textAlignVertical: 'center',
           },

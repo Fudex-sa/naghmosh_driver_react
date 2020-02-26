@@ -8,8 +8,8 @@ import {
   AppButton,
   AppIcon,
 } from '../../common';
-import { APPBAR_HEIGHT } from '../../common/utils/responsiveDimensions';
 
+const APPBAR_HEIGHT = Platform.OS === 'ios' ? 54 : 56;
 
 export default class Header extends Component {
   goBack = () => {
@@ -28,20 +28,20 @@ export default class Header extends Component {
         <AppView flex>
           <AppButton
             flex
+            width={20}
             paddingVertical={0.1}
-            paddingHorizontal={6}
+            paddingHorizontal={8}
             leftIcon={
               <AppIcon
-                reverse
-                name="keyboard-backspace"
-                type="material-community"
-                size={13}
+                name="md-arrow-back"
+                type="ion"
+                size={12}
                 flip
                 color="#fff"
               />
             }
             backgroundColor="transparent"
-            color="foreground"
+            color="#fff"
             onPress={this.goBack}
           />
         </AppView>
@@ -65,7 +65,7 @@ export default class Header extends Component {
           <AppView row>
             {this.renderLeft()}
             <AppView flex={2} centerY centerX>
-              <AppText size={5.5} bold color="#fff" numberOfLines={1}>
+              <AppText size={8} bold color="#fff" numberOfLines={1}>
                 {this.props.title}
               </AppText>
             </AppView>

@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import Colors from './defaults/colors';
-import View from './View';
-import Icon from './Icon';
+import Colors from "./defaults/colors";
+import View from "./View";
+import Icon from "./Icon";
 
 class AppStarRating extends Component {
   static propTypes = {
     size: PropTypes.number,
     rate: PropTypes.number,
-    maxStars: PropTypes.number,
+    maxStars: PropTypes.number
   };
 
   static defaultProps = {
@@ -18,34 +18,34 @@ class AppStarRating extends Component {
     maxStars: 5,
     disabled: true,
     rate: 0,
-    emptyStar: 'star-o',
-    emptyStarColor: 'gray',
-    fullStar: 'star',
-    fullStarColor: Colors.star,
-    halfStar: 'star-half-empty',
-    halfStarColor: Colors.star,
-    iconSet: 'font-awesome',
+    emptyStar: "star-o",
+    emptyStarColor: "#FFCACC",
+    fullStar: "star",
+    fullStarColor: "primary",
+    halfStar: "star-half-empty",
+    halfStarColor: "primary",
+    iconSet: "font-awesome"
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      rating: props.rate,
+      rating: props.rate
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.rate !== this.props.rate) {
       this.setState({
-        rating: nextProps.rate,
+        rating: nextProps.rate
       });
     }
   }
 
   onPress = r => {
     this.setState({
-      rating: r,
+      rating: r
     });
 
     if (this.props.selectedStar) {
@@ -66,7 +66,7 @@ class AppStarRating extends Component {
       starPaddingHorizontal,
       disabled,
       maxStars,
-      starStyle,
+      starStyle
     } = this.props;
 
     const nodes = [];
@@ -89,6 +89,7 @@ class AppStarRating extends Component {
 
       nodes.push(
         <View
+          key={i}
           touchableOpacity
           onPress={
             disabled
@@ -98,10 +99,11 @@ class AppStarRating extends Component {
                 }
           }
           style={{
-            paddingHorizontal: starPaddingHorizontal || 0,
+            paddingHorizontal: starPaddingHorizontal || 0
           }}
         >
           <Icon
+            paddingHorizontal={0.5}
             name={starIconName}
             type={iconSet}
             color={starIconColor}
@@ -109,7 +111,7 @@ class AppStarRating extends Component {
             flip={flip}
             style={starStyle}
           />
-        </View>,
+        </View>
       );
 
       starsLeft -= 1;
@@ -130,7 +132,7 @@ class AppStarRating extends Component {
 }
 
 const mapStateToProps = state => ({
-  rtl: state.lang.rtl,
+  rtl: state.lang.rtl
 });
 
 export default connect(mapStateToProps)(AppStarRating);

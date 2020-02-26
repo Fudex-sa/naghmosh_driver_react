@@ -7,7 +7,7 @@ import { getThemeColor } from './colors';
 export const showInfo = message => {
   Snackbar.show({
     title: message,
-    duration: Snackbar.LENGTH_LONG,
+    duration: Snackbar.LENGTH_SHORT,
     backgroundColor: getThemeColor(
       getTheme().localNotifications.info.backgroundColor,
     ),
@@ -21,7 +21,7 @@ export const showInfo = message => {
 export const showSuccess = message => {
   Snackbar.show({
     title: message,
-    duration: Snackbar.LENGTH_LONG,
+    duration: Snackbar.LENGTH_SHORT,
     backgroundColor: getThemeColor(
       getTheme().localNotifications.success.backgroundColor,
     ),

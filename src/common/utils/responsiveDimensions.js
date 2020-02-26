@@ -1,15 +1,16 @@
-import { Dimensions, PixelRatio, Platform, StatusBar } from "react-native";
+import { Dimensions, PixelRatio, Platform, StatusBar } from 'react-native';
 
 const { roundToNearestPixel } = PixelRatio;
+
+const decorateHeights = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
+
 export const APPBAR_HEIGHT = Platform.OS === "ios" ? 54 : 56;
 
-const decorateHeights = Platform.OS === "android" ? StatusBar.currentHeight : 0;
+export const { width: windowWidth } = Dimensions.get('window');
+export const windowHeight = Dimensions.get('window').height - decorateHeights;
 
-const { width: windowWidth } = Dimensions.get("window");
-const windowHeight = Dimensions.get("window").height - decorateHeights;
-
-const { width: screenWidth } = Dimensions.get("screen");
-const screenHeight = Dimensions.get("screen").height - decorateHeights;
+export const { width: screenWidth } = Dimensions.get('screen');
+export const screenHeight = Dimensions.get('screen').height - decorateHeights;
 
 const maxWidth = 420;
 const maxHeight = 800;
@@ -37,4 +38,4 @@ export const responsiveFontSize = (f, factor = 0.5) => {
   return roundToNearestPixel(f + (rw - f) * factor);
 };
 
-export { windowWidth, windowHeight, screenWidth, screenHeight };
+//export { windowWidth, windowHeight, screenWidth, screenHeight };

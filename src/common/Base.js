@@ -252,17 +252,17 @@ export const elevationStyles = props => {
   const { elevation } = props;
 
   if (elevation) {
-    if (Platform.OS === 'ios') {
-      styles.shadowColor = 'rgba(0,0,0, .4)';
+    // if (Platform.OS === 'ios') {
+      styles.shadowColor = '#A3A3A333';
       styles.shadowOffset = {
         height: elevation - 1,
         width: elevation - 1,
       };
       styles.shadowOpacity = 1;
       styles.shadowRadius = elevation - 1;
-    } else {
+    // } else {
       styles.elevation = elevation;
-    }
+    // }
   }
 
   return styles;

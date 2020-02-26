@@ -8,7 +8,6 @@ import {
   Platform,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import * as Progress from 'react-native-progress';
 import { connect } from 'react-redux';
 import I18n from 'react-native-i18n';
 
@@ -27,6 +26,9 @@ import {
   borderRadiusStyles,
   selfLayoutStyles,
 } from './Base';
+import { getColor } from '.';
+import ImageViewer from './ImageViewer';
+import colors from './defaults/colors';
 
 const styles = StyleSheet.create({
   fetchingStatusContainer: {
@@ -57,13 +59,14 @@ class Image extends PureComponent {
 
   constructor(props) {
     super(props);
+    this.imageViewer = React.createRef();
 
     let localImg = false;
     if (
-      typeof props.source === 'object' &&
-      Platform.OS === 'ios' &&
-      props.source.uri &&
-      props.source.uri.startsWith('assets-library://')
+      typeof props.source !== 'object'
+      && Platform.OS === 'ios'
+      && props.source.uri
+      && props.source.uri.startsWith('assets-library://')
     ) {
       localImg = true;
     }
@@ -107,18 +110,18 @@ class Image extends PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (
-      typeof nextProps.source === 'object' &&
-      Platform.OS === 'ios' &&
-      nextProps.source.uri &&
-      nextProps.source.uri.startsWith('assets-library://')
+      typeof nextProps.source === 'object'
+      && Platform.OS === 'ios'
+      && nextProps.source.uri
+      && nextProps.source.uri.startsWith('assets-library://')
     ) {
       this.setState({
-        localImg: true,
+        localImg: false,
       });
     } else if (
-      typeof nextProps.source === 'object' &&
-      Platform.OS === 'ios' &&
-      nextProps.source.uri
+      typeof nextProps.source === 'object'
+      && Platform.OS === 'ios'
+      && nextProps.source.uri
     ) {
       this.setState({
         localImg: false,
@@ -152,10 +155,10 @@ class Image extends PureComponent {
         style={styles.fetchingStatusContainer}
       >
         {!this.state.error && this.state.status === 'loading' ? (
-          <Indicator size={this.diameter / 5} color={progressColor} />
+          <Indicator size={this.diameter / 5} color={colors.primary} />
         ) : null}
         {!this.state.error && this.state.status === 'inProgress' ? (
-          <Indicator size={this.diameter / 3} color={progressColor} />
+          <Indicator size={this.diameter / 3} color={colors.primary} />
         ) : null}
         {this.state.error ? (
           <React.Fragment>
@@ -200,19 +203,20 @@ class Image extends PureComponent {
       pr,
       pt,
       pb,
+      imageViewer,
       placeholder,
       data,
       ...rest
     } = this.props;
 
-    const onPress = this.props.onPress;
-    const ImageComponent =
-      // this.state.localImg
-      //   ? children
-      //     ? NativeImageBackground
-      //     : NativeImage
-      //   :
-      FastImage;
+    const onPress = imageViewer
+      ? () => this.imageViewer.current.toggleModal(true)
+      : this.props.onPress;
+    const ImageComponent = this.state.localImg
+      ? children
+        ? NativeImageBackground
+        : NativeImage
+      : FastImage;
 
     const Container = onPress ? TouchableOpacity : React.Fragment;
 
@@ -287,7 +291,9 @@ class Image extends PureComponent {
             ) : null}
           </ImageComponent>
         </Container>
-        
+        {imageViewer && (
+          <ImageViewer ref={this.imageViewer} data={data || [source]} />
+        )}
       </View>
     );
   }

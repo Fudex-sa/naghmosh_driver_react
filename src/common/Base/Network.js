@@ -1,7 +1,7 @@
-import { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
-import I18n from 'react-native-i18n';
+import { PureComponent } from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
+import I18n from "react-native-i18n";
 // import firebase from 'react-native-firebase';
 
 const { CancelToken } = axios;
@@ -17,20 +17,20 @@ class Network extends PureComponent {
       ContentType: PropTypes.string,
       pageFieldName: PropTypes.string,
       limitFieldName: PropTypes.string,
-      params: PropTypes.object,
+      params: PropTypes.object
     }),
     firebaseRequest: PropTypes.shape({
       collectionName: PropTypes.string.isRequired,
       onError: PropTypes.func,
       orderBy: PropTypes.string,
       desc: PropTypes.bool,
-      conditions: PropTypes.arrayOf(PropTypes.array),
-    }),
+      conditions: PropTypes.arrayOf(PropTypes.array)
+    })
   };
 
   static defaultProps = {
-    limit: 20,
-    paging: true,
+    limit: 10,
+    paging: true
   };
 
   constructor(props) {
@@ -54,7 +54,7 @@ class Network extends PureComponent {
   }
 
   componentDidMount() {
-    this.loading = true;
+    // this.loading = true;
     this.fetch(this.mainIndicator, true);
   }
 
@@ -63,7 +63,7 @@ class Network extends PureComponent {
       if (
         nextProps.apiRequest.params &&
         JSON.stringify(nextProps.apiRequest.params) !==
-          JSON.stringify(this.props.apiRequest.params)
+        JSON.stringify(this.props.apiRequest.params)
       ) {
         this.reload();
         if (CB) CB();
@@ -79,7 +79,7 @@ class Network extends PureComponent {
 
   componentWillUnmount() {
     if (this.props.apiRequest) {
-      this.source.cancel('Network Operation Canceled.');
+      this.source.cancel("Network Operation Canceled.");
     }
   }
 
@@ -101,14 +101,13 @@ class Network extends PureComponent {
       ContentType,
       responseResolver,
       onError,
-      transformData,
+      transformData
     } = apiRequest;
 
     const pagingParams = {};
-
     if (paging) {
-      pagingParams[pageFieldName || 'page'] = this.page;
-      pagingParams[limitFieldName || 'limit'] = this.props.limit;
+      pagingParams[pageFieldName || "page"] = this.page;
+      pagingParams[limitFieldName || "limit"] = this.props.limit;
     }
 
     this.loading = true;
@@ -118,46 +117,44 @@ class Network extends PureComponent {
         cancelToken: this.source.token,
         params: {
           ...pagingParams,
-          ...params,
+          ...params
         },
         headers: {
-          'Content-Type': ContentType || 'application/json',
-        },
+          "Content-Type": ContentType || "application/json"
+        }
       });
-      console.log(response);
 
       this.loading = false;
       this.firstFetchDone = true;
-
-      const { data, pageCount, page } = responseResolver(response);
+      const { data, pageCount, nextPage } = responseResolver(response);
       this.pageCount = pageCount || this.pageCount;
-      this.page = page;
+      this.page = nextPage ? nextPage : response.data.page || 1;
 
       this.page++;
-      let newData = data;
 
+      let newData = data;
       if (transformData) {
         newData = data.map(item => transformData(item));
       }
-      console.log(data);
+
       const allData = [...oldData, ...newData];
 
       this.setData(allData);
       this.setState({
-        [loadingIndicator]: false,
+        [loadingIndicator]: false
       });
 
       this.setEndFetching(allData);
     } catch (error) {
       this.loading = false;
-      if (!axios.isCancel(error[0])) {
+      if (!axios.isCancel(error)) {
         if (onError) {
           this.setError(onError(error));
         } else {
-          this.setError(I18n.t('ui-error-happened'));
+          this.setError(I18n.t("ui-error-happened"));
         }
         this.setState({
-          [loadingIndicator]: false,
+          [loadingIndicator]: false
         });
       }
     }
@@ -170,7 +167,7 @@ class Network extends PureComponent {
       desc,
       transformData,
       onError,
-      populate,
+      populate
     } = this.props.firebaseRequest;
     const data = [];
 
@@ -182,13 +179,13 @@ class Network extends PureComponent {
         });
       }
       if (orderBy) {
-        if (desc) acc = acc.orderBy(orderBy, 'desc');
+        if (desc) acc = acc.orderBy(orderBy, "desc");
         else acc = acc.orderBy(orderBy);
       }
 
       if (this.props.paging) {
         this.pageCount = Math.ceil(
-          (await acc.get()).docs.length / this.props.limit,
+          (await acc.get()).docs.length / this.props.limit
         );
 
         if (this.lastItem) {
@@ -217,7 +214,7 @@ class Network extends PureComponent {
 
             return {
               ...item,
-              [field]: d,
+              [field]: d
             };
           });
 
@@ -233,14 +230,14 @@ class Network extends PureComponent {
 
       this.setData(allData);
       this.setState({
-        [loadingIndicator]: false,
+        [loadingIndicator]: false
       });
 
       this.setEndFetching(allData);
     } catch (error) {
       this.setError(onError(error));
       this.setState({
-        [loadingIndicator]: false,
+        [loadingIndicator]: false
       });
     }
   };
@@ -251,9 +248,9 @@ class Network extends PureComponent {
     if (!this.props.apiRequest && !this.props.firebaseRequest) return;
 
     this.setStartFetching();
-    if (indicator === 'loading') {
+    if (indicator === "loading") {
       this.setState({
-        [indicator]: true,
+        [indicator]: true
       });
     }
     const data = reset ? [] : d || this.state.dataProvider._data;
@@ -268,7 +265,7 @@ class Network extends PureComponent {
   }
 
   render() {
-    return null;
+    return <></>;
   }
 }
 

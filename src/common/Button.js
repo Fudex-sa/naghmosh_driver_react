@@ -1,14 +1,15 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import View from './View';
-import Text from './Text';
-import Indicator from './Indicator';
-import { getTheme } from './Theme';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import View from "./View";
+import Text from "./Text";
+import Indicator from "./Indicator";
+import { getTheme } from "./Theme";
 
-import { BasePropTypes } from './Base';
+import { BasePropTypes } from "./Base";
+import { AppView } from ".";
 
 const log = () => {
-  console.log('Please attach a method to this component');
+  console.log("Please attach a method to this component");
 };
 
 class Button extends PureComponent {
@@ -20,7 +21,7 @@ class Button extends PureComponent {
     disabled: PropTypes.bool,
     transparent: PropTypes.bool,
     leftIcon: PropTypes.node,
-    rightIcon: PropTypes.node,
+    rightIcon: PropTypes.node
   };
 
   static defaultProps = {
@@ -31,13 +32,13 @@ class Button extends PureComponent {
       start: { x: 0, y: 0 },
       end: { x: 1, y: 1 },
       locations: [0, 0.6],
-      colors: ['#e46961', '#E04F46'],
+      colors: ["#e46961", "#E04F46"]
     },
-    ...getTheme().button,
+    ...getTheme().button
   };
 
   static getDerivedStateFromProps = (props, state) => ({
-    processing: props.processing,
+    processing: props.processing
   });
 
   constructor(props) {
@@ -47,7 +48,7 @@ class Button extends PureComponent {
       processing: props.processing,
       width: 0,
       height: 0,
-      layoutReady: false,
+      layoutReady: false
     };
   }
 
@@ -64,14 +65,14 @@ class Button extends PureComponent {
 
   renderLeftIcon = c => {
     const { leftIcon, rightIcon, title, size } = this.props;
-    
+
     return React.cloneElement(leftIcon, {
       size: leftIcon.props.size || size * 1.4,
       lineHeight: leftIcon.props.size || size * 1.4,
       color: leftIcon.props.color || c,
       pr:
         leftIcon.props.pr ||
-        (title || rightIcon ? (leftIcon.props.size || size) / 2 : 0),
+        (title || rightIcon ? (leftIcon.props.size || size) / 2 : 0)
     });
   };
 
@@ -84,7 +85,7 @@ class Button extends PureComponent {
       color: rightIcon.props.color || c,
       pl:
         rightIcon.props.pl ||
-        (title || leftIcon ? (rightIcon.props.size || size) / 2 : 0),
+        (title || leftIcon ? (rightIcon.props.size || size) / 2 : 0)
     });
   };
 
@@ -101,26 +102,40 @@ class Button extends PureComponent {
       disabledColor,
       transparent,
       bold,
+      center
     } = this.props;
 
     const { processing } = this.state;
 
-    const bg = disabled ? disabledBackgroundColor : backgroundColor;
+    const bg = disabled
+      ? disabledBackgroundColor
+      : backgroundColor || "primary";
     const fg = disabled ? disabledColor : color;
-
     const c = transparent ? (color !== getTheme().button.color ? fg : bg) : fg;
 
     return processing ? (
-      <Indicator color={c} size={size} />
+      <AppView center>
+        <Indicator color={c} size={size} />
+      </AppView>
     ) : (
-        <React.Fragment>
+      <React.Fragment>
+        <AppView stertch stertchChildren row flex>
           {leftIcon && this.renderLeftIcon(c)}
-          <Text size={size} color={c} bold={bold} center>
-            {title}
-          </Text>
-          {rightIcon && this.renderRightIcon(c)}
-        </React.Fragment>
-      );
+          <AppView stertch center flex>
+            <Text
+              size={size}
+              color={c}
+              bold={transparent ? false : bold}
+              center={center}
+            >
+              {title}
+            </Text>
+          </AppView>
+
+          {rightIcon ? this.renderRightIcon(c) : <></>}
+        </AppView>
+      </React.Fragment>
+    );
   };
 
   render() {
@@ -134,6 +149,8 @@ class Button extends PureComponent {
       linearBackgroundGradient,
       width,
       height,
+      noBorder,
+      noPadding,
       ...rest
     } = this.props;
 
@@ -146,14 +163,20 @@ class Button extends PureComponent {
 
     const flatProps = {};
     if (transparent) {
-      flatProps.backgroundColor = 'transparent';
+      flatProps.backgroundColor = "transparent";
       flatProps.elevation = 0;
+      flatProps.borderRadius = 0;
+    }
+    if (noBorder) {
       flatProps.borderRadius = 0;
     }
 
     const paddingProps = {};
     if (height) {
       paddingProps.paddingVertical = 0;
+    }
+    if (noPadding) {
+      paddingProps.paddingHorizontal = 0;
     }
 
     const overwriteWidth =
@@ -185,7 +208,7 @@ class Button extends PureComponent {
           this.setState({
             width: w,
             height: h,
-            layoutReady: true,
+            layoutReady: true
           });
         }}
         flexInnerTouchable={overwriteWidth}
@@ -194,7 +217,7 @@ class Button extends PureComponent {
           overwriteWidth ? { width: this.state.width } : null,
           overwriteHeight ? { height: this.state.height } : null,
 
-          style,
+          style
         ]}
       >
         {children || this.renderChildren()}

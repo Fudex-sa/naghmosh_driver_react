@@ -1,4 +1,43 @@
-import { GOOGLE_KEY } from "./Config";
+import { Navigation } from "react-native-navigation";
+import { AppNavigation } from "../common";
+
+import store from "../store";
+export function setHomeScreen() {
+  Navigation.mergeOptions("MAIN_STACK", {
+    bottomTabs: {
+      currentTabIndex: 0
+    }
+  });
+  AppNavigation.init('MAIN_STACK', {
+    bottomTabs: [
+      {
+        screen: 'Home',
+        label: 'Home',
+        icon: require('../assets/imgs/avatarClient.png'),
+      },
+      {
+        screen: 'Souq',
+        label: 'Souq',
+        icon: require('../assets/imgs/avatarClient.png'),
+      },
+      {
+        screen: 'Products',
+        label: 'Products',
+        icon: require('../assets/imgs/avatarClient.png'),
+      },
+      {
+        screen: 'GoldPrice',
+        label: 'GoldPrice',
+        icon: require('../assets/imgs/avatarClient.png'),
+      },
+      {
+        screen: 'Account',
+        label: 'Account',
+        icon: require('../assets/imgs/avatarClient.png'),
+      },
+    ],
+  });
+}
 
 export function secondsToHMS(d) {
   d = Number(d);
@@ -7,36 +46,4 @@ export function secondsToHMS(d) {
   const s = Math.floor((d % 3600) % 60);
 
   return { hours: h, minutes: m, seconds: s };
-}
-
-export function getPlaceName(latitude, longitude) {
-  return fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_KEY}&language=ar`
-  )
-    .then(res => res.json())
-    .then(json => {
-      if (json.status !== "OK") {
-        throw new Error(`Geocode error: ${json.status}`);
-      }
-
-      // return [
-      //   json.results[1].address_components[0].short_name,
-      //   ' ',
-      //   json.results[1].address_components[1].short_name,
-      // ];
-
-      const formattedAddress = json.results[0].formatted_address;
-
-      if (formattedAddress) {
-        return [formattedAddress, "", ""];
-      }
-      return [
-        json.results[1].address_components[0].short_name,
-        " ",
-        json.results[1].address_components[1].short_name
-      ];
-    })
-    .catch(error => {
-      console.log("errror", JSON.parse(JSON.stringify(error)));
-    });
 }

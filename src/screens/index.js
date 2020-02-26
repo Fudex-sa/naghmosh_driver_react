@@ -1,76 +1,59 @@
-import React, { Component } from "react";
-import { Navigation } from "react-native-navigation";
-import { gestureHandlerRootHOC } from "react-native-gesture-handler";
-
-import { Provider } from "react-redux";
-import store from "../store";
-
-import ContactUs from "./contactUs/ContactUs";
-import AboutBalsam from "./aboutBalsam/AboutBalsam";
-
-import PhotoSelection from "./photoSelection/PhotoSelection";
+import { AppNavigation } from "../common";
+import About from "./about/About";
+import Home from "./home/Home";
+import Welcome from "./welcome/Welcome";
+import Offers from "./offers/Offers";
+import Cart from "./cart/Cart";
+import Fav from "./fav/Fav";
+import Settings from "./settings/Settings";
+import Products from "./products/Products";
+import ProductDetails from "./productDetails/ProductDetails";
+import Orders from './orders/Orders';
+import OrderDetails from './orderDetails/OrderDetails';
+import Profile from "./profile/Profile";
 import SignUp from "./signUp/SignUp";
-// import SignIn from "./signIn/SignIn";
+import ContactUs from './contactUs/ContactUs';
+import AddNewAddress from "./addNewAddress/AddNewAddress";
+import AppPickerModal from "./appPickerModal/AppPickerModal";
+import Login from "../components/login/Login";
+import SearchProducts from "./products/SearchProducts";
+import Language from "./settings/Language";
+import Addresses from "./settings/Addresses";
+import EditProfile from "./profile/EditProfile";
+import ChangePassword from "./profile/ChangePassword/ChangePassword";
+import HowToUse from "./settings/HowToUse";
+import EditPicture from "./profile/EditPicture";
+import AddCopon from "../components/cart/AddCopon";
+import ForgetPassword from "./ForgetPassword/ForgetPassword";
+import MapLocation from "../components/addNewAddress/Map";
 
-import MapScreen from "./mapScreen/MapScreen";
-
-// new proj
-
-import HomeScreen from "./newProj/Home";
-import ProfileScreen from "./newProj/Profile/Profile";
-import Notifications from "./newProj/Notification/Notification";
-import SignInScreen from "./newProj/signIn/SignIn";
-import FinishedOrderScreen from "./newProj/FinishedOrder";
-import DeliverOrderScreen from "./newProj/DeliverOrder";
-import OrderDetails from "./newProj/OrderDetails";
-import FollowOrder from "./newProj/FollowOrder";
-import AppSetting from "./newProj/AppSetting";
-import ForgetPassword from "./newProj/ForgetPassword/ForgetPassword";
-import ChangePassword from "./newProj/ChangePassword/ChangePassword";
-
-export default function () {
-  const createScene = InternalComponent => () =>
-    gestureHandlerRootHOC(
-      class SceneWrapper extends Component {
-        render() {
-          return (
-            <Provider store={store}>
-              <InternalComponent {...this.props} />
-            </Provider>
-          );
-        }
-      }
-    );
-
-  Navigation.registerComponent("contactUs", createScene(ContactUs));
-  Navigation.registerComponent("aboutBalsam", createScene(AboutBalsam));
-
-  Navigation.registerComponent("photoSelection", createScene(PhotoSelection));
-  Navigation.registerComponent("signUp", createScene(SignUp));
-  // Navigation.registerComponent("signIn", createScene(SignIn));
-
-  Navigation.registerComponent("mapScreen", createScene(MapScreen));
-
-  // new Proj
-  Navigation.registerComponent("homeScreen", createScene(HomeScreen));
-  Navigation.registerComponent("ProfileScreen", createScene(ProfileScreen));
-  Navigation.registerComponent(
-    "Notifications",
-    createScene(Notifications)
-  );
-  Navigation.registerComponent("SignInScreen", createScene(SignInScreen));
-  Navigation.registerComponent(
-    "FinishedOrderScreen",
-    createScene(FinishedOrderScreen)
-  );
-  Navigation.registerComponent(
-    "DeliverOrderScreen",
-    createScene(DeliverOrderScreen)
-  );
-  Navigation.registerComponent("OrderDetails", createScene(OrderDetails));
-  Navigation.registerComponent("FollowOrder", createScene(FollowOrder));
-  Navigation.registerComponent("AppSetting", createScene(AppSetting));
-  Navigation.registerComponent("ForgetPassword", createScene(ForgetPassword));
-  Navigation.registerComponent("ChangePassword", createScene(ChangePassword));
-
-}
+// register all screens of the app
+export default () => {
+  AppNavigation.registerScreen("MapLocation", MapLocation);
+  AppNavigation.registerScreen("ForgetPassword", ForgetPassword);
+  AppNavigation.registerScreen("AddCopon", AddCopon);
+  AppNavigation.registerScreen("EditPicture", EditPicture);
+  AppNavigation.registerScreen("HowToUse", HowToUse);
+  AppNavigation.registerScreen("ChangePassword", ChangePassword);
+  AppNavigation.registerScreen("EditProfile", EditProfile);
+  AppNavigation.registerScreen("SearchProducts", SearchProducts);
+  AppNavigation.registerScreen("Addresses", Addresses);
+  AppNavigation.registerScreen("Language", Language);
+  AppNavigation.registerScreen("Login", Login);
+  AppNavigation.registerScreen("welcome", Welcome);
+  AppNavigation.registerScreen("about", About);
+  AppNavigation.registerScreen("home", Home);
+  AppNavigation.registerScreen("offers", Offers);
+  AppNavigation.registerScreen("cart", Cart);
+  AppNavigation.registerScreen("fav", Fav);
+  AppNavigation.registerScreen("orders", Orders);
+  AppNavigation.registerScreen("settings", Settings);
+  AppNavigation.registerScreen("products", Products);
+  AppNavigation.registerScreen("productDetails", ProductDetails);
+  AppNavigation.registerScreen("orderDetails", OrderDetails);
+  AppNavigation.registerScreen("profile", Profile);
+  AppNavigation.registerScreen("signUp", SignUp);
+  AppNavigation.registerScreen("contactUs", ContactUs);
+  AppNavigation.registerScreen("addNewAddress", AddNewAddress);
+  AppNavigation.registerScreen("appPickerModal", AppPickerModal);
+};

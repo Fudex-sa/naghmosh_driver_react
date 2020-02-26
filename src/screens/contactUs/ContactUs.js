@@ -1,266 +1,174 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import { AppView, AppText, AppIcon, moderateScale, AppScrollView, AppForm, AppInput, AppButton, AppTextArea, showSuccess, AppNavigation, showError } from "../../../src/common";
+import { AppHeader } from "../../../src/components";
+import { ImageBackground, ActivityIndicator } from "react-native";
+import backgroundImg from '../../assets/imgs/background.png';
 import I18n from "react-native-i18n";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps"; // remove PROVIDER_GOOGLE import if not using Google Maps
-import { AppHeader } from "../../components";
-import {
-  AppView,
-  AppIcon,
-  AppText,
-  AppScrollView,
-  AppForm,
-  AppButton,
-  AppInput,
-  AppTextArea,
-  moderateScale,
-  AppImage,
-  showError,
-  AppNavigation
-} from "../../common";
-import styles from "./styles";
-import Api, {
-  API_ENDPOINT,
-  ACCESS_DATA,
-  validateRequst
-} from "../../utils/Network";
+import colors from '../../common/defaults/colors';
+import Map from '../../components/contactUs/Map';
+import { validationSchema } from './validation';
+import { useSelector, useDispatch } from 'react-redux';
+import Axios from 'axios';
 
-import { validationSchema } from "./validation";
+export default ContactUs = props => {
+  const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
+  const [loading, setLoading] = useState(false);
+  const [loadingCompany, setLoadingCompany] = useState(false);
+  const [company, setCompany] = useState(null);
+  const [coordinates, setCoordinates] = useState(null)
 
-const paypal = require("../../assets/imgs/paypal.png");
-
-const ContactItem = props => {
-  const { name, type, value, bold } = props;
-  return (
-    <AppView stretch row>
-      <AppIcon color="darkgrey" {...{ name }} {...{ type }} />
-      <AppText color="darkgrey" bold={bold} marginHorizontal={5}>
-        {value}
-      </AppText>
-    </AppView>
-  );
-};
-class ContactUs extends Component {
-  onSubmit = async (values, { setSubmitting }) => {
-    const val = { ...values };
-    val.contactMobile = parseInt(values.contactMobile);
-    console.log("**", val);
-
-    try {
-      const res = await Api.post(`addmessage`, val);
-      const response = validateRequst(res);
-      console.log("response -->>", response);
-
-      if (response.isError) {
-        setSubmitting(false);
-        showError(response.data.message);
-        return;
-      }
-      setSubmitting(false);
-
-      AppNavigation.setStackRoot({
-        rtl: this.props.rtl,
-        sideMenu: "menu",
-        name: "home"
+  const onSubmit = (values, { setSubmitting }) => {
+    setLoading(true)
+    Axios.post('addmessage', values)
+      .then(async (res) => {
+        showSuccess(res.data.message)
+        setLoading(false)
+        AppNavigation.pop();
+      })
+      .catch((error) => {
+        setLoading(false)
+        if (!error.response) {
+          showError(I18n.t("ui-networkConnectionError"));
+        } else {
+          showError(I18n.t("ui-error-happened"));
+        }
       });
-    } catch (error) {
-      console.log("error", JSON.parse(JSON.stringify(error)));
-      setSubmitting(false);
-      if (!this.props.isConnected) {
-        showError(I18n.t("no-internet-connection"));
-      }
-    }
-  };
+  }
 
-  renderForm = ({ injectFormProps, handleSubmit, isSubmitting }) => {
-    const border = 5;
-    const margin = 5;
-    nameRef = React.createRef();
-    emailRef = React.createRef();
-    phoneRef = React.createRef();
-    msgRef = React.createRef();
-
+  const renderForm = ({
+    injectFormProps,
+    isSubmitting,
+    handleSubmit,
+    setFieldValue
+  }) => {
     return (
-      <>
+      <AppView flex stretch marginTop={5} >
+        <AppText color="#000" bold marginHorizontal={5} marginBottom={5} >{I18n.t("contactName")}</AppText>
         <AppInput
-          leftItems={
-            <AppIcon name="user" type="font-awesome" color="darkgrey" />
-          }
-          marginTop={margin}
-          ref={this.nameRef}
-          nextInput={this.emailRef}
           {...injectFormProps("contactName")}
-          placeholder={I18n.t("ur-name")}
-          borderRadius={border}
-          borderColor="inputBorderColor"
+          placeholder={I18n.t("contactName")}
+          height={7}
+          size={7}
+          paddingHorizontal={10}
+          borderRadius={70}
         />
-
+        <AppText color="#000" bold marginHorizontal={5} marginBottom={5} >{I18n.t("contactEmail")}</AppText>
         <AppInput
-          marginTop={margin}
-          ref={this.emailRef}
-          nextInput={this.phoneRef}
           {...injectFormProps("contactEmail")}
-          placeholder={I18n.t("email")}
-          borderRadius={border}
-          borderColor="inputBorderColor"
-          leftItems={<AppIcon name="email" type="zocial" color="darkgrey" />}
+          placeholder={I18n.t("contactEmail")}
+          height={7}
+          size={7}
+          email
+          paddingHorizontal={10}
+          borderRadius={70}
         />
-
+        <AppText color="#000" bold marginHorizontal={5} marginBottom={5} >{I18n.t("contactMobile")}</AppText>
         <AppInput
-          borderColor="inputBorderColor"
-          marginTop={margin}
-          ref={this.phoneRef}
-          nextInput={this.msgRef}
-          borderRadius={border}
-          phone
           {...injectFormProps("contactMobile")}
-          placeholder={I18n.t("phone")}
-          leftItems={
-            <AppIcon name="telephone" type="foundation" color="darkgrey" />
-          }
+          placeholder={I18n.t("contactMobile")}
+          height={7}
+          size={7}
+          phone
+          paddingHorizontal={10}
+          borderRadius={70}
         />
-        <AppView stretch>
-          <AppTextArea
-            {...injectFormProps("contactMessage")}
-            paddingHorizontal={8}
-            placeholder={I18n.t("ur-msg")}
-            borderRadius={border}
-            marginTop={margin}
-            borderWidth={0.5}
-            ref={this.msgRef}
-          />
-          <AppIcon
-            name="edit-3"
-            type="feather"
-            color="darkgrey"
-            style={{
-              position: "absolute",
-              ...(!this.props.rtl
-                ? { left: moderateScale(4) }
-                : { right: moderateScale(4) }),
-              top: moderateScale(10)
-            }}
-          />
-        </AppView>
+        <AppText color="#000" bold marginHorizontal={5} marginBottom={5} >{I18n.t("contactMessage")}</AppText>
+        <AppTextArea
+          {...injectFormProps("contactMessage")}
+          placeholder={I18n.t("contactMessage")}
+          // height={7}
+          // maxLength={50000}
+          size={7}
+          paddingHorizontal={10}
+          bw={0}
+          borderRadius={30}
+        />
         <AppButton
-          stretch
-          marginVertical={5}
           title={I18n.t("send")}
-          processing={isSubmitting}
+          stretch
+          bottom
+          size={7}
+          borderRadius={25}
+          marginTop={10}
+          height={7}
           onPress={handleSubmit}
+          center
+          processing={loading}
         />
-      </>
-    );
-  };
-
-  renderVisas = () => {
-    const size = 3;
-    const margin = 1;
-    return (
-      <AppView stretch row marginVertical={10}>
-        <AppImage
-          height={size}
-          width={2.5 * size}
-          source={paypal}
-          marginHorizontal={3}
-        />
-        <AppImage
-          height={size}
-          width={2.5 * size}
-          source={paypal}
-          marginHorizontal={margin}
-        />
-        <AppImage
-          height={size}
-          width={2.5 * size}
-          source={paypal}
-          marginHorizontal={margin}
-        />
-        <AppImage
-          height={size}
-          width={2.5 * size}
-          source={paypal}
-          marginHorizontal={margin}
-        />
-        <AppImage
-          height={size}
-          width={2.5 * size}
-          source={paypal}
-          marginHorizontal={margin}
-        />
-        <AppImage
-          height={size}
-          width={2.5 * size}
-          source={paypal}
-          marginHorizontal={margin}
-        />
-        <AppImage
-          height={size}
-          width={2.5 * size}
-          source={paypal}
-          marginHorizontal={margin}
-        />
-      </AppView>
-    );
-  };
-
-  render() {
-    return (
-      <AppView flex stretch>
-        <AppHeader title={I18n.t("contact-us")} />
-
-        <AppScrollView stretch showsVerticalScrollIndicator={false}>
-          <AppView stretch height={28}>
-            <MapView
-              provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-              style={styles.map}
-              region={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.007016387588862472,
-                longitudeDelta: 0.004741139709949493
-              }}
-            />
-          </AppView>
-          <AppView marginTop={5} stretch marginHorizontal={5}>
-            <ContactItem
-              name="home"
-              type="font-awesome"
-              value="السعوديه المنطقه الشرقيه"
-            />
-            <ContactItem
-              bold
-              name="telephone"
-              type="foundation"
-              value="+966 138241000"
-            />
-            <ContactItem
-              name="clockcircleo"
-              type="ant"
-              value="الاحد - للجمعه | 8 صباحا - 8 مساء"
-            />
-            {this.renderVisas()}
-            <AppForm
-              schema={{
-                ...ACCESS_DATA,
-                clientId: this.props.currentUser.id,
-                contactEmail: "",
-                contactMessage: "",
-                contactName: "",
-                contactMobile: ""
-              }}
-              validationSchema={validationSchema}
-              render={this.renderForm}
-              onSubmit={this.onSubmit}
-            />
-          </AppView>
-        </AppScrollView>
       </AppView>
     );
   }
-}
-const mapStateToProps = state => ({
-  rtl: state.lang.rtl,
-  currentUser: state.auth.currentUser
-});
+  const renderRow = (iconName, iconType, title) => {
+    return (
+      <AppView row stretch marginBottom={3} >
+        <AppIcon
+          name={iconName}
+          type={iconType}
+          color={colors.darkgrey}
+          size={8}
+        />
+        <AppText size={7} color={colors.darkgrey} marginHorizontal={5} >
+          {title}
+        </AppText>
+      </AppView>
+    )
+  }
 
-export default connect(mapStateToProps)(ContactUs);
+  useEffect(() => {
+    setLoadingCompany(true)
+    Axios.get(`getsettings`)
+      .then((res) => {
+        setCompany(res.data.data)
+        let coordinate = res.data.data.site_map_coordinates.split(',')
+        setCoordinates({ latitude: parseFloat(coordinate[0]), longitude: parseFloat(coordinate[1]) })
+        setLoadingCompany(false)
+      }).catch((error) => {
+        setLoadingCompany(false)
+        if (!error.response) {
+          showError(I18n.t("ui-networkConnectionError"));
+        } else {
+          showError(I18n.t("ui-error-happened"));
+        }
+        return I18n.t("ui-networkConnectionError");
+      })
+  }
+    , []);
+
+  return (
+    <AppView flex stretch >
+      <AppHeader title={I18n.t("contact-us")} hideCart/>
+      <ImageBackground source={backgroundImg} style={{ flex: 1, alignSelf: "stretch" }} >
+        {!company || loadingCompany ?
+          <AppView flex stretch center>
+            <ActivityIndicator />
+          </AppView>
+          :
+          <AppScrollView flex stretch paddingBottom={20} paddingHorizontal={8} >
+            <Map coordinates={coordinates} />
+            <AppView stretch marginBottom={5}>
+              <AppText bold >
+                {I18n.t("contact-us")}
+              </AppText>
+            </AppView>
+            <AppText color="#000" stretch bold marginHorizontal={5} size={7} marginBottom={5} >{company.site_name}</AppText>
+            {renderRow("maps", "custom", company.site_address)}
+            {renderRow("ios-call", "ion", company.site_mobile)}
+            {renderRow("ios-call", "ion", company.site_mobile2)}
+            {renderRow("md-mail", "ion", company.site_email)}
+            <AppForm
+              schema={{
+                contactName: user ? user.user_name : "",
+                contactEmail: user ? user.email : "",
+                contactMobile: user ? user.mobile : "",
+                contactMessage: "",
+              }}
+              validationSchema={validationSchema}
+              render={renderForm}
+              onSubmit={onSubmit}
+            />
+          </AppScrollView>
+        }
+      </ImageBackground>
+    </AppView>
+  );
+}

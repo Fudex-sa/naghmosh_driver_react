@@ -84,6 +84,7 @@ class InputError extends PureComponent {
           marginHorizontal={errorTextMarginHorizontal}
           color={this.props.color}
           size={this.props.size * this.props.sizeScale}
+          height={this.props.textErrorHeight?this.props.textErrorHeight:3}
         >
           {this.state.error}
         </AppText>

@@ -1,3 +1,4 @@
+// import { AsyncStorage } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import I18n from 'react-native-i18n';
 import 'moment/locale/ar';
@@ -13,10 +14,8 @@ export const setLang = (lang, rtl) => async (dispatch, store) => {
 };
 
 export const initLang = (lang, rtl) => async (dispatch, store) => {
- 
   const l = await AsyncStorage.getItem('lang');
-  
-  if (l) {    
+  if (l) {
     const d = JSON.parse(l);
     await setLang(d.lang, d.rtl)(dispatch, store);
   } else {

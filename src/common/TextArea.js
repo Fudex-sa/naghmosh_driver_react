@@ -1,7 +1,7 @@
-import React, { PureComponent } from "react";
-import { TextInput as NativeInput } from "react-native";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import React, { PureComponent } from 'react';
+import { TextInput as NativeInput, Animated } from 'react-native';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import {
   BasePropTypes,
@@ -14,13 +14,19 @@ import {
   borderStyles,
   borderRadiusStyles,
   backgroundColorStyles,
-  elevationStyles
-} from "./Base";
-import { isASCII } from "./utils/text";
-import View from "./View";
-import InputError from "./micro/InputError";
-import { getTheme } from "./Theme";
-import { convertNumbers } from "./utils/numbers";
+  elevationStyles,
+} from './Base';
+import { isASCII } from './utils/text';
+import View from './View';
+import InputError from './micro/InputError';
+import { getTheme } from './Theme';
+import { convertNumbers } from './utils/numbers';
+import { AppView, AppText } from '.';
+import {
+  moderateScale,
+  responsiveHeight,
+  responsiveFontSize,
+} from './utils/responsiveDimensions';
 
 class TextArea extends PureComponent {
   static propTypes = {
@@ -35,11 +41,10 @@ class TextArea extends PureComponent {
     placeholderColor: PropTypes.string,
     error: PropTypes.string,
     noValidation: PropTypes.bool,
-    noBorder: PropTypes.bool
   };
 
   state = {
-    isTouched: false
+    isTouched: false,
   };
 
   componentWillReceiveProps(nextProps) {
@@ -49,14 +54,13 @@ class TextArea extends PureComponent {
 
     if (nextProps.error && !this.state.isTouched) {
       this.setState({
-        isTouched: true
+        isTouched: true,
       });
     }
   }
 
   static defaultProps = {
     ...getTheme().textArea,
-    noBorder: false
   };
 
   constructor(props) {
@@ -65,15 +69,23 @@ class TextArea extends PureComponent {
     this.inputRef = React.createRef();
 
     this.state = {
-      text: props.initialValue
+      text: props.initialValue,
     };
+    this._animatedIsFocused = new Animated.Value(props.initialValue ? 1 : 0);
+  }
+
+  componentDidUpdate() {
+    Animated.timing(this._animatedIsFocused, {
+      toValue: this.state.isFocused || this.props.initialValue !== '' ? 1 : 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
   }
 
   onChangeText = (text, noValidate) => {
     const { name, onChange } = this.props;
-
     this.setState({
-      text
+      text,
     });
 
     if (onChange) {
@@ -89,16 +101,23 @@ class TextArea extends PureComponent {
       if (name) onBlur(name, this.state.text);
       else onBlur(this.state.text);
     }
+    this.setState({
+      isFocused: false,
+      isTouched: false,
+    });
   };
 
   onFocus = () => {
-    const { name, onFocus } = this.props;
+    const { onFocus, color, activeColor, initialValue } = this.props;
 
     if (onFocus) {
-      if (name) onFocus(name, this.state.text);
-      else onFocus(this.state.text);
+      onFocus(initialValue);
     }
-    this.setState({ isTouched: true });
+
+    this.setState({
+      isFocused: true,
+      isTouched: true,
+    });
   };
 
   onSubmitEditing = () => {
@@ -120,7 +139,25 @@ class TextArea extends PureComponent {
 
   clear = () => {
     this.inputRef.current.clear();
-    this.onChangeText("", true);
+    this.onChangeText('', true);
+  };
+
+  getColor = type => {
+    if (this.props.borderColor) {
+      return this.props.borderColor;
+    }
+    if (
+      this.props.error &&
+      !this.props.asyncLoading &&
+      (this.props.isTouched || this.props.isFocused) &&
+      !this.props.noValidation
+    )
+      return type ? 'grey' : '#FF0050';
+
+    if (this.state.isFocused) {
+      return 'primary';
+    }
+    return 'grey';
   };
 
   render() {
@@ -143,12 +180,72 @@ class TextArea extends PureComponent {
       underlineColor,
       maxLength,
       editable,
-      borderBottomLeftRadius,
-      borderBottomRightRadius,
-      borderTopLeftRadius,
-      borderTopRightRadius,
-      noBorder
+      borderWidth,
+      borderTopWidth,
+      borderBottomWidth,
+      borderLeftWidth,
+      borderRightWidth,
+      borderColor,
+      borderTopColor,
+      borderBottomColor,
+      borderLeftColor,
+      borderRightColor,
+      borderRadius,
+      noBorder,
+      label,
+      height,
+      picker,
+      paddingTop,
+      style,
+      borderTopColorContainer,
+      borderTopWidthContainer,
+      backgroundColor,
     } = this.props;
+
+    const paddingText = moderateScale(2);
+    const assignedColor = this.getColor();
+    const labelStyle = [
+      {
+        position: 'absolute',
+        top:
+          this.state.text || this.state.isFocused
+            ? responsiveHeight(22) / 4
+            : responsiveHeight(height) / 7,
+        // bottom: responsiveHeight(height) / 5,
+        height: 20,
+        borderRadius: moderateScale(10),
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+        alignItems: rtl ? 'flex-end' : 'flex-start',
+        paddingHorizontal: paddingText,
+        transform: [
+          {
+            translateY: this._animatedIsFocused.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, -responsiveHeight(height) / 6],
+            }),
+          },
+          {
+            scale: this._animatedIsFocused.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 0.8],
+            }),
+          },
+          {
+            translateX: this._animatedIsFocused.interpolate({
+              inputRange: [0, 1],
+              outputRange: [
+                0,
+                rtl
+                  ? responsiveFontSize(size) - 10
+                  : -responsiveFontSize(size) + 10,
+              ],
+            }),
+          },
+        ],
+      },
+      !rtl ? { left: 0 } : { right: 0 },
+    ];
 
     return (
       <View
@@ -161,61 +258,126 @@ class TextArea extends PureComponent {
         marginBottom={marginBottom}
         marginLeft={marginLeft}
         marginRight={marginRight}
-        borderBottomLeftRadius={borderBottomLeftRadius}
-        borderBottomRightRadius={borderBottomRightRadius}
-        borderTopLeftRadius={borderTopRightRadius}
-        borderTopRightRadius={borderTopRightRadius}
+        // style={[{ overflow: 'visible' }]}
+        {...(this.state.isFocused && this.props.onFocusBorderHighlight
+          ? this.props.onFocusBorderHighlight
+          : null)}
       >
-        <NativeInput
-          ref={this.inputRef}
-          maxLength={maxLength}
-          // {...rest}
-          placeholder={convertNumbers(
-            placeholder,
-            translateNumbers ? rtl : false
-          )}
-          placeholderTextColor={placeholderColor}
-          multiline
-          blurOnSubmit
-          editable={editable}
-          value={this.state.text}
-          underlineColorAndroid={underlineColor}
-          onChangeText={this.onChangeText}
-          onBlur={this.onBlur}
-          onFocus={this.onFocus}
-          onSubmitEditing={this.onSubmitEditing}
+        <AppView
+          stretch
+          borderRadius={borderRadius}
+          // borderWidth={borderWidth || (noBorder ? 0 : 1)}
+          borderWidth={borderWidth || 0}
+          borderTopWidth={borderTopWidth || borderTopWidthContainer}
+          borderTopColor={borderTopColor || borderTopColorContainer}
+          borderBottomWidth={
+            this.state.isFocused || this.props.isTouched ? 1 : 0
+          }
+          borderLeftWidth={borderLeftWidth}
+          borderRightWidth={borderRightWidth}
+          borderBottomColor={borderBottomColor}
+          borderLeftColor={borderLeftColor}
+          borderRightColor={borderRightColor}
+          borderColor={this.getColor() || borderColor}
+          paddingTop={paddingTop}
           style={[
-            dimensionsStyles(this.props),
-            backgroundColorStyles(this.props),
-            textDirectionStyles(this.props),
-            fontSizeStyles(this.props),
-            fontFamilyStyles(this.props),
-            colorStyles(this.props),
-            borderStyles(this.props),
+            { overflow: 'visible' },
+            // colorStyles(this.props),
+            // borderStyles(this.props),
             borderRadiusStyles(this.props),
-            elevationStyles(this.props),
-            {
-              alignSelf: "stretch",
-              textAlignVertical: "top",
-              padding: 0,
-              writingDirection: isASCII(this.state.text) ? "ltr" : "rtl"
-            },
-            paddingStyles(this.props)
+            style,
           ]}
-        />
-        {!noValidation ? <InputError error={error} size={size} /> : null}
+          backgroundColor={backgroundColor}
+
+        // height={30}
+        >
+          {/* <AppView stretch flex> */}
+          <NativeInput
+            ref={this.inputRef}
+            maxLength={maxLength}
+            // {...rest}
+            placeholder={convertNumbers(
+              placeholder,
+              translateNumbers ? rtl : false,
+            )}
+            placeholderTextColor={placeholderColor}
+            multiline
+            // blurOnSubmit
+            // editable={editable}
+            value={this.state.text}
+            underlineColorAndroid={underlineColor}
+            onChangeText={this.onChangeText}
+            onBlur={this.onBlur}
+            onFocus={this.onFocus}
+            onSubmitEditing={this.onSubmitEditing}
+            style={[
+              dimensionsStyles(this.props),
+              backgroundColorStyles(this.props),
+              textDirectionStyles(this.props),
+              fontSizeStyles(this.props),
+              fontFamilyStyles(this.props),
+              colorStyles(this.props),
+              borderStyles(this.props),
+              borderRadiusStyles(this.props),
+              elevationStyles(this.props),
+              {
+                alignSelf: 'stretch',
+                textAlignVertical: 'top',
+                // margin: 10,
+                padding: 0,
+                borderTopWidth: undefined,
+                borderBottomLeftRadius: undefined,
+                borderBottomRightRadius: undefined,
+                borderLeftWidth: undefined,
+                borderRightWidth: undefined,
+                // marginTop: 10,
+                // marginHorizontal: 10,
+                // marginHorizontal: 2,
+                writingDirection: isASCII(this.state.text) ? 'ltr' : 'rtl',
+              },
+              paddingStyles(this.props),
+            ]}
+          />
+          {label && (
+            <Animated.View pointerEvents="none" style={labelStyle}>
+              <AppText
+                pointerEvents="none"
+                color={
+                  picker
+                    ? 'grey'
+                    : this.state.isFocused
+                      ? 'primary'
+                      : this.getColor('text')
+                }
+                size={size}
+              >
+                {label}
+              </AppText>
+            </Animated.View>
+          )}
+          {/* </AppView> */}
+        </AppView>
+        {!noValidation ? (
+          <InputError
+            textErrorHeight={
+              this.props.textErrorHeight ? this.props.textErrorHeight : null
+            }
+            error={this.props.isTouched ? error : ''}
+            size={size}
+          />
+        ) : null}
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  rtl: state.lang.rtl
+  rtl: state.lang.rtl,
 });
 
 export default connect(
   mapStateToProps,
   null,
   null,
-  { forwardRef: true }
+  // { forwardRef: true },
 )(TextArea);

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { RectButton } from 'react-native-gesture-handler';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { RectButton } from "react-native-gesture-handler";
 
-import { TouchableOpacity } from 'react-native';
-import { marginStyles } from './Base';
-import View from './View';
-import Text from './Text';
-import Icon from './Icon';
-import { getTheme } from './Theme';
-import { RADIO_BUTTON_DISPLAY_NAME } from '../utils/Constants';
+import { TouchableOpacity } from "react-native";
+import { marginStyles } from "./Base";
+import View from "./View";
+import Text from "./Text";
+import Icon from "./Icon";
+import { getTheme } from "./Theme";
+import { RADIO_BUTTON_DISPLAY_NAME } from "./utils/Constants";
 // TODO: Add custom button (for different radio shapes)
 // TODO: REFACTOR
 class RadioButton extends Component {
@@ -27,7 +27,7 @@ class RadioButton extends Component {
     labelSize: PropTypes.number,
     style: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     touchableOpacity: PropTypes.bool,
-    labelBold: PropTypes.bool,
+    labelBold: PropTypes.bool
   };
 
   static defaultProps = {
@@ -37,7 +37,7 @@ class RadioButton extends Component {
     normalColor: getTheme().radioButton.normalColor,
     labelColor: getTheme().radioButton.labelColor,
     labelBold: false,
-    onPress: () => {},
+    onPress: () => {}
   };
 
   render() {
@@ -63,49 +63,53 @@ class RadioButton extends Component {
 
     const Container = touchableOpacity ? TouchableOpacity : RectButton;
     return (
-      <View row>
-        <Container
-          onPress={() => {
-            onPress(value, index);
+      <View
+        row
+        style={[
+          marginStyles(this.props),
+          { alignSelf: stretch ? "stretch" : null }
+        ]}
+        centerX
+      >
+        {/* <Container
+          style={{
+            borderRadius: size
           }}
-          style={[
-            marginStyles(this.props),
-            { alignSelf: stretch ? 'stretch' : null },
-          ]}
-        >
-          <View row {...rest} style={style}>
-            <View
-              bc={selected ? color : '#ACB5BB'}
-              bw={2}
-              circle
-              circleRadius={size}
-              mr={5}
-              center
-            >
-              {selected ? (
-                <View
-                  circle
-                  circleRadius={size * 0.5}
-                  backgroundColor={color}
-                />
-              ) : null}
-            </View>
-
-            {this.props.icon && (
-              <Icon
-                name={this.props.name}
-                type={this.props.type}
-                size={8}
-                // marginTop={2}
-                marginHorizontal={3}
-              />
-            )}
+        > */}
+        <View row>
+          <View
+            bc={selected ? color : "#ACB5BB"}
+            bw={2}
+            circle
+            circleRadius={size}
+            mr={5}
+            center
+            onPress={() => {
+              onPress(value, index);
+            }}
+            touchableOpacity={touchableOpacity}
+          >
+            {selected ? (
+              <View circle circleRadius={size * 0.5} backgroundColor={color} />
+            ) : null}
           </View>
-        </Container>
+
+          {this.props.icon && (
+            <Icon
+              name={this.props.name}
+              type={this.props.type}
+              size={8}
+              // marginTop={2}
+              marginHorizontal={3}
+            />
+          )}
+        </View>
+        {/* </Container> */}
         <Text
           bold={labelBold}
           size={labelSize || size}
           color={labelColor}
+          centerY
           marginHorizontal={touchableOpacity && 5}
         >
           {label}

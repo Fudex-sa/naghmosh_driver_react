@@ -15,7 +15,10 @@ import Indicator from "./Indicator";
 import Button from "./Button";
 import {
   expResponsiveHeight,
-  moderateScale
+  moderateScale,
+  responsiveHeight,
+  windowHeight,
+  APPBAR_HEIGHT
 } from "./utils/responsiveDimensions";
 import { getThemeColor } from "./utils/colors";
 import { getTheme } from "./Theme";
@@ -24,7 +27,10 @@ import {
   dimensionsStyles,
   borderStyles,
   backgroundColorStyles,
-  paddingStyles
+  paddingStyles,
+  textDirectionStyles,
+  marginStyles,
+  childrenLayoutStyles
 } from "./Base";
 import Network from "./Base/Network";
 
@@ -41,8 +47,7 @@ class List extends Network {
     errorLabelColor: PropTypes.string,
     noResultsLabelColor: PropTypes.string,
     retryButtoncolor: PropTypes.string,
-    retryButtonBackgroundColor: PropTypes.string,
-    flatlist: PropTypes.bool
+    retryButtonBackgroundColor: PropTypes.string
   };
 
   static defaultProps = {
@@ -51,18 +56,15 @@ class List extends Network {
     columns: 1,
     data: [],
     rowHeight: 20,
-    flatlist: true
+    withBottomNav: false
   };
-  convert1DTo2DArr = data => {
-    var newArr = [];
-    while (data.length) newArr.push(data.splice(0, 2));
-    return newArr;
-  };
+
   constructor(props) {
     super(props);
 
     this.dataProvider = new DataProvider((r1, r2) => r1 !== r2);
     this.mainIndicator = "loading";
+    this.currentFlatListScrollOffset = 0;
 
     this.state = {
       ...super.state,
@@ -78,14 +80,16 @@ class List extends Network {
     };
   }
 
-  componentDidMount() {
-    super.componentDidMount();
-  }
+  // componentDidMount() {
+  //   if (this.props.flatlist) {
+  //     super.componentDidMount();
+  //   }
+  // }
 
   componentWillReceiveProps(nextProps) {
     super.componentWillReceiveProps(nextProps);
-
     if (nextProps.refreshControl !== this.props.refreshControl) {
+      if (this.props.onRefresh) this.props.onRefresh();
       if (this.state.loading) return;
       this.reload();
     }
@@ -118,6 +122,7 @@ class List extends Network {
       firstFetchDone: true,
       errorLabel
     });
+    this.loading = false;
   };
 
   setEndFetching = () => {
@@ -137,17 +142,14 @@ class List extends Network {
 
   removeItemFromList = id => {
     const { _data } = this.state.dataProvider;
-
     const index = _data.findIndex(
       item => Object.getDeepProp(item, this.props.idPathInData) === id
     );
-
-    const newData = [..._data.slice(0, index), ..._data.slice(index + 1)];
-
-    this.setData(newData);
+    _data.splice(index, 1);
+    this.setData(_data);
   };
 
-  updateItemInList = (id, changedData, changedDataCB = () => ({})) => {
+  updateItemInList = (id, changedData, changedDataCB = () => { }) => {
     const { _data } = this.state.dataProvider;
 
     const index = _data.findIndex(
@@ -188,31 +190,50 @@ class List extends Network {
   };
 
   renderFooter = () => {
-    if (this.state.refreshing) return null;
+    const { noResultListHeight, withBottomNav } = this.props;
+    const height = windowHeight - APPBAR_HEIGHT;
 
-    if (this.state.loading || !this.state.firstFetchDone) {
-      return (
-        <View centerX p={5}>
-          <Indicator color={this.props.indicatorColor} size={12} />
-        </View>
-      );
-    }
+    if (
+      (this.state.refreshing || this.loading) &&
+      !(this.props.staticData && !this.props.data.length)
+    )
+      return null;
 
     if (this.state.errorLabel) {
       return (
-        <View centerX p={10}>
+        <View
+          mv={30}
+          centerX
+          p={10}
+          style={
+            this.props.horizontal && this.props.rtl
+              ? {
+                transform: [
+                  {
+                    scale: -1
+                  }
+                ]
+              }
+              : noResultListHeight
+                ? { height: noResultListHeight }
+                : { height }
+          }
+        >
           <Text bold color={this.props.errorLabelColor}>
             {this.state.errorLabel}
           </Text>
           <Button
+            stretch
             title={I18n.t("ui-retry")}
             backgroundColor={this.props.retryButtonBackgroundColor}
             color={this.props.retryButtoncolor}
             mv={8}
+            mh={20}
             onPress={() => {
               this.setState({
                 errorLabel: ""
               });
+              if (this.props.onRefresh) this.props.onRefresh();
               this.reload();
             }}
             processing={this.state.refreshing}
@@ -223,12 +244,46 @@ class List extends Network {
       );
     }
 
-    if (this.state.dataProvider._data.length === 0) {
+    if (
+      this.state.dataProvider._data.length === 0 &&
+      !this.state.loading &&
+      this.state.firstFetchDone
+    ) {
       if (this.props.noResultsComponent) {
-        return React.cloneElement(this.props.noResultsComponent);
+
+        return React.cloneElement(this.props.noResultsComponent, {
+          style:
+            this.props.horizontal && this.props.rtl
+              ? {
+                transform: [
+                  {
+                    scale: -1
+                  }
+                ]
+              }
+              : noResultListHeight
+                ? { height: noResultListHeight }
+                : { height }
+        });
       }
       return (
-        <View centerX p={15}>
+        <View
+          centerX
+          p={15}
+          style={
+            this.props.horizontal && this.props.rtl
+              ? {
+                transform: [
+                  {
+                    scale: -1
+                  }
+                ]
+              }
+              : noResultListHeight
+                ? { height: noResultListHeight }
+                : { height }
+          }
+        >
           <Text bold color={this.props.noResultsLabelColor}>
             {this.props.noResultsLabel || I18n.t("ui-noResultsFound")}
           </Text>
@@ -236,48 +291,138 @@ class List extends Network {
       );
     }
 
-    return this.props.renderFooter ? this.props.renderFooter() : null;
+    return null;
   };
 
-  renderFlatList = () => (
+  isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 100; // Distance from the bottom you want it to trigger.
+
+    if (this.props.horizontal) {
+      return (
+        layoutMeasurement.width + contentOffset.x >=
+        contentSize.width - paddingToBottom
+      );
+    }
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
+  renderFlatListLoadingIndicator = () => {
+    const { horizontal, rtl, staticData } = this.props;
+
+    if (
+      (this.page > this.pageCount && !this.loading) ||
+      staticData ||
+      this.state.errorLabel
+    ) {
+      return null;
+    }
+
+    return (
+      <View center p={4} >
+        <Indicator color={this.props.indicatorColor} size={12} />
+      </View>
+    );
+  };
+
+  renderFlatListItem = ({ item, index }) => {
+    if (index == this.state.dataProvider._data.length) {
+      return this.renderFlatListLoadingIndicator();
+    }
+    return React.cloneElement(this.props.rowRenderer(item), {
+      addItemToList: this.addItemToList,
+      updateItemInList: this.updateItemInList,
+      removeItemFromList: this.removeItemFromList,
+      style:
+        this.props.horizontal && this.props.rtl
+          ? {
+            transform: [
+              {
+                scale: -1
+              }
+            ]
+          }
+          : {}
+    });
+  };
+
+  onFlatListScroll = ({ nativeEvent }) => {
+    if (this.props.horizontal) {
+      const currentOffset = nativeEvent.contentOffset.x;
+      const direction =
+        currentOffset > this.currentFlatListScrollOffset ? "right" : "left";
+      this.currentFlatListScrollOffset = currentOffset;
+      if (this.props.onScroll) this.props.onScroll({ nativeEvent });
+      if (direction === "left" || this.loading) return;
+      if (this.isCloseToBottom(nativeEvent)) {
+        if (this.page <= this.pageCount) {
+          this.props.limitData ? null : this.fetch("loading");
+        }
+      }
+    } else {
+      const currentOffset = nativeEvent.contentOffset.y;
+      const direction =
+        currentOffset > this.currentFlatListScrollOffset ? "down" : "up";
+      this.currentFlatListScrollOffset = currentOffset;
+
+      if (this.props.onScroll) this.props.onScroll({ nativeEvent });
+
+      if (direction === "up" || this.loading) return;
+
+      if (this.isCloseToBottom(nativeEvent)) {
+        if (this.page <= this.pageCount) {
+          this.props.limitData ? null : this.fetch("loading");
+        }
+      }
+    }
+  };
+
+  resetFlatListScroll = () => {
+    if (this.flatList)
+      this.flatList.scrollToIndex({ animated: true, index: 0 });
+  };
+
+  renderFlatList = props => (
     <FlatList
-      // numColumns={this.props.columns}
-      horizontal={false}
+      ref={ref => (this.flatList = ref)}
+      onContentSizeChange={this.props.onContentSizeChange}
+      numColumns={this.props.columns}
+      horizontal={this.props.horizontal}
+      // removeClippedSubviews
+      // getItemLayout={(data, index) => ({
+      //   length: 70,
+      //   offset: 70 * index,
+      //   index,
+      // })}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      initialNumToRender={27}
+      maxToRenderPerBatch={30}
       contentContainerStyle={
         this.props.columns > 1
           ? {
-              // flex: 1,
-              flexDirection: this.props.rtl ? "row-reverse" : "row",
-              flexWrap: "wrap",
-              justifyContent: this.state.loading ? "center" : "space-between"
-            }
-          : {}
+            // flex: 1,
+            flex: this.state.loading ? 1 : undefined,
+            alignItems: this.state.loading ? 'center' : undefined,
+            // flexDirection: this.props.rtl ? "row-reverse" : "row",
+            // flexWrap: "wrap",
+            justifyContent: this.state.loading ? "center" : "space-between"
+          }
+          : [paddingStyles(props),
+          {
+            // alignItems: this.state.loading ? 'center' : undefined,
+            justifyContent: this.state.loading && this.props.horizontal? 'center' : 'space-around',
+            flex: this.state.loading && this.props.horizontal ? 1 : undefined
+          }]
       }
-      data={this.state.dataProvider._data}
+      data={[...this.state.dataProvider._data, {}]}
       keyExtractor={(item, index) => String(index)}
-      renderItem={({ item }) =>
-        React.cloneElement(this.props.rowRenderer(item), {
-          addItemToList: this.addItemToList,
-          updateItemInList: this.updateItemInList,
-          removeItemFromList: this.removeItemFromList
-        })
-      }
-      onScroll={this.props.onScroll}
-      onEndReachedThreshold={0.2}
-      onEndReached={() => {
-        console.log(
-          "FlatList End Reached",
-          this.page,
-          this.pageCount,
-          !this.state.loading
-        );
-
-        if (this.page <= this.pageCount && !this.state.loading) {
-          this.fetch("loading");
-          this.page++;
-        }
-      }}
-      ListFooterComponent={this.renderFooter}
+      renderItem={this.renderFlatListItem}
+      onScroll={this.onFlatListScroll}
+      scrollEventThrottle={1000}
+      ListFooterComponent={this.renderFooter()}
       refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
@@ -294,44 +439,7 @@ class List extends Network {
     />
   );
 
-  renderRecyclerListView = () => (
-    <RecyclerListView
-      layoutProvider={this.state.layoutProvider}
-      dataProvider={this.state.dataProvider}
-      rowRenderer={(type, data) =>
-        React.cloneElement(this.props.rowRenderer(data), {
-          updateItemInList: this.updateItemInList
-        })
-      }
-      onScroll={this.props.onScroll}
-      contentContainerStyle={[paddingStyles(this.props)]}
-      onEndReachedThreshold={0.5}
-      onEndReached={() => {
-        // console.log('Current Page', this.page);
-        // console.log('Page Count', this.pageCount);
-        // console.log('Not Loading', !this.state.loading);
-        // console.log('Condition', this.page <= this.pageCount);
-        if (this.page <= this.pageCount && !this.state.loading) {
-          this.fetch("loading");
-          this.page++;
-        }
-      }}
-      renderFooter={this.renderFooter}
-      refreshControl={
-        <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={() => {
-            this.fetch("refreshing", true);
-            if (this.props.onRefresh) {
-              this.props.onRefresh();
-            }
-          }}
-          colors={[getThemeColor(this.props.indicatorColor)]}
-          tintColor={getThemeColor(this.props.indicatorColor)}
-        />
-      }
-    />
-  );
+
 
   render() {
     return (
@@ -339,19 +447,20 @@ class List extends Network {
         style={[
           dimensionsStyles(this.props),
           backgroundColorStyles(this.props),
+          marginStyles(this.props),
+          // childrenLayoutStyles(this.props),
           {
             alignSelf: "stretch",
-            flex: this.props.height ? undefined : 1
+            paddingBottom: this.props.withBottomNav ? barHeight - 20 : 0,
+            flex: this.props.height ? undefined : 1,
+            transform:
+              this.props.horizontal && this.props.rtl ? [{ scaleX: -1 }] : []
           },
           borderStyles(this.props)
         ]}
         onLayout={this.handleParentViewLayout}
       >
-        {this.state.layoutReady
-          ? this.props.flatlist
-            ? this.renderFlatList()
-            : this.renderRecyclerListView()
-          : null}
+        {this.state.layoutReady && this.renderFlatList(this.props)}
       </NativeView>
     );
   }
@@ -360,5 +469,9 @@ class List extends Network {
 const mapStateToProps = state => ({
   rtl: state.lang.rtl
 });
-
-export default connect(mapStateToProps)(List);
+export default connect(
+  mapStateToProps,
+  null,
+  null,
+  // { forwardRef: true }
+)(List);

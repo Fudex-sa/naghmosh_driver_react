@@ -1,12 +1,12 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
 import {
   ScrollView as NativeScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import { connect } from 'react-redux';
+  Platform
+} from "react-native";
+import { connect } from "react-redux";
 
 import {
   BasePropTypes,
@@ -16,19 +16,25 @@ import {
   backgroundColorStyles,
   paddingStyles,
   marginStyles,
-  borderStyles,
-} from './Base';
+  borderStyles
+} from "./Base";
 
 const styles = StyleSheet.create({
   rtl: {
-    transform: [{ scaleX: -1 }],
-  },
+    transform: [{ scaleX: -1 }]
+  }
 });
 
 class ScrollView extends PureComponent {
   static propTypes = {
     ...BasePropTypes,
-    horizontal: PropTypes.bool,
+    horizontal: PropTypes.bool
+  };
+
+  static defaultProps = {
+    showVIndicator: false,
+    showHIndicator: false,
+    avoidPadding: 20
   };
 
   constructor(props) {
@@ -46,6 +52,9 @@ class ScrollView extends PureComponent {
       style,
       contentStyle,
       row,
+      showVIndicator,
+      showHIndicator,
+      avoidPadding,
       ...rest
     } = this.props;
     let { children } = this.props;
@@ -63,6 +72,8 @@ class ScrollView extends PureComponent {
       <NativeScrollView
         ref={this.ref}
         {...rest}
+        showsVerticalScrollIndicator={showVIndicator}
+        showsHorizontalScrollIndicator={showHIndicator}
         horizontal={horizontal}
         alwaysBounceVertical={!h}
         right={null}
@@ -75,32 +86,32 @@ class ScrollView extends PureComponent {
           borderStyles(rest),
           marginStyles({ ...rest, row: h }),
           rtl && h ? styles.rtl : null,
-          style,
+          style
         ]}
         contentContainerStyle={[
           !horizontal && childrenLayoutStyles(rest),
           paddingStyles({ ...rest, row: h }),
           flexGrow && { flexGrow: 1 },
-          contentStyle,
+          contentStyle
         ]}
       >
         {React.Children.map(children, child =>
           child
             ? React.cloneElement(child, {
                 style: [
-                  Object.getDeepProp(child, 'props.style'),
-                  rtl && h ? styles.rtl : {},
-                ],
+                  Object.getDeepProp(child, "props.style"),
+                  rtl && h ? styles.rtl : {}
+                ]
               })
-            : child,
+            : child
         )}
       </NativeScrollView>
     );
 
-    if (Platform.OS === 'ios' && !h) {
+    if (Platform.OS === "ios" && !h) {
       return (
         <KeyboardAvoidingView
-          style={{ alignSelf: 'stretch', flex: 1 }}
+          style={{ alignSelf: "stretch", flex: 1 }}
           behavior="padding"
           enabled
         >
@@ -109,17 +120,25 @@ class ScrollView extends PureComponent {
       );
     }
 
-    return main_node;
+    return (
+      <KeyboardAvoidingView
+        style={{ alignSelf: "stretch", flex: 1, paddingBottom: avoidPadding }}
+        behavior="height"
+        enabled
+      >
+        {main_node}
+      </KeyboardAvoidingView>
+    );
   }
 }
 
 const mapStateToProps = state => ({
-  rtl: state.lang.rtl,
+  rtl: state.lang.rtl
 });
 
 export default connect(
   mapStateToProps,
   null,
   null,
-  { forwardRef: true },
+  // { forwardRef: true }
 )(ScrollView);
