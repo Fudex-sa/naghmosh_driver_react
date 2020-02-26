@@ -18,7 +18,7 @@ import MapScreen from "./mapScreen/MapScreen";
 
 import HomeScreen from "./newProj/Home";
 import ProfileScreen from "./newProj/Profile/Profile";
-import NotificationScreen from "./newProj/Notification";
+import Notifications from "./newProj/Notification/Notification";
 import SignInScreen from "./newProj/signIn/SignIn";
 import FinishedOrderScreen from "./newProj/FinishedOrder";
 import DeliverOrderScreen from "./newProj/DeliverOrder";
@@ -28,7 +28,7 @@ import AppSetting from "./newProj/AppSetting";
 import ForgetPassword from "./newProj/ForgetPassword/ForgetPassword";
 import ChangePassword from "./newProj/ChangePassword/ChangePassword";
 
-export default function() {
+export default function () {
   const createScene = InternalComponent => () =>
     gestureHandlerRootHOC(
       class SceneWrapper extends Component {
@@ -55,8 +55,8 @@ export default function() {
   Navigation.registerComponent("homeScreen", createScene(HomeScreen));
   Navigation.registerComponent("ProfileScreen", createScene(ProfileScreen));
   Navigation.registerComponent(
-    "NotificationScreen",
-    createScene(NotificationScreen)
+    "Notifications",
+    createScene(Notifications)
   );
   Navigation.registerComponent("SignInScreen", createScene(SignInScreen));
   Navigation.registerComponent(

@@ -31,7 +31,7 @@ class Home extends Component {
             hint={I18n.t('notificationsDetalis')}
             notification
             onPress={() => {
-              AppNavigation.push("NotificationScreen");
+              AppNavigation.push("Notifications");
             }}
           />
           <HomeCard

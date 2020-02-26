@@ -7,7 +7,7 @@ import {
   AppIcon,
   AppNavigation
 } from "../../common";
-
+import I18n from 'react-native-i18n'
 import { AppHeader } from "../../components";
 
 class Home extends Component {
@@ -36,12 +36,12 @@ class Home extends Component {
         }}
         {...rest}
       >
-        <AppView flex={1.5} stretch center paddingHorizontal={7}>
-          <AppText>رقم الطلب</AppText>
-          <AppText color="#23A636">{orderNum}</AppText>
+        <AppView flex={1.7} stretch center borderRightWidth={0.7} borderColor={'gray'} >
+          <AppText>{I18n.t('OrderNumber')}</AppText>
+          <AppText size={7} color="#23A636">{orderNum}</AppText>
         </AppView>
-        <AppView flex={4}>
-          <AppText bold>{name}</AppText>
+        <AppView flex={4} marginLeft={5}>
+          <AppText bold size={6}>{name}</AppText>
           <AppView row>
             {!status && (
               <AppIcon
@@ -67,8 +67,8 @@ class Home extends Component {
               <AppText color="white">{status}</AppText>
             </AppView>
           ) : (
-            <AppIcon name="ios-arrow-forward" type="ion" flip color="grey" />
-          )}
+              <AppIcon name="ios-arrow-forward" type="ion" flip color="grey" size={9} />
+            )}
         </AppView>
       </AppView>
     );
