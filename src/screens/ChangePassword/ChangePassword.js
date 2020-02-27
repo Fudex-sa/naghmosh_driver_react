@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
     AppNavigation, AppView, AppText, AppScrollView, AppForm,
-    showSuccess, showError, AppInput, AppButton
-} from "../../../common";
-import { AppHeader } from "../../../components";
+    showSuccess, showError, AppInput, AppButton, AppIcon
+} from "../../common";
+import { AppHeader } from "../../components";
 import { ImageBackground } from "react-native";
-import backgroundImg from '../../../assets/imgs/background.png';
+import backgroundImg from '../../assets/imgs/background.png';
 import I18n from "react-native-i18n";
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { validationSchema } from './validation';
-import { setUserData } from '../../../actions/auth';
+import { setUserData } from '../../actions/auth';
 import AsyncStorage from '@react-native-community/async-storage';
 
 
@@ -26,7 +26,7 @@ export default ChangePassword = props => {
             formData.append(value, values[value]);
         });
 
-        Axios.post('updateprofile', formData)
+        Axios.post('driverprofileupdate', formData)
             .then(async (res) => {
                 showSuccess(res.data.message)
                 setLoading(false)
@@ -58,30 +58,30 @@ export default ChangePassword = props => {
                 <AppText color="#000" bold marginHorizontal={5} marginBottom={5} >{I18n.t("password")}</AppText>
                 <AppInput
                     {...injectFormProps("password")}
+                    secure
+                    showSecureEye
                     placeholder={I18n.t("password")}
                     height={7}
                     size={7}
-                    secure
-                    showSecureEye
-                    paddingHorizontal={10}
-                    borderRadius={70}
-                />
+                    borderRadius={7}
+                    leftItems={<AppIcon name="lock" type="simple-line" size={8} marginHorizontal={5} />} />
+
                 <AppText color="#000" bold marginHorizontal={5} marginBottom={5} >{I18n.t("confirm-password")}</AppText>
                 <AppInput
                     {...injectFormProps("password_confirmation")}
+                    secure
+                    showSecureEye
                     placeholder={I18n.t("confirm-password")}
                     height={7}
                     size={7}
-                    showSecureEye
-                    secure
-                    paddingHorizontal={10}
-                    borderRadius={70}
-                />
+                    borderRadius={7}
+                    leftItems={<AppIcon name="lock" type="simple-line" size={8} marginHorizontal={5} />} />
+
                 <AppButton
                     title={I18n.t("save")}
                     stretch
                     size={7}
-                    borderRadius={25}
+                    borderRadius={7}
                     marginTop={10}
                     height={7}
                     onPress={handleSubmit}
@@ -94,22 +94,20 @@ export default ChangePassword = props => {
     return (
         <AppView flex stretch >
             <AppHeader title={I18n.t("editPassword")} hideCart />
-            <ImageBackground source={backgroundImg} style={{ flex: 1, alignSelf: "stretch" }} >
-                <AppScrollView flex stretch paddingHorizontal={8} paddingTop={5} >
-                    <AppForm
-                        schema={{
-                            api_token: user ? user.api_token : "",
-                            firstName: user ? user.first_name : "",
-                            lastName: user ? user.last_name : "",
-                            password: "",
-                            password_confirmation: "",
-                        }}
-                        validationSchema={validationSchema}
-                        render={renderForm}
-                        onSubmit={onSubmit}
-                    />
-                </AppScrollView>
-            </ImageBackground>
+            <AppScrollView flex stretch paddingHorizontal={8} paddingTop={5} >
+                <AppForm
+                    schema={{
+                        api_token: user ? user.api_token : "",
+                        firstName: user ? user.first_name : "",
+                        lastName: user ? user.last_name : "",
+                        password: "",
+                        password_confirmation: "",
+                    }}
+                    validationSchema={validationSchema}
+                    render={renderForm}
+                    onSubmit={onSubmit}
+                />
+            </AppScrollView>
         </AppView>
     );
 }

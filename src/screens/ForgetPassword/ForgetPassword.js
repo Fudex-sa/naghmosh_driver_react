@@ -11,11 +11,11 @@ export default ForgetPassword = props => {
 
     const onSubmit = (values, { setSubmitting }) => {
         setLoading(true)
-        Axios.post('forgetpassword', values)
+        Axios.post('driverforgetpassword', values)
             .then((res) => {
-                showSuccess(res.data.message)
-                setLoading(false)
-                AppNavigation.pop();
+                showSuccess(res.data.message);
+                setLoading(false);
+                if (res.data.data !== 0) { AppNavigation.pop(); }
             })
             .catch((error) => {
                 console.log(error)
@@ -40,11 +40,11 @@ export default ForgetPassword = props => {
                 <AppInput
                     {...injectFormProps("email")}
                     placeholder={I18n.t("email")}
+                    email
                     height={7}
                     size={7}
-                    email
-                    paddingHorizontal={10}
-                    borderRadius={70}
+                    borderRadius={7}
+                    leftItems={<AppIcon name="email-open-outline" type="material-community" size={8} marginHorizontal={5} />}
                 />
                 <AppButton
                     title={I18n.t("Submit a new password")}
@@ -62,7 +62,7 @@ export default ForgetPassword = props => {
         );
     return (
         <AppView flex stretch >
-            <AppHeader title={I18n.t('forget-password1')} hideCart />
+            <AppHeader title={I18n.t('forget-password1')} />
             <AppScrollView flex stretch paddingHorizontal={8} paddingTop={5} center >
                 <AppImage
                     width={50}

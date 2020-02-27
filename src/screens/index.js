@@ -5,30 +5,37 @@ import Welcome from "./welcome/Welcome";
 import Offers from "./offers/Offers";
 import Cart from "./cart/Cart";
 import Fav from "./fav/Fav";
-import Settings from "./settings/Settings";
+import Settings from "./Settings/Settings";
 import Products from "./products/Products";
 import ProductDetails from "./productDetails/ProductDetails";
 import Orders from './orders/Orders';
-import OrderDetails from './orderDetails/OrderDetails';
+import OrderDetails from './OrderDetails/OrderDetails';
 import Profile from "./profile/Profile";
 import SignUp from "./signUp/SignUp";
 import ContactUs from './contactUs/ContactUs';
 import AddNewAddress from "./addNewAddress/AddNewAddress";
 import AppPickerModal from "./appPickerModal/AppPickerModal";
-import Login from "../components/login/Login";
+import Login from "./login/Login";
 import SearchProducts from "./products/SearchProducts";
-import Language from "./settings/Language";
-import Addresses from "./settings/Addresses";
+import Language from "./Settings/Language";
+import Addresses from "./Settings/Addresses";
 import EditProfile from "./profile/EditProfile";
-import ChangePassword from "./profile/ChangePassword/ChangePassword";
-import HowToUse from "./settings/HowToUse";
+import ChangePassword from "./ChangePassword/ChangePassword";
+import HowToUse from "./Settings/HowToUse";
 import EditPicture from "./profile/EditPicture";
 import AddCopon from "../components/cart/AddCopon";
 import ForgetPassword from "./ForgetPassword/ForgetPassword";
 import MapLocation from "../components/addNewAddress/Map";
+import Notifications from "./Notification/Notification"
+import DeliverOrder from "./DeliverOrder/DeliverOrder";
+import FinishedOrders from "./FinishedOrders/FinishedOrders";
 
 // register all screens of the app
 export default () => {
+  AppNavigation.registerScreen("DeliverOrder", DeliverOrder);
+  AppNavigation.registerScreen("FinishedOrders", FinishedOrders);
+
+  AppNavigation.registerScreen("Notifications", Notifications);
   AppNavigation.registerScreen("MapLocation", MapLocation);
   AppNavigation.registerScreen("ForgetPassword", ForgetPassword);
   AppNavigation.registerScreen("AddCopon", AddCopon);
@@ -42,15 +49,15 @@ export default () => {
   AppNavigation.registerScreen("Login", Login);
   AppNavigation.registerScreen("welcome", Welcome);
   AppNavigation.registerScreen("about", About);
-  AppNavigation.registerScreen("home", Home);
+  AppNavigation.registerScreen("Home", Home);
   AppNavigation.registerScreen("offers", Offers);
   AppNavigation.registerScreen("cart", Cart);
   AppNavigation.registerScreen("fav", Fav);
   AppNavigation.registerScreen("orders", Orders);
-  AppNavigation.registerScreen("settings", Settings);
+  AppNavigation.registerScreen("Settings", Settings);
   AppNavigation.registerScreen("products", Products);
   AppNavigation.registerScreen("productDetails", ProductDetails);
-  AppNavigation.registerScreen("orderDetails", OrderDetails);
+  AppNavigation.registerScreen("OrderDetails", OrderDetails);
   AppNavigation.registerScreen("profile", Profile);
   AppNavigation.registerScreen("signUp", SignUp);
   AppNavigation.registerScreen("contactUs", ContactUs);

@@ -6,7 +6,7 @@ export default {
   primaryLight: '#00397A',
   safe: '#007F41',
   warning: '#FFC107',
-  error: '#D0021B',
+  error: '#E3000F',
   danger: '#C62828',
   disabled: '#AcB5BB',
   grey: '#ACB5BB',

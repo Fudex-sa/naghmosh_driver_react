@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Platform, SafeAreaView } from 'react-native';
+import { Platform, SafeAreaView, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 
 import {
@@ -58,7 +58,7 @@ class Header extends Component {
     const { rowItems, showSettings, rtl, showNotif, hideCart, cartCount } = this.props;
     return (
       <AppView stretch center flex  >
-        {hideCart ? null
+        {/* {hideCart ? null
           : <>
             <AppImage source={require('../assets/imgs/cart.png')} width={10} height={5}
               resizeMode={'contain'}
@@ -75,7 +75,7 @@ class Header extends Component {
               <AppText color={'white'} >{cartCount}</AppText>
             </AppView>}
           </>
-        }
+        } */}
         {/* {showSettings ? (
           <AppView
             row
@@ -121,7 +121,7 @@ class Header extends Component {
             name="md-arrow-back"
             type="ion"
             size={12}
-            color="#fff"
+            color="black"
           />
         </AppButton>
       </AppView>
@@ -141,16 +141,17 @@ class Header extends Component {
           stretch
           style={{
             height: APPBAR_HEIGHT,
+            marginTop: StatusBar.currentHeight
           }}
           row
           spaceBetween
-          borderBottomColor={colors.borderBottomColor}
-          backgroundColor={colors.primary}
-        // borderBottomWidth={.2}
+          backgroundColor={"white"}
+          borderBottomWidth={0.5}
+          borderBottomColor="grey"
         >
           {this.renderLeft()}
           <AppView flex={4} center marginRight={5} >
-            <AppText size={9} bold numberOfLines={1} color="#fff">
+            <AppText size={9} bold numberOfLines={1} color="black">
               {title}
             </AppText>
           </AppView>

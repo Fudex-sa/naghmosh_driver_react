@@ -1,16 +1,17 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import I18n from "react-native-i18n";
 import {
   TextInput as NativeInput,
   View as RNView,
   TouchableWithoutFeedback,
   Animated,
   Platform,
-  TouchableOpacity,
-} from 'react-native';
-import { connect } from 'react-redux';
+  TouchableOpacity
+} from "react-native";
+import { connect } from "react-redux";
 
-import axios from 'axios';
+import axios from "axios";
 import {
   BasePropTypes,
   paddingStyles,
@@ -18,20 +19,19 @@ import {
   fontFamilyStyles,
   textDirectionStyles,
   colorStyles,
-  borderStyles,
-} from './Base';
+  borderStyles
+} from "./Base";
 
-import { AppView, AppIcon, AppText } from '.';
-import { getTheme } from './Theme';
-import InputError from './micro/InputError';
-import { convertNumbers } from './utils/numbers';
+import { AppView, AppIcon, AppText, AppButton } from ".";
+import { getTheme } from "./Theme";
+import InputError from "./micro/InputError";
+import { convertNumbers } from "./utils/numbers";
+import { isASCII } from "./utils/text";
 import {
   moderateScale,
   responsiveHeight,
-  responsiveFontSize,
-} from './utils/responsiveDimensions';
-
-import { showError } from './utils/localNotifications';
+  responsiveFontSize
+} from "./utils/responsiveDimensions";
 
 const { CancelToken } = axios;
 
@@ -58,15 +58,16 @@ class Input extends PureComponent {
     noValidation: PropTypes.bool,
     asyncErrorResolver: PropTypes.func,
     asyncDataResolver: PropTypes.func,
+    noBorder: PropTypes.bool
   };
 
   static defaultProps = {
     leftItems: [],
     rightItems: [],
     masks: [],
-    initialValue: '',
-    noValidation: false,
+    initialValue: "",
     ...getTheme().input,
+    noBorder: false
   };
 
   constructor(props) {
@@ -80,8 +81,9 @@ class Input extends PureComponent {
       color: props.color || props.inactiveColor,
       isFocused: !!props.initialValue,
       isTouched: false,
-      textFontSize: responsiveFontSize(props.fontSize) || responsiveFontSize(5)
+      asyncConnectionError: false
     };
+    this.asyncValidateLoading = false;
     this._animatedIsFocused = new Animated.Value(props.initialValue ? 1 : 0);
   }
 
@@ -89,110 +91,147 @@ class Input extends PureComponent {
     if (nextProps.reset !== this.props.reset) {
       this.clear();
     }
+
+    if (nextProps.error && !this.state.isTouched) {
+      this.setState({
+        isTouched: true
+      });
+    }
   }
 
   componentDidUpdate() {
     Animated.timing(this._animatedIsFocused, {
-      toValue: this.state.isFocused || this.state.text !== '' ? 1 : 0,
+      toValue: this.state.isFocused || this.state.text !== "" ? 1 : 0,
       duration: 150,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start();
   }
 
+  getText = () => this.state.text;
+
   getAsyncValidationScheme = value => {
     if (!value) return;
+    // this.setState({
+    //   asyncConnectionError: false,
+    // });
+    if (this.asyncValidateLoading && this.source) {
+      this.source.cancel("Async Validation Canceled.");
+    }
 
     const { asyncDataResolver, asyncErrorResolver } = this.props;
 
     const { url, data } = asyncDataResolver(value);
+    this.asyncValidateLoading = true;
+    this.props.setErrorState(this.props.name, true);
+
+    this.source = CancelToken.source();
     axios
-      .put(url, data)
+      .put(url, data, {
+        cancelToken: this.source.token
+      })
       .then(res => {
-        const errText = asyncErrorResolver(res) || null;
-        if (this.props.setError) {
+        const errText = asyncErrorResolver(res, value) || null;
+        if (this.props.setError && !this.props.error) {
           this.props.setError(this.props.name, errText);
         }
-
-        clearTimeout(this.asyncErrorTimer);
-        this.asyncErrorTimer = null;
+        this.asyncValidateLoading = false;
+        this.props.setErrorState(this.props.name, false);
+        this.setState({
+          isTouched: true,
+          asyncConnectionError: false
+        });
       })
       .catch(error => {
-        showError(error[1].message);
-        clearTimeout(this.asyncErrorTimer);
-        this.asyncErrorTimer = null;
+        if (!axios.isCancel(error[0])) {
+          this.asyncValidateLoading = false;
+          this.props.setErrorState(this.props.name, false);
+          this.props.setError(
+            this.props.name,
+            I18n.t("ui-networkConnectionError")
+          );
+          this.setState({
+            isTouched: true,
+            asyncConnectionError: true
+          });
+        }
       });
   };
 
+  getTouchedStatus = () => this.state.isTouched;
+
   onChangeText = (text, noValidate) => {
-    this.setState({
-      textFontSize: responsiveFontSize(6)
-    })
-    if (!this.state.isTouched) {
-      this.setState({
-        isTouched: true,
-      });
-    }
     const { name, onChange, asyncDataResolver } = this.props;
 
     this.setState({
-      text,
+      text
     });
 
     if (onChange) {
-      if (name) onChange(name, text, noValidate);
+      if (name) onChange(name, text, !this.state.isTouched || noValidate);
       else onChange(text);
     }
+
     if (asyncDataResolver) {
-      clearTimeout(this.asyncErrorTimer);
-      this.asyncErrorTimer = setTimeout(() => {
-        this.getAsyncValidationScheme(text);
-      }, 1000);
+      this.getAsyncValidationScheme(text);
     }
   };
 
   onBlur = () => {
-    const { name, onBlur, color, inactiveColor } = this.props;
-    this.setState({
-      textFontSize: responsiveFontSize(this.props.fontSize || 5)
-    })
-
+    const {
+      name,
+      onBlur,
+      color,
+      inactiveColor,
+      asyncDataResolver
+    } = this.props;
     if (!color) {
       this.setState({
-        color: inactiveColor,
+        color: inactiveColor
       });
     }
-    if (!this.state.isTouched) {
-      this.setState({
-        isTouched: true,
-      });
+
+    if (asyncDataResolver && this.state.isTouched) {
+      this.getAsyncValidationScheme(this.state.text);
     }
-    this.setState({
-      isFocused: false,
-    });
 
     if (onBlur) {
-      if (name) onBlur(name, this.state.text);
+      if (name)
+        onBlur(
+          name,
+          this.state.text,
+          !!this.props.error && !!asyncDataResolver,
+          !asyncDataResolver
+        );
       else onBlur(this.state.text);
     }
+
+    this.setState({
+      isFocused: false,
+      isTouched: true
+    });
   };
 
   onFocus = () => {
-    const { name, onFocus, color, activeColor } = this.props;
+    const { name, onFocus, color, activeColor, asyncDataResolver } = this.props;
 
     if (!color) {
       this.setState({
-        color: activeColor,
+        color: activeColor
       });
     }
 
-    this.setState({
-      isFocused: true,
-    });
+    if (asyncDataResolver && this.state.isTouched) {
+      this.getAsyncValidationScheme(this.state.text);
+    }
 
     if (onFocus) {
-      if (name) onFocus(name, this.state.text);
+      if (name) onFocus(name, this.state.text, !this.state.isTouched);
       else onFocus(this.state.text);
     }
+
+    this.setState({
+      isFocused: true
+    });
   };
 
   onSubmitEditing = () => {
@@ -219,7 +258,7 @@ class Input extends PureComponent {
   clear = () => {
     this.inputRef.current.clear();
 
-    this.onChangeText('', true);
+    this.onChangeText("", true);
   };
 
   renderSecureEyeButton = () => (
@@ -229,15 +268,15 @@ class Input extends PureComponent {
         this.setState(prevState => ({ secure: !prevState.secure }));
       }}
       style={{
-        alignSelf: 'stretch',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignSelf: "stretch",
+        alignItems: "center",
+        justifyContent: "center"
       }}
     >
       <RNView
         style={borderStyles({
           rtl: this.props.rtl,
-          borderLeftColor: '#8A8A8A',
+          borderLeftColor: "#8A8A8A"
           // borderLeftWidth: 1,
         })}
       >
@@ -245,7 +284,7 @@ class Input extends PureComponent {
           size={this.props.size * 1.4}
           paddingHorizontal={5}
           type="feather"
-          name={this.state.secure ? 'eye' : 'eye-off'}
+          name={this.state.secure ? "eye-off" : "eye"}
           color="#8A8A8A"
         />
       </RNView>
@@ -254,7 +293,7 @@ class Input extends PureComponent {
 
   renderErrorIcon = () => (
     <AppIcon
-      color="red"
+      color="#E3000F"
       name="error-outline"
       type="material"
       onPress={this.focus}
@@ -265,26 +304,26 @@ class Input extends PureComponent {
 
   renderItems = items => {
     const { size } = this.props;
-
+    const assignedColor = this.getColor();
     const nodes = items.map(item => {
       if (
         item.type.WrappedComponent &&
-        (item.type.WrappedComponent.displayName === 'Button' ||
-          item.type.WrappedComponent.displayName === 'Icon')
+        (item.type.WrappedComponent.displayName === "Button" ||
+          item.type.WrappedComponent.displayName === "Icon")
       ) {
         return React.cloneElement(item, {
           key: String(Math.random()),
           transparent: true,
-          stretch: item.type.WrappedComponent.displayName === 'Button',
+          stretch: item.type.WrappedComponent.displayName === "Button",
           color: item.props.color || this.state.color,
           size: item.props.size || size * 1.5,
-          backgroundColor: 'transparent',
+          backgroundColor: "transparent",
           paddingHorizontal: item.props.paddingHorizontal || size / 1.5,
-          paddingVertical: 0,
+          paddingVertical: 0
         });
       }
       return React.cloneElement(item, {
-        key: String(Math.random()),
+        key: String(Math.random())
       });
     });
 
@@ -299,12 +338,12 @@ class Input extends PureComponent {
     >
       <RNView
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           bottom: 0,
           left: 0,
           right: 0,
-          zIndex: 10,
+          zIndex: 10
         }}
       />
     </TouchableWithoutFeedback>
@@ -323,11 +362,17 @@ class Input extends PureComponent {
   };
 
   getColor = () => {
-
-    if (this.props.error) return '#FF0050'
-    else (!this.state.isTouched || this.props.noValidation)
-    return '#8A8A8A';
-
+    if (this.state.isFocused) {
+      return '#23A636'
+    }
+    if (this.props.borderColor) {
+      return this.props.borderColor;
+    }
+    if (!this.state.isTouched || this.props.noValidation) {
+      return "#8A8A8A";
+    }
+    if (this.props.error) return "#E3000F";
+    return "green";
   };
 
   render() {
@@ -365,43 +410,48 @@ class Input extends PureComponent {
       borderBottomColor,
       borderLeftColor,
       borderRightColor,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderTopLeftRadius,
+      borderTopRightRadius,
       email,
       phone,
       number,
       label,
       errorTextMarginHorizontal,
+      errorTextMarginBottom,
       noBorder,
       maxLength,
       style,
+      textStyle,
+      editable,
+      onPress,
       ...rest
     } = this.props;
 
     let { leftItems, rightItems } = this.props;
     const paddingText = moderateScale(2);
     const assignedColor = this.getColor();
-    const labelOffset = rtl ? leftItems.length > 0 ? 0 : 15 : rightItems.length > 0 ? 0 : 15
     const labelStyle = [
       {
-        position: 'absolute',
+        position: "absolute",
         top: responsiveHeight(height) / 5,
         bottom: responsiveHeight(height) / 5,
-        borderRadius: moderateScale(2),
-        backgroundColor,
-        justifyContent: 'center',
-        alignItems: rtl ? 'flex-end' : 'flex-start',
-        padding: paddingText,
+        justifyContent: "center",
+        alignItems: rtl ? "flex-end" : "flex-start",
+        paddingHorizontal: paddingText,
         transform: [
           {
             translateY: this._animatedIsFocused.interpolate({
               inputRange: [0, 1],
-              outputRange: [0, -responsiveHeight(height) / 2],
-            }),
+              outputRange: [0, -responsiveHeight(height) / 3]
+            })
           },
           {
             scale: this._animatedIsFocused.interpolate({
               inputRange: [0, 1],
-              outputRange: [1, 0.8],
-            }),
+              outputRange: [1, 0.8]
+            })
           },
           {
             translateX: this._animatedIsFocused.interpolate({
@@ -410,28 +460,28 @@ class Input extends PureComponent {
                 0,
                 rtl
                   ? responsiveFontSize(size) - 15
-                  : -responsiveFontSize(size) + 15,
-              ],
-            }),
-          },
-        ],
+                  : -responsiveFontSize(size) + 15
+              ]
+            })
+          }
+        ]
       },
-      !rtl ? { left: labelOffset } : { right: labelOffset },
+      !rtl ? { left: 0 } : { right: 0 }
     ];
 
     if (leftItems && !leftItems.map) leftItems = [leftItems];
     if (rightItems && !rightItems.map) rightItems = [rightItems];
 
-    let keyboardType = 'default';
-    if (number) keyboardType = 'phone-pad';
-    if (phone) keyboardType = 'phone-pad';
-    if (email) keyboardType = 'email-address';
+    let keyboardType = "default";
+    if (number) keyboardType = "decimal-pad";
+    if (phone) keyboardType = "phone-pad";
+    if (email) keyboardType = "email-address";
 
     const scrollFixProps = {};
 
-    if (Platform.OS === 'android' && rtl && keyboardType === 'default') {
-      scrollFixProps.multiline = secure ? false : true;
-      scrollFixProps.maxLength = maxLength || 40;
+    if (Platform.OS === "android" && rtl && keyboardType === "default") {
+      scrollFixProps.multiline = this.state.secure ? false : true;
+      scrollFixProps.maxLength = maxLength || 10000;
     }
 
     return (
@@ -448,14 +498,18 @@ class Input extends PureComponent {
         width={width}
       >
         <AppView
-          style={{ overflow: 'visible' }}
+          style={{ overflow: "visible" }}
           stretch
           row
           height={height}
           backgroundColor={backgroundColor}
+          borderBottomLeftRadius={borderBottomLeftRadius}
+          borderBottomRightRadius={borderBottomRightRadius}
+          borderTopLeftRadius={borderTopLeftRadius}
+          borderTopRightRadius={borderTopRightRadius}
           borderRadius={borderRadius}
           elevation={elevation}
-          borderWidth={borderWidth}
+          borderWidth={borderWidth || (noBorder ? 0 : 1)}
           borderTopWidth={borderTopWidth}
           borderBottomWidth={borderBottomWidth}
           borderLeftWidth={borderLeftWidth}
@@ -464,13 +518,31 @@ class Input extends PureComponent {
           borderBottomColor={borderBottomColor}
           borderLeftColor={borderLeftColor}
           borderRightColor={borderRightColor}
-          borderColor={assignedColor}
-          style={[{ overflow: 'visible' }, style]}
+          borderColor={assignedColor || borderColor}
+          style={[{ overflow: "visible" }, style]}
           {...(this.state.isFocused && this.props.onFocusBorderHighlight
             ? this.props.onFocusBorderHighlight
             : null)}
+          onPress={onPress}
         >
           {leftItems.length ? this.renderItems(leftItems) : null}
+          {error &&
+            this.state.asyncConnectionError &&
+            this.renderItems([
+              <AppButton
+                transparent
+                backgroundColor="black"
+                touchableOpacity
+                leftIcon={<AppIcon name="reload1" type="ant" />}
+                onPress={() => {
+                  this.props.setError(this.props.name, "");
+                  this.setState({
+                    asyncConnectionError: false
+                  });
+                  this.getAsyncValidationScheme(this.state.text);
+                }}
+              />
+            ])}
           <AppView flex stretch>
             {label && (
               <Animated.View pointerEvents="none" style={labelStyle}>
@@ -480,19 +552,19 @@ class Input extends PureComponent {
               </Animated.View>
             )}
             <NativeInput
-              returnKeyType={nextInput ? 'next' : 'done'}
+              returnKeyType={nextInput ? "next" : "done"}
               {...rest}
+              editable={editable}
               onChange={null}
               placeholder={convertNumbers(
                 placeholder,
-                translateNumbers ? rtl : false,
+                translateNumbers ? rtl : false
               )}
               placeholderTextColor={placeholderColor}
               blurOnSubmit
               ref={this.inputRef}
               value={this.state.text}
               underlineColorAndroid="transparent"
-              multiline={secure ? false : true}
               secureTextEntry={this.state.secure}
               onChangeText={this.onChangeText}
               onBlur={this.onBlur}
@@ -508,12 +580,12 @@ class Input extends PureComponent {
                 colorStyles({ color: this.state.color }),
                 {
                   flex: 1,
-                  alignSelf: 'stretch',
-                  textAlignVertical: 'center',
-                  // padding: 0,
-                  fontSize: this.state.textFontSize
+                  alignSelf: "stretch",
+                  textAlignVertical: "center",
+                  writingDirection: isASCII(this.state.text) ? "ltr" : "rtl"
                 },
                 paddingStyles(this.props),
+                textStyle
               ]}
             />
           </AppView>
@@ -524,27 +596,28 @@ class Input extends PureComponent {
           {secure && showSecureEye
             ? this.renderItems([this.renderSecureEyeButton()])
             : null}
-          {/* {(this.state.asyncError || error) && this.renderErrorIcon()} */}
         </AppView>
-        {!noValidation && (
+
+        {!noValidation ? (
           <InputError
             error={error}
             errorTextMarginHorizontal={errorTextMarginHorizontal}
+            errorTextMarginBottom={errorTextMarginBottom}
             size={size}
           />
-        )}
+        ) : null}
       </AppView>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  rtl: state.lang.rtl,
+  rtl: state.lang.rtl
 });
 
 export default connect(
   mapStateToProps,
   null,
   null,
-  // { forwardRef: true },
+  { forwardRef: true }
 )(Input);

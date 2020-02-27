@@ -5,39 +5,67 @@ import homeTopImg from '../../assets/imgs/hometop.png';
 import Images from '../../assets/imgs/index';
 import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppIcon } from "../../../src/common";
 import I18n from "react-native-i18n";
-import SearchInput from '../../components/home/SearchInput';
-import Categories from '../../components/home/Categories';
-import Products from '../../components/home/Products';
-import { Navigation } from 'react-native-navigation';
 import splashScreen from "react-native-splash-screen";
+import HomeCard from './HomeCard'
+import { AppHeader } from '../../components';
 
 export default Home = props => {
-  splashScreen.hide();
-  Navigation.mergeOptions("MAIN_STACK", {
-    bottomTabs: {
-      currentTabIndex: 2,
-    }
-  });
 
   return (
-    <ImageBackground source={backgroundImg} style={{ flex: 1, alignSelf: "stretch" }}>
-      <AppScrollView showsVerticalScrollIndicator={false} flex stretch>
-        <AppImage stretch height={35} source={homeTopImg} resizeMode="cover" width={100} />
-        <SearchInput />
-        <Categories />
-        <Products orderBy={"recentlyArrived"} />
-        <AppImage
-          marginBottom={5}
-          source={require('../../assets/imgs/checkinsline.png')}
-          resizeMode="cover"
-          width={95}
-          centerSelf
-          center
-          height={15}
-          borderRadius={25}
+    <AppView flex stretch>
+      <AppHeader title={I18n.t('home')} transparent hideBack />
+      <AppScrollView paddingTop={10} stretch>
+        <HomeCard
+          source={require('../../assets/imgs/person.png')}
+          label={I18n.t('personalPage')}
+          hint={I18n.t('personalPageDetalis')}
+          onPress={() => {
+            AppNavigation.push("profile");
+          }}
         />
-        <Products orderBy={"mostCommon"} />
+        <HomeCard
+          source={require('../../assets/imgs/service.png')}
+          label={I18n.t('notifications')}
+          hint={I18n.t('notificationsDetalis')}
+          notification
+          onPress={() => {
+            AppNavigation.push("Notifications");
+          }}
+        />
+        <HomeCard
+          source={require('../../assets/imgs/current.png')}
+          label={I18n.t('Delivery requests')}
+          hint={I18n.t('DeliveryDetails')}
+          onPress={() => {
+            AppNavigation.push("DeliverOrder");
+          }}
+        />
+        <HomeCard
+          source={require('../../assets/imgs/finished.png')}
+          label={I18n.t('Completed requests')}
+          hint={I18n.t('CompletedDetails')}
+          onPress={() => {
+            AppNavigation.push("FinishedOrders");
+          }}
+        />
+        <HomeCard
+          source={require('../../assets/imgs/settings.png')}
+          label={I18n.t('Settings')}
+          hint={I18n.t('SettingsDetalis')}
+          onPress={() => {
+            AppNavigation.push("Settings")
+          }}
+        />
+        <HomeCard
+          source={require('../../assets/imgs/information.png')}
+          label={I18n.t('informations')}
+          hint={I18n.t('informationsDetails')}
+          onPress={() => {
+            // AppNavigation.push("HowToUse");
+          }}
+        />
       </AppScrollView>
-    </ImageBackground>
+    </AppView>
+
   );
 }

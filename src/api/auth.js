@@ -1,11 +1,16 @@
 import axios from "axios";
 import { ApiErrorException, ApiErrorTypes } from "./errors";
 import { showError } from "../common"
+import I18n from 'react-native-i18n';
 export default class Auth {
 
   signUp = async (data) => {
     try {
-      const res = await axios.post("clientregister", data);
+      console.log("4444444444")
+      const res = await axios.post("driverregister", data);
+      // .then((res) => console.log("reddd ", res))
+      // .catch((error) => console.log(error, "fff ", error.response))
+      console.log("res ", res)
       if (res.data.status === 200) { return res.data }
       else {
         throw new ApiErrorException(
@@ -31,14 +36,16 @@ export default class Auth {
 
   signIn = async (data) => {
     try {
-      const res = await axios.post("clientlogin", data);
+      const res = await axios.post("driverlogin", data);
       if (res.data.status === 200) { return res.data }
       else if (res.data.status === 403) {
         showError(res.data.message)
         return
       }
     } catch (error) {
-      showError(I18.t("ui-error-happened"))
+      console.log(error)
+      console.log(error.response)
+      showError(I18n.t("ui-error-happened"))
     }
   };
 

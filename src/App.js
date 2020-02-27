@@ -24,13 +24,10 @@ export default () => {
     if (userData) await store.dispatch(setUserData(userData));
     if (userData && !userData.isLogout) {
       // auth
-      if (rtl)
-        AppNavigation.navigateToHomeAr();
-      else
-        AppNavigation.navigateToHome();
+      AppNavigation.navigateToHome();
     } else {
       // no auth
-      AppNavigation.navigateToAuth();
+      AppNavigation.navigateToHome();
     }
   });
 };

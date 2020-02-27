@@ -14,7 +14,7 @@ export default {
     type: "ion"
   },
   button: {
-    height: 9,
+    height: 7,
     size: 7,
     color: "white",
     bold: true,
@@ -37,20 +37,20 @@ export default {
     sizeScale: 0.7
   },
   input: {
-    size: 7,
-    activeColor: "primary",
-    inactiveColor: "#D0D0D0",
-    color: "#5C5C5C",
-    backgroundColor: "#F3F3F3",
-    placeholderColor: "darkgrey",
+    size: 6,
+    activeColor: "#8A8A8A",
+    inactiveColor: "grey",
+    color: "#484848",
+    backgroundColor: "white",
+    placeholderColor: "#858F96",
     center: false,
     translateNumbers: true,
-    paddingHorizontal: 5,
-    pv: 5,
+    paddingHorizontal: 3,
+    pv: 3,
     bc: "inputBorderColor",
-    // bw: 1,
+    bw: 0.5,
     borderRadius: 5,
-    height: 8
+    height: 7
   },
   formInputFrame: {
     size: 5,

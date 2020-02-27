@@ -8,9 +8,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { setUserData } from "../../actions/auth";
 import { useDispatch } from 'react-redux';
 import { setLang } from '../../actions/lang';
+import { Switch } from 'native-base';
 
 export default MenuItem = props => {
     const dispatch = useDispatch();
+    const [notif, setNotif] = useState(false)
 
     const renderLogout = () => {
         return Alert.alert(
@@ -43,35 +45,45 @@ export default MenuItem = props => {
 
     return (
         <AppView
-            stretch row height={6.5} spaceBetween borderBottomWidth={.5} borderColor={colors.darkgrey}
-            centerY paddingHorizontal={10}
-            onPress={() => {
+            linearBackgroundGradient={{ colors: ['#23A636', '#88C80A'], start: { x: 1, y: 1 }, end: { x: 0, y: 0 } }}
+            stretch row height={7} spaceBetween borderWidth={1} borderColor={colors.darkgrey}
+            centerY paddingHorizontal={10} marginHorizontal={7} marginVertical={5} borderRadius={7}
+            onPress={props.noti ? undefined : () => {
                 if (props.screenName === 'Logout') {
                     renderLogout();
                 }
                 if (props.screenName && props.screenName !== 'Logout') AppNavigation.push(props.screenName)
-                // if (props.screenName === 'lang') {
-                //     dispatch(setLang('ar', true))
-                // }
             }}
         >
             <AppView stretch row  >
                 <AppIcon
                     name={props.iconName}
                     type={props.iconType || "custom"}
-                    size={8}
+                    size={9} color='white'
                 />
-                <AppText bold marginHorizontal={5} size={7}>
+                <AppText bold marginHorizontal={5} size={8} color={'white'}>
                     {props.name}
                 </AppText>
             </AppView>
-            <AppIcon
-                name="chevron-right"
-                type="entypo"
-                color={colors.darkgrey}
-                flip
-                size={10}
-            />
+            {props.noti ?
+                <Switch
+                    trackColor={notif ? 'white' : '#E95B06'}
+                    onValueChange={value => {
+                        setNotif(value)
+                        // this.StopNotifications(value);
+                    }}
+                    thumbColor={notif ? '#E95B06' : 'white'}
+                    value={notif}
+                />
+                :
+                <AppIcon
+                    name="chevron-right"
+                    type="entypo"
+                    color={'white'}
+                    flip
+                    size={10}
+                />
+            }
 
         </AppView>
     )

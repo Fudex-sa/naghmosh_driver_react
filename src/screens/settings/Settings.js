@@ -15,26 +15,15 @@ export default Settings = props => {
     const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null);
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
     return (
-        <ImageBackground source={backgroundImg} style={{ flex: 1, alignSelf: "stretch" }}>
-            <AppHeader title={user ? user.user_name : I18n.t('user')} hideBack hideCart />
+        <AppView flex stretch>
+            <AppHeader title={I18n.t('settings')} hideCart />
             <AppScrollView showsVerticalScrollIndicator={false} flex stretch>
-                {token && <HeaderSection />}
-                {token && <>
-                    <MenuHeader name="my-account" />
-                    <MenuItem name={I18n.t("addresses")} iconName="flag" screenName="Addresses" />
-                    {/* <MenuItem name={I18n.t("payment")} iconName="maps" screenName="" />
-                    <MenuItem name={I18n.t("return")} iconName="reply" screenName="" /> */}
+                <MenuItem name={I18n.t("lang")} iconName="language" iconType='material' screenName="Language" />
+                {<>
+                    <MenuItem name={I18n.t("notifications")} iconName='notifications-none' iconType='material' noti />
+                    <MenuItem name={I18n.t("log-out")} iconName="logout" iconType='material-community' screenName="Logout" />
                 </>}
-                <MenuHeader name="settings" />
-                {/* <MenuItem name={I18n.t("country")} iconName="flag" screenName="" /> */}
-                <MenuItem name={I18n.t("lang")} iconName="lang" screenName="Language" />
-
-                <MenuHeader name="contact-us" />
-                <MenuItem name={I18n.t("help")} iconName="inf" screenName="HowToUse" />
-                <MenuItem name={I18n.t("contact-us")} iconName="ios-call" iconType="ion" screenName="contactUs" />
-                {token && <MenuItem name={I18n.t("log-out")} iconName="out" screenName="Logout" />}
-
             </AppScrollView>
-        </ImageBackground>
+        </AppView>
     );
 }

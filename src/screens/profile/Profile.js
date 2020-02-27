@@ -1,105 +1,174 @@
 import React, { useState, useEffect } from 'react';
-import { AppNavigation, AppView, AppText, AppImage, AppList, AppIcon, moderateScale, AppScrollView, showError } from "../../../src/common";
+import { AppNavigation, AppView, AppText, AppImage, AppList, AppIcon, moderateScale, AppScrollView, showError, AppForm, AppButton, AppInput } from "../../../src/common";
 import { AppHeader } from "../../../src/components";
-import Images from '../../assets/imgs/index';
-import { ImageBackground, ActivityIndicator } from "react-native";
-import backgroundImg from '../../assets/imgs/background.png';
+import { Alert } from 'react-native';
 import I18n from "react-native-i18n";
-import colors from '../../common/defaults/colors';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
-
-const renderItem = (title, value, isPassword) => {
-    return (
-        <AppView stretch borderColor={colors.grey} borderTopWidth={.7} paddingVertical={5} >
-            <AppText color="#000" bold marginHorizontal={10} >
-                {title}
-            </AppText>
-            <AppView row stretch spaceBetween>
-                <AppText color={colors.darkgrey} bold marginHorizontal={10} paddingTop={5} >
-                    {value}
-                </AppText>
-                {isPassword &&
-                    <AppText color={colors.primary} bold paddingHorizontal={10}
-                        onPress={() => { AppNavigation.push('ChangePassword') }}>
-                        {I18n.t("edit")}
-                    </AppText>
-                }
-            </AppView>
-        </AppView>
-    )
-}
+import { validationSchema } from './validation';
+import MenuItem from '../../components/settings/MenuItem';
+import AsyncStorage from '@react-native-community/async-storage';
+import { setUserData } from '../../actions/auth';
 
 export default Profile = props => {
+    const dispatch = useDispatch();
+
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
-    const [loading, setLoading] = useState(false);
-    // const [user, setUser] = useState(useSelector(state => state.auth.userData ? state.auth.userData.data : null));
-    // const [reload, setReload] = useState(false)
-    // useEffect(() => {
-    //     setLoading(true)
-    //     Axios.get(`getprofile?api_token=${token}`)
-    //         .then((res) => {
-    //             setUser(res.data.profile_data)
-    //             setLoading(false)
-    //             // setReload(false)
-    //         }).catch((error) => {
-    //             setLoading(false)
-    //             if (!error.response) {
-    //                 showError(I18n.t("ui-networkConnectionError"));
-    //             } else {
-    //                 showError(I18n.t("ui-error-happened"));
-    //             }
-    //             return I18n.t("ui-networkConnectionError");
-    //         })
-    // }
-    //     , [reload])
+
+    const onSubmit = (values, { setSubmitting }) => {
+        setSubmitting(true)
+        let formData = new FormData();
+        Object.keys(values).forEach((value, index) => {
+            formData.append(value, values[value]);
+        });
+
+        Axios.post('driverprofileupdate', formData)
+            .then(async (res) => {
+                showSuccess(res.data.message)
+                setSubmitting(false)
+                await dispatch(setUserData(res.data));
+                try {
+                    await AsyncStorage.setItem("@UserData", JSON.stringify(res.data));
+                } catch (error) {
+                }
+                // AppNavigation.pop();
+            })
+            .catch((error) => {
+                setSubmitting(false)
+                if (!error.response) {
+                    showError(I18n.t("ui-networkConnectionError"));
+                } else {
+                    showError(I18n.t("ui-error-happened"));
+                }
+            });
+    }
+    const renderForm = ({
+        injectFormProps,
+        isSubmitting,
+        handleSubmit,
+        setFieldValue
+    }) => {
+        return (
+            <AppView flex stretch marginHorizontal={7} >
+                <AppView
+                    row
+                    stretch
+                    spaceBetween
+                    paddingHorizontal={7}
+                    marginBottom={10}
+                >
+                    <AppText>{I18n.t('Personal account information')}</AppText>
+
+                    <AppButton
+                        title={I18n.t('save')}
+                        color="primary"
+                        transparent
+                        processing={isSubmitting}
+                        onPress={handleSubmit}
+                        stretch
+                        paddingHorizontal={0}
+                    />
+                </AppView>
+                <AppInput
+                    {...injectFormProps("firstName")}
+                    placeholder={I18n.t("first-name")}
+                    height={7}
+                    size={7}
+                    borderRadius={7}
+                    leftItems={<AppIcon name="user-o" type="font-awesome" size={8} marginHorizontal={5} />}
+                />
+                <AppInput
+                    {...injectFormProps("lastName")}
+                    placeholder={I18n.t("last-name")}
+                    height={7}
+                    size={7}
+                    borderRadius={7}
+                    leftItems={<AppIcon name="user-o" type="font-awesome" size={8} marginHorizontal={5} />}
+                />
+                <AppInput
+                    {...injectFormProps("email")}
+                    placeholder={I18n.t("email")}
+                    email
+                    height={7}
+                    size={7}
+                    borderRadius={7}
+                    leftItems={<AppIcon name="email-open-outline" type="material-community" size={8} marginHorizontal={5} />}
+                />
+                <AppInput
+                    {...injectFormProps("mobile")}
+                    placeholder={I18n.t("phone")}
+                    phone
+                    height={7}
+                    size={7}
+                    leftItems={<AppIcon name="phone" type="ant" flip size={9} marginHorizontal={5} />}
+                    borderRadius={7}
+                />
+                <AppView
+                    stretch borderWidth={1.5} borderColor={'#E95B06'} padding={5}
+                    row
+                    spaceBetween borderRadius={7}
+                    marginTop={5}
+                    onPress={() => { AppNavigation.push('ChangePassword') }}
+                >
+                    <AppText>{I18n.t('editPassword')}</AppText>
+                    <AppIcon name="ios-arrow-forward" type="ion" flip color="grey" />
+                </AppView>
+            </AppView>
+        )
+    }
 
     return (
-        <AppView flex stretch >
-            <AppHeader title={I18n.t("profile")} hideCart />
-            <ImageBackground source={backgroundImg} style={{ flex: 1, alignSelf: "stretch" }} >
-                {!user || loading ?
-                    <AppView flex stretch center>
-                        <ActivityIndicator />
+        <AppView flex stretch>
+            <AppHeader title={I18n.t('personalPage')} transparent />
+            <AppScrollView stretch>
+                <AppView
+                    stretch
+                    row
+                    height={12}
+                    margin={10}
+                    borderRadius={5}
+                >
+                    <AppView
+                        stretch flex={1} center
+                        backgroundColor={'#E95B06'}
+                        paddingHorizontal={5}
+                    >
+                        <AppText color='white' size={7} >
+                            {`${'1,235'}`}
+                            <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
+                        </AppText>
+                        <AppText color='white' size={5} >{`${I18n.t('Applications received')}`}</AppText>
+
                     </AppView>
-                    : <AppScrollView flex stretch paddingBottom={5} >
-                        <AppView stretch center marginHorizontal={10} marginTop={10} marginBottom={5} >
-                            <AppText color={colors.darkgrey} bold size={7}>
-                                {I18n.t("personal picture")}
+                    <AppView
+                        stretch flex={2} center row spaceBetween
+                        linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
+                    >
+                        <AppView stretch flex center>
+                            <AppText color='white' size={7} >
+                                {`${'1,235'}`}
+                                <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
                             </AppText>
-                            <AppImage
-                                circleRadius={25}
-                                bw={1}
-                                resizeMode='cover'
-                                source={user.img_url ? { uri: user.img_url } : require('../../assets/imgs/logo.png')}
-                            />
-                            <AppText color={colors.primary} bold padding={2}
-                                onPress={() => {
-                                    AppNavigation.push({
-                                        name: 'EditPicture',
-                                        // passProps: { onDone: () => { setReload(true); } }
-                                    })
-                                }}>
-                                {I18n.t("edit")}
-                            </AppText>
+                            <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText>
                         </AppView>
-                        <AppView row stretch spaceBetween marginHorizontal={10} marginTop={10} marginBottom={5} >
-                            <AppText color={colors.darkgrey} bold size={7}>
-                                {I18n.t("profile-info")}
-                            </AppText>
-                            <AppText color={colors.primary} bold padding={2}
-                                onPress={() => { AppNavigation.push('EditProfile') }}>
-                                {I18n.t("edit")}
-                            </AppText>
+                        <AppView stretch flex>
+                            <AppImage source={require('../../assets/imgs/cc.png')} flex stretch resizeMode={'contain'} />
                         </AppView>
-                        {renderItem(I18n.t("first-name"), user.first_name)}
-                        {renderItem(I18n.t("last-name"), user.last_name)}
-                        {renderItem(I18n.t("email"), user.email)}
-                        {renderItem(I18n.t("phone"), user.mobile)}
-                        {renderItem(I18n.t("password"), "**********", true)}
-                    </AppScrollView>
-                }
-            </ImageBackground>
+                    </AppView>
+                </AppView>
+                <AppForm
+                    schema={{
+                        api_token: user ? user.api_token : "",
+                        firstName: user ? user.first_name : "",
+                        lastName: user ? user.last_name : "",
+                        email: user ? user.email : "",
+                        mobile: user ? user.mobile : "",
+                    }}
+                    validationSchema={validationSchema}
+                    render={renderForm}
+                    onSubmit={onSubmit}
+                />
+            </AppScrollView>
         </AppView>
     );
 }

@@ -514,81 +514,10 @@ class Navigation {
   };
 
   static navigateToHome = () => {
-    Navigation.init('MainStack', {
-      bottomTabs: [
-        {
-          screen: 'home',
-          label: I18n.t('home'),
-          icon: require('../assets/imgs/menu.png'),
-        },
-        {
-          screen: 'cart',
-          label: I18n.t('cart'),
-          icon: require('../assets/imgs/cart.png'),
-        },
-        {
-          screen: 'offers',
-          label: I18n.t('offers'),
-          icon: require('../assets/imgs/percent.png'),
-        },
-        {
-          screen: 'fav',
-          label: I18n.t('fav'),
-          icon: require('../assets/imgs/fav.png'),
-        },
-        {
-          screen: 'settings',
-          label: I18n.t('settings'),
-          icon: require('../assets/imgs/settings.png'),
-        },
-      ]
-    });
-    NativeNavigation.mergeOptions('bottomTabs', {
-      bottomTabs: {
-        currentTabIndex: 0,
-      },
-    });
+    Navigation.init(Navigation.MAIN_STACK, "Home");
   };
-
-  static navigateToHomeAr = () => {
-    Navigation.init('MainStack', {
-      bottomTabs: [
-        {
-          screen: 'settings',
-          label: I18n.t('settings'),
-          icon: require('../assets/imgs/settings.png'),
-        },
-        {
-          screen: 'fav',
-          label: I18n.t('fav'),
-          icon: require('../assets/imgs/fav.png'),
-        },
-        {
-          screen: 'offers',
-          label: I18n.t('offers'),
-          icon: require('../assets/imgs/percent.png'),
-        },
-        {
-          screen: 'cart',
-          label: I18n.t('cart'),
-          icon: require('../assets/imgs/cartAr.png'),
-        },
-        {
-          screen: 'home',
-          label: I18n.t('home'),
-          icon: require('../assets/imgs/menuAr.png'),
-        },
-      ]
-    });
-    NativeNavigation.mergeOptions('bottomTabs', {
-      bottomTabs: {
-        currentTabIndex: 4,
-      },
-    });
-  };
-
   static navigateToAuth = () => {
-    Navigation.init(Navigation.MAIN_STACK, "welcome");
+    Navigation.init(Navigation.MAIN_STACK, "Login");
   };
 }
 
