@@ -1,5 +1,5 @@
 export default {
-  statusBar: "#3DA90E",
+  statusBar: "white",
   primary: '#3DA90E',
   primaryAccent: '#E54300',
   thirdly: '#8DBF3F',

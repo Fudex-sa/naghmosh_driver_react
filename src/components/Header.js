@@ -131,33 +131,33 @@ class Header extends Component {
   render() {
     const { title } = this.props;
     return (
-      <SafeAreaView
+      // <SafeAreaView
+      //   style={{
+      //     alignSelf: 'stretch',
+      //     backgroundColor: getColors().primary,
+      //   }}
+      // >
+      <AppView
+        stretch
         style={{
-          alignSelf: 'stretch',
-          backgroundColor: getColors().primary,
+          height: APPBAR_HEIGHT,
+          // marginTop: StatusBar.currentHeight
         }}
+        row
+        spaceBetween
+        backgroundColor={"white"}
+        borderBottomWidth={0.5}
+        borderBottomColor="grey"
       >
-        <AppView
-          stretch
-          style={{
-            height: APPBAR_HEIGHT,
-            marginTop: StatusBar.currentHeight
-          }}
-          row
-          spaceBetween
-          backgroundColor={"white"}
-          borderBottomWidth={0.5}
-          borderBottomColor="grey"
-        >
-          {this.renderLeft()}
-          <AppView flex={4} center marginRight={5} >
-            <AppText size={9} bold numberOfLines={1} color="black">
-              {title}
-            </AppText>
-          </AppView>
-          {this.renderRight()}
+        {this.renderLeft()}
+        <AppView flex={4} center marginRight={5}  >
+          <AppText size={9} bold numberOfLines={1} color="black">
+            {title}
+          </AppText>
         </AppView>
-      </SafeAreaView>
+        {this.renderRight()}
+      </AppView>
+      // </SafeAreaView>
     );
   }
 }

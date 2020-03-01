@@ -38,7 +38,7 @@ class Navigation {
     NativeNavigation.setDefaultOptions({
       statusBar: {
         visible: true,
-        // style: Platform.Version < 23 ? "light" : "dark",
+        style: "dark",
         backgroundColor: colors.statusBar
       },
       topBar: {
