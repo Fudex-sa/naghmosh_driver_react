@@ -27,7 +27,7 @@ export default () => {
       AppNavigation.navigateToHome();
     } else {
       // no auth
-      AppNavigation.navigateToHome();
+      AppNavigation.navigateToAuth();
     }
   });
 };
