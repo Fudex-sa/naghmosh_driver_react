@@ -1,6 +1,8 @@
 {
   "home": "الرئيسية",
   "welcome again": "مرحبا بك مجددا",
+  "noCurrentOrders": "لا يوجد طلبات حالية",
+  "noFinishedOrders": "لا يوجد طلبات منتهية",
   "personalPage": "الصفحة الشخصية",
   "personalPageDetalis": "معلومات السائق الشخصيه مع إمكانية التعديل",
   "notifications": "الإشعارات",

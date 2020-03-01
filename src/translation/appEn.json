@@ -1,6 +1,8 @@
 {
   "home": "Home",
   "signup-password": "Passwoed",
+  "noCurrentOrders": "No Current Orders",
+  "noFinishedOrders": "No Finished Orders",
   "signup-confirmPassword": "Confrim Password",
   "signup-phone": "Mobile number",
   "sign-up-create-account": "Join now",
