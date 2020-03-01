@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { AppNavigation, AppView, AppText, AppScrollView, AppButton } from "../../common";
 import { AppHeader } from "../../components";
-import Images from '../../assets/imgs/index';
-import { ImageBackground, ActivityIndicator } from "react-native";
-import backgroundImg from '../../assets/imgs/background.png';
 import I18n from "react-native-i18n";
-import CartCard from '../../components/cart/CartCard';
-import TotalSection from '../../components/cart/TotalSection';
-import ProductInfo from '../../components/productDetails/ProductInfo';
 import colors from '../../common/defaults/colors';
-import ProductDetailsCard from '../../components/productDetails/ProductDetailsCard';
-import OrderProduct from '../../components/OrderDetails/OrderProduct';
-import OrderTotal from '../../components/OrderDetails/OrderTotal';
 import { useSelector } from 'react-redux';
 import Axios from 'axios';
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps"; 
+import Map from './Map';
 
 const renderStatus = (id, date, status) => {
   return (
@@ -73,7 +64,8 @@ export default OrderDetails = props => {
       <AppHeader title="تفاصيل الطلب" transparent />
       <AppScrollView stretch>
         <AppView stretch height={35}>
-          <MapView
+          <Map />
+          {/* <MapView
             provider={PROVIDER_GOOGLE} // remove if not using Google Maps
             // style={styles.map}
             region={{
@@ -82,7 +74,7 @@ export default OrderDetails = props => {
               latitudeDelta: 0.007016387588862472,
               longitudeDelta: 0.004741139709949493
             }}
-          />
+          /> */}
         </AppView>
         <AppView stretch flex paddingTop={10}>
           <Row label="رقم الطلب" value={34} marginBottom={10} />
