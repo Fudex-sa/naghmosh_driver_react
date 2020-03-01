@@ -8,8 +8,20 @@ import I18n from "react-native-i18n";
 import splashScreen from "react-native-splash-screen";
 import HomeCard from './HomeCard'
 import { AppHeader } from '../../components';
+import PushNotification from 'react-native-push-notification';
 
 export default Home = props => {
+
+  PushNotification.configure({
+    onNotification: function (notification) {
+      console.log('notification', notification);
+
+    },
+    // ANDROID: GCM or FCM Sender ID
+    senderID: '56743868961',
+    popInitialNotification: true,
+    requestPermissions: true,
+  });
 
   return (
     <AppView flex stretch>

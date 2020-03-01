@@ -7,6 +7,8 @@ import com.facebook.react.PackageList;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -26,6 +28,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; // <-- Add this line
 
 
 import java.util.Arrays;
@@ -57,6 +60,9 @@ public class MainApplication extends NavigationApplication {
     protected List<ReactPackage> getPackages() {
      return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new RNFirebasePackage(),
+        new ReactNativePushNotificationPackage(),
+        new RNFirebaseMessagingPackage(),
         new GeolocationPackage(),
         new RNI18nPackage(),
         new RNGestureHandlerPackage(),
