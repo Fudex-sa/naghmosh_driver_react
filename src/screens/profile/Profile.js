@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppNavigation, AppView, AppText, AppImage, AppList, AppIcon, moderateScale, AppScrollView, showError, AppForm, AppButton, AppInput } from "../../../src/common";
+import { AppNavigation, AppView, AppText, AppImage, AppList, AppIcon, moderateScale, AppScrollView, showError, AppForm, AppButton, AppInput, showSuccess } from "../../../src/common";
 import { AppHeader } from "../../../src/components";
 import { Alert } from 'react-native';
 import I18n from "react-native-i18n";
@@ -21,7 +21,6 @@ export default Profile = props => {
         Object.keys(values).forEach((value, index) => {
             formData.append(value, values[value]);
         });
-
         Axios.post('driverprofileupdate', formData)
             .then(async (res) => {
                 showSuccess(res.data.message)
@@ -31,7 +30,6 @@ export default Profile = props => {
                     await AsyncStorage.setItem("@UserData", JSON.stringify(res.data));
                 } catch (error) {
                 }
-                // AppNavigation.pop();
             })
             .catch((error) => {
                 setSubmitting(false)
