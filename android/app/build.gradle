@@ -209,6 +209,8 @@ configurations.all {
 }
 
 dependencies {
+    // compile project(':@paytabscom/react-native-paytabs-library@1.0.7')
+    implementation project(':@paytabscom_react-native-paytabs-library')
     implementation project(':react-native-firebase')
     // Firebase dependencies
     implementation "com.google.android.gms:play-services-base:16.1.0"

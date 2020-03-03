@@ -38,6 +38,8 @@ target 'NaghmoshDriver' do
 
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
 
+  pod 'RNPaytabsLibrary', :path => '../node_modules/@paytabscom/react-native-paytabs-library'
+
   target 'NaghmoshDriverTests' do
     inherit! :search_paths
     # Pods for testing

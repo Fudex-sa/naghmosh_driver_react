@@ -7,6 +7,7 @@ import com.facebook.react.PackageList;
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.RNPaytabsLibraryPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
@@ -60,6 +61,7 @@ public class MainApplication extends NavigationApplication {
     protected List<ReactPackage> getPackages() {
      return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+        new RNPaytabsLibraryPackage(),
         new RNFirebasePackage(),
         new ReactNativePushNotificationPackage(),
         new RNFirebaseMessagingPackage(),
