@@ -31,7 +31,7 @@ export default MenuItem = props => {
                             try {
                                 await AsyncStorage.removeItem("@UserData");
                                 await dispatch(setUserData(null));
-                                AppNavigation.push({ name: 'Login', passProps: { loginInApp: true } });
+                                AppNavigation.navigateToAuth();
                             } catch (e) {
                                 // remove error
                             }
