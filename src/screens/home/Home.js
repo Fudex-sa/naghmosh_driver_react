@@ -16,7 +16,6 @@ import colors from '../../common/defaults/colors';
 export default Home = props => {
   const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
   const lang = useSelector(state => state.lang.lang);
-  console.log("4444444444", lang)
 
   PushNotification.configure({
     onNotification: function (notification) {
@@ -128,7 +127,7 @@ export default Home = props => {
           label={I18n.t('informations')}
           hint={I18n.t('informationsDetails')}
           onPress={() => {
-            // AppNavigation.push("HowToUse");
+            AppNavigation.push("Informations");
           }}
         />
         <HomeCard

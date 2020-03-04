@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView, { Marker } from "react-native-maps";
-import { StyleSheet, } from 'react-native';
+import { StyleSheet, Linking } from 'react-native';
 import {
-    AppView, AppText, AppButton, showInfo, AppNavigation,
+    AppView, AppText, AppButton, showInfo, AppNavigation, showError, AppImage, AppIcon,
 } from '../../common';
 import Geolocation from '@react-native-community/geolocation';
 import Permissions from 'react-native-permissions';
 import I18n from "react-native-i18n";
+import MapViewDirections from 'react-native-maps-directions';
 
 export default MapComponent = props => {
     const [loc, setLoc] = useState(null)
     const [initialRegion, setInitialRegion] = useState(null)
-
+    const userLoc = (props.destination).split(',')
     useEffect(() => {
         _requestPermission();
     }, [])
@@ -56,55 +57,49 @@ export default MapComponent = props => {
         );
     }
 
-    const longPress = (e) => {
-        setLoc(
-            {
-                latitude: e.nativeEvent.coordinate.latitude,
-                longitude: e.nativeEvent.coordinate.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            }
-        )
+    const openGoogleMaps = () => {
+        const url = `https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&origin=${loc.latitude},${loc.longitude}&destination=${userLoc[0]},${userLoc[1]}`;
+        Linking.openURL(url).catch((err) => { showError(I18n.t('error')) });
     }
 
-    const renderMap = () => (
-        <MapView
-            style={{ ...StyleSheet.absoluteFillObject }}
-            provider="google"
-            initialRegion={initialRegion}
-        // onLongPress={event => longPress(event)}
-        >
-            {loc && <Marker coordinate={loc} />}
-        </MapView >
-    );
+    const renderMap = () => {
+        return (
+            <MapView
+                style={{ ...StyleSheet.absoluteFillObject }}
+                provider="google"
+                initialRegion={initialRegion}
+            >
+                {loc && <Marker coordinate={loc} />}
+                {userLoc && <Marker
+                    coordinate={{
+                        latitude: parseFloat(userLoc[0]),
+                        longitude: parseFloat(userLoc[1]),
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
+                />}
+                <MapViewDirections
+                    origin={loc}
+                    destination={{ latitude: (userLoc[0]), longitude: (userLoc[1]) }}
+                    apikey={'AIzaSyCay9xEcxxoHTh8Qpm1DridNz3YJxQNtAY'}
+                    strokeWidth={4}
+                    strokeColor="#000"
+                />
+            </MapView >
+        )
+    };
     return (
         <AppView flex stretch >
             <AppView flex stretch>
-                {/* <AppView backgroundColor='transparent' stretch center
-                    style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10000 }}>
-                    <AppText color="#000" bold marginVertical={5} stretch center size={7} backgroundColor='transparent'
-                    >{I18n.t('Long press to locate the map')}</AppText>
-                </AppView> */}
+                <AppView backgroundColor='#000' stretch center row borderRadius={25} paddingHorizontal={5}
+                    style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 10000, opacity: 0.7 }}
+                    onPress={() => { openGoogleMaps() }}
+                >
+                    <AppText color="white" bold marginVertical={5} stretch center size={7} backgroundColor='transparent'
+                    >{I18n.t('directions')}</AppText>
+                    <AppIcon name={'directions'} marginLeft={5} type='font-awesome5' size={12} color='white' />
+                </AppView>
                 {renderMap()}
-                {/* <AppView stretch backgroundColor='transparent' center
-                    style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10000 }}>
-                    <AppButton
-                        title={I18n.t('select')}
-                        borderRadius={10}
-                        height={6} width={25}
-                        marginBottom={5}
-                        backgroundColor="primary"
-                        onPress={() => {
-                            if (loc) {
-                                props.onLocationChange(loc.latitude, loc.longitude);
-                                AppNavigation.pop();
-                            } else {
-                                showInfo(I18n.t('The location must be located on the map'))
-                            }
-                        }}
-                    />
-                </AppView> */}
-
             </AppView>
         </AppView>
     );

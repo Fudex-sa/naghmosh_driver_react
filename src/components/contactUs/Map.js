@@ -16,7 +16,6 @@ import { AppHeader } from "../../components"
 import styles from "./styles";
 
 export default MapComponent = props => {
-    console.log("fffv ", props.coordinates)
     const [initialRegion, setInitialRegion] = useState({
         latitude: props.coordinates.latitude,
         longitude: props.coordinates.longitude,

@@ -19,16 +19,18 @@ import { useSelector } from "react-redux";
 export default FinishedOrders = props => {
   const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null);
   const [ordersCount, setOrdersCount] = useState(0);
+  // const refresh = useSelector(state => state.list.refreshFinishedOrdersList)
   const ApiRequest = {
-    url: `driverorders?api_token=${token}`,
+    url: `driverorders/completed?api_token=${token}`,
     responseResolver: response => {
-      setOrdersCount(response.data.driver_orders.length === 0 ? 0 : response.data.driver_orders.total)
+      setOrdersCount(response.data.completed_orders.length === 0 ? 0 : response.data.completed_orders.total)
       return {
-        data: response.data.driver_orders.length === 0 ? [] : response.data.driver_orders.data,
-        pageCount: response.data.driver_orders.length === 0 ? 1 : response.data.driver_orders.last_page,
+        data: response.data.completed_orders.length === 0 ? [] : response.data.completed_orders.data,
+        pageCount: response.data.completed_orders.length === 0 ? 1 : response.data.completed_orders.last_page,
       }
     },
     onError: error => {
+      con
       if (!error.response) {
         showError(I18n.t("ui-networkConnectionError"));
       } else {
@@ -72,37 +74,14 @@ export default FinishedOrders = props => {
         noResultsLabel={ordersCount === 0 && I18n.t('noFinishedOrders')}
         noResultListHeight={10}
         apiRequest={ApiRequest}
+        // refreshControl={refresh}
+        idPathInData={'order_id'}
         rowRenderer={data => (
           <OrderCard
             data={data}
           />
         )}
       />
-      {/* <OrderCard
-        name="محمد عبد السلام"
-        status="تم التسلسم"
-        hint="تم الاستلام في 4 اكتوبر"
-        orderNum={12}
-      />
-      <OrderCard
-        name="محمد عبد السلام"
-        status="تم الاسترجاع"
-        hint="تم الاستلام في 4 اكتوبر"
-        orderNum={7}
-        notDeliver
-      />
-      <OrderCard
-        name="محمد عبد السلام"
-        status="تم التسلسم"
-        hint="تم الاستلام في 4 اكتوبر"
-        orderNum={8}
-      />
-      <OrderCard
-        name="محمد عبد السلام"
-        status="تم التسلسم"
-        hint="تم الاستلام في 4 اكتوبر"
-        orderNum={6}
-      /> */}
     </AppView>
   );
 }

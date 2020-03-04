@@ -10,11 +10,12 @@ export default HowToUse = props => {
     const [use, setUse] = useState(null);
     useEffect(() => {
         setLoading(true)
-        Axios.get(`howtouse`)
+        Axios.get(`http://api-ksa.com/demo/nghmoshy/api/v1/${props.url}`)
             .then((res) => {
                 setUse(res.data.data)
                 setLoading(false)
             }).catch((error) => {
+                console.log("ffff ", error, "ddxxx ", error.response)
                 setLoading(false)
                 if (!error.response) {
                     showError(I18n.t("ui-networkConnectionError"));
@@ -28,7 +29,7 @@ export default HowToUse = props => {
 
     return (
         <AppView flex stretch >
-            <AppHeader title={I18n.t('HowToUse')} hideCart />
+            <AppHeader title={use ? use.name : ''} hideCart />
             {!use || loading ?
                 <AppView flex stretch center>
                     <ActivityIndicator />

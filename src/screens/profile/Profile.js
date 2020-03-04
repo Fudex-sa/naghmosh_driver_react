@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AppNavigation, AppView, AppText, AppImage, AppList, AppIcon, moderateScale, AppScrollView, showError, AppForm, AppButton, AppInput, showSuccess } from "../../../src/common";
 import { AppHeader } from "../../../src/components";
-import { Alert } from 'react-native';
+import { Alert, ActivityIndicator } from 'react-native';
 import I18n from "react-native-i18n";
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
@@ -12,8 +12,26 @@ import { setUserData } from '../../actions/auth';
 
 export default Profile = props => {
     const dispatch = useDispatch();
-
+    const [loading, setLoading] = useState(false);
+    const [CollectedOrders, setCollectedOrders] = useState(null);
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
+    useEffect(() => {
+        setLoading(true)
+        Axios.get(`driverprofile?api_token=${user.api_token}`)
+            .then((res) => {
+                setCollectedOrders(res.data.profile_data.collected_orders)
+                setLoading(false)
+            }).catch((error) => {
+                setLoading(false)
+                if (!error.response) {
+                    showError(I18n.t("ui-networkConnectionError"));
+                } else {
+                    showError(I18n.t("ui-error-happened"));
+                }
+                return I18n.t("ui-networkConnectionError");
+            })
+    }
+        , []);
 
     const onSubmit = (values, { setSubmitting }) => {
         setSubmitting(true)
@@ -118,55 +136,61 @@ export default Profile = props => {
     return (
         <AppView flex stretch>
             <AppHeader title={I18n.t('personalPage')} transparent />
-            <AppScrollView stretch>
-                <AppView
-                    stretch
-                    row
-                    height={12}
-                    margin={10}
-                    borderRadius={5}
-                >
+            {loading ?
+                <AppView flex stretch center >
+                    <ActivityIndicator />
+                </AppView>
+                :
+                <AppScrollView stretch>
                     <AppView
-                        stretch flex={1} center
-                        backgroundColor={'#E95B06'}
-                        paddingHorizontal={5}
+                        stretch
+                        row
+                        height={12}
+                        margin={10}
+                        borderRadius={5}
                     >
-                        <AppText color='white' size={7} >
-                            {`${'1,235'}`}
-                            <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
-                        </AppText>
-                        <AppText color='white' size={5} >{`${I18n.t('Applications received')}`}</AppText>
-
-                    </AppView>
-                    <AppView
-                        stretch flex={2} center row spaceBetween
-                        linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
-                    >
-                        <AppView stretch flex center>
+                        <AppView
+                            stretch flex={1} center
+                            backgroundColor={'#E95B06'}
+                            paddingHorizontal={5}
+                        >
                             <AppText color='white' size={7} >
-                                {`${'1,235'}`}
+                                {`${CollectedOrders}`}
                                 <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
                             </AppText>
-                            <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText>
+                            <AppText color='white' size={5} >{`${I18n.t('Applications received')}`}</AppText>
+
                         </AppView>
-                        <AppView stretch flex>
-                            <AppImage source={require('../../assets/imgs/cc.png')} flex stretch resizeMode={'contain'} />
+                        <AppView
+                            stretch flex={2} center row spaceBetween
+                            linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
+                        >
+                            <AppView stretch flex center>
+                                {/* <AppText color='white' size={7} >
+                                    {`${'1,235'}`}
+                                    <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
+                                </AppText>
+                                <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText> */}
+                            </AppView>
+                            <AppView stretch flex>
+                                <AppImage source={require('../../assets/imgs/cc.png')} flex stretch resizeMode={'contain'} />
+                            </AppView>
                         </AppView>
                     </AppView>
-                </AppView>
-                <AppForm
-                    schema={{
-                        api_token: user ? user.api_token : "",
-                        firstName: user ? user.first_name : "",
-                        lastName: user ? user.last_name : "",
-                        email: user ? user.email : "",
-                        mobile: user ? user.mobile : "",
-                    }}
-                    validationSchema={validationSchema}
-                    render={renderForm}
-                    onSubmit={onSubmit}
-                />
-            </AppScrollView>
+                    <AppForm
+                        schema={{
+                            api_token: user ? user.api_token : "",
+                            firstName: user ? user.first_name : "",
+                            lastName: user ? user.last_name : "",
+                            email: user ? user.email : "",
+                            mobile: user ? user.mobile : "",
+                        }}
+                        validationSchema={validationSchema}
+                        render={renderForm}
+                        onSubmit={onSubmit}
+                    />
+                </AppScrollView>
+            }
         </AppView>
     );
 }

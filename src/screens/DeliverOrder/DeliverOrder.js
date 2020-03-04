@@ -14,13 +14,14 @@ import OrderCard from "./OrderCard";
 export default DeliverOrder = props => {
   const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null);
   const [ordersCount, setOrdersCount] = useState(0);
+  const refresh = useSelector(state => state.list.refreshDeliveredOrderList)
   const ApiRequest = {
-    url: `driverorders?api_token=${token}`,
+    url: `driverorders/active?api_token=${token}`,
     responseResolver: response => {
-      setOrdersCount(response.data.driver_orders.length === 0 ? 0 : response.data.driver_orders.total)
+      setOrdersCount(response.data.active_orders.length === 0 ? 0 : response.data.active_orders.total)
       return {
-        data: response.data.driver_orders.length === 0 ? [] : response.data.driver_orders.data,
-        pageCount: response.data.driver_orders.length === 0 ? 1 : response.data.driver_orders.last_page,
+        data: response.data.active_orders.length === 0 ? [] : response.data.active_orders.data,
+        pageCount: response.data.active_orders.length === 0 ? 1 : response.data.active_orders.last_page,
       }
     },
     onError: error => {
@@ -68,6 +69,8 @@ export default DeliverOrder = props => {
         noResultsLabel={ordersCount === 0 && I18n.t('noCurrentOrders')}
         noResultListHeight={10}
         apiRequest={ApiRequest}
+        refreshControl={refresh}
+        idPathInData={'order_id'}
         rowRenderer={data => (
           <OrderCard
             data={data}

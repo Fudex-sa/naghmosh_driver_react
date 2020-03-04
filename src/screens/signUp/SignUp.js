@@ -11,11 +11,16 @@ import AuthRepo from "../../repo/auth";
 import { AppHeader } from '../../components';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import firebase from 'react-native-firebase';
+import { ActivityIndicator } from 'react-native';
 
 export default SignUp = props => {
-    const rtl = useSelector(state => state.lang.rtl);
+    const [fcm, setFCM] = useState(null)
     const dispatch = useDispatch();
-
+    useEffect(async () => {
+        const fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) { setFCM(fcmToken) }
+    }, []);
     const onSubmit = async (values, { setSubmitting }) => {
         setSubmitting(true)
         let formData = new FormData();
@@ -139,21 +144,26 @@ export default SignUp = props => {
                 <AppText marginTop={1} color="darkgrey" size={7} marginBottom={15}>
                     {I18n.t("sign-up-hint")}
                 </AppText>
-                <AppForm
-                    schema={{
-                        first_name: "",
-                        last_name: "",
-                        email: "",
-                        mobile: "",
-                        password: "",
-                        job_description: '',
-                        password_confirmation: ""
-                    }}
-                    validationSchema={validationSchema}
-                    render={renderForm}
-                    onSubmit={onSubmit}
-                />
-                {/* {renderFooter()} */}
+                {!fcm ?
+                    <AppView flex stretch center>
+                        <ActivityIndicator />
+                    </AppView>
+                    : <AppForm
+                        schema={{
+                            first_name: "",
+                            last_name: "",
+                            email: "",
+                            mobile: "",
+                            password: "",
+                            job_description: '',
+                            password_confirmation: "",
+                            deviceToken: fcm,
+                        }}
+                        validationSchema={validationSchema}
+                        render={renderForm}
+                        onSubmit={onSubmit}
+                    />
+                }
             </AppScrollView>
         </AppView>
     );

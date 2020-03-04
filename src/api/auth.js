@@ -6,7 +6,7 @@ export default class Auth {
 
   signUp = async (data) => {
     try {
-      console.log("4444444444")
+      console.log("dayta ", data)
       const res = await axios.post("driverregister", data);
       // .then((res) => console.log("reddd ", res))
       // .catch((error) => console.log(error, "fff ", error.response))

@@ -10,11 +10,16 @@ import { setUserData } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { ApiErrorTypes } from "../../api/errors";
 import AuthRepo from "../../repo/auth";
+import firebase from 'react-native-firebase';
+import { ActivityIndicator } from 'react-native';
 
 export default Login = props => {
-    const rtl = useSelector(state => state.lang.rtl);
+    const [fcm, setFCM] = useState(null)
     const dispatch = useDispatch();
-
+    useEffect(async () => {
+        const fcmToken = await firebase.messaging().getToken();
+        if (fcmToken) { setFCM(fcmToken) }
+    }, []);
     const onSubmit = async (values, { setSubmitting }) => {
         const authRepo = new AuthRepo();
         const userData = await authRepo.signIn(values);
@@ -108,15 +113,21 @@ export default Login = props => {
                 >{I18n.t("welcome again")}</AppText>
             </AppImage>
 
-            <AppForm
-                schema={{
-                    mobile: "",
-                    password: ""
-                }}
-                validationSchema={validationSchema}
-                render={renderForm}
-                onSubmit={onSubmit}
-            />
+            {!fcm ?
+                <AppView flex stretch center>
+                    <ActivityIndicator />
+                </AppView>
+                : <AppForm
+                    schema={{
+                        mobile: "",
+                        password: "",
+                        deviceToken: fcm,
+                    }}
+                    validationSchema={validationSchema}
+                    render={renderForm}
+                    onSubmit={onSubmit}
+                />
+            }
         </AppScrollView >
     );
 }
