@@ -78,13 +78,13 @@ export default MapComponent = props => {
                         longitudeDelta: 0.0421,
                     }}
                 />}
-                <MapViewDirections
+                {/* <MapViewDirections
                     origin={loc}
                     destination={{ latitude: (userLoc[0]), longitude: (userLoc[1]) }}
                     apikey={'AIzaSyCay9xEcxxoHTh8Qpm1DridNz3YJxQNtAY'}
                     strokeWidth={4}
                     strokeColor="#000"
-                />
+                /> */}
             </MapView >
         )
     };

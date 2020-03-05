@@ -22,14 +22,14 @@ export default Home = props => {
   PushNotification.configure({
     onNotification: function (notification) {
       console.log('notification', notification);
-      if (AppState.currentState === 'active') {
-        if (notification.userInteraction === true) {
-          AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.order_id } });
-        }
-      }
-      else {
+      // if (AppState.currentState === 'active') {
+      if (notification.userInteraction === true) {
         AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.order_id } });
       }
+      // }
+      // else {
+      //   AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.order_id } });
+      // }
     },
     // ANDROID: GCM or FCM Sender ID
     senderID: '56743868961',
