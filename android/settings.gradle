@@ -1,8 +1,8 @@
 rootProject.name = 'NaghmoshDriver'
-include ':@paytabscom_react-native-paytabs-library', ':paytabs_sdk-v4.0.1'
-project(':@paytabscom_react-native-paytabs-library').projectDir = new File(rootProject.projectDir, '../node_modules/@paytabscom/react-native-paytabs-library/android')
-include ':paytabs_sdk-v4.0.1'
-project(':paytabs_sdk-v4.0.1').projectDir = new File(rootProject.projectDir, '../node_modules/@paytabscom/react-native-paytabs-library/android/paytabs_sdk-v4.0.1/')
+// include ':@paytabscom_react-native-paytabs-library', ':paytabs_sdk-v4.0.1'
+// project(':@paytabscom_react-native-paytabs-library').projectDir = new File(rootProject.projectDir, '../node_modules/@paytabscom/react-native-paytabs-library/android')
+// include ':paytabs_sdk-v4.0.1'
+// project(':paytabs_sdk-v4.0.1').projectDir = new File(rootProject.projectDir, '../node_modules/@paytabscom/react-native-paytabs-library/android/paytabs_sdk-v4.0.1/')
 include ':react-native-firebase'
 project(':react-native-firebase').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-firebase/android')
 include ':react-native-push-notification'

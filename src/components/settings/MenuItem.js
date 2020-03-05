@@ -13,8 +13,9 @@ import Axios from 'axios';
 
 export default MenuItem = props => {
     const dispatch = useDispatch();
-    const [notif, setNotif] = useState(false);
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
+    const [notif, setNotif] = useState(user.notifications === 'on' ? true : false);
+
     const deleteToken = () => {
         Axios.post('drivertoken/delete', { api_token: user.api_token })
             .then(async (res) => {
@@ -58,6 +59,25 @@ export default MenuItem = props => {
         );
     }
 
+    const notificationOnOff = (url) => {
+        Axios.post(url, { api_token: user.api_token })
+            .then(async (res) => {
+                await dispatch(setUserData(res.data));
+                try {
+                    await AsyncStorage.setItem("@UserData", JSON.stringify(res.data));
+                } catch (error) {
+                }
+                showSuccess(res.data.message)
+            })
+            .catch((error) => {
+                if (!error.response) {
+                    showError(I18n.t("ui-networkConnectionError"));
+                } else {
+                    showError(I18n.t("ui-error-happened"));
+                }
+            });
+    }
+
     return (
         <AppView
             linearBackgroundGradient={{ colors: ['#23A636', '#88C80A'], start: { x: 1, y: 1 }, end: { x: 0, y: 0 } }}
@@ -86,7 +106,8 @@ export default MenuItem = props => {
                     trackColor={notif ? 'white' : '#E95B06'}
                     onValueChange={value => {
                         setNotif(value)
-                        // this.StopNotifications(value);
+                        if (value) { notificationOnOff('driver/notifications/on') }
+                        else { notificationOnOff('driver/notifications/off') }
                     }}
                     thumbColor={notif ? '#E95B06' : 'white'}
                     value={notif}

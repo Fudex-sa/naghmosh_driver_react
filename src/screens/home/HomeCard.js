@@ -13,6 +13,7 @@ class Home extends Component {
       hint,
       notification,
       source,
+      notifCount,
       ...rest
     } = this.props;
     return (
@@ -40,14 +41,14 @@ class Home extends Component {
           </AppText>
         </AppView>
         <AppView>
-          {notification && (
+          {notification && notifCount > 0 && (
             <AppView
               equalSize={6}
               center
               borderRadius={12}
               backgroundColor="red"
             >
-              <AppText color="white">2</AppText>
+              <AppText color="white">{notifCount}</AppText>
             </AppView>
           )}
         </AppView>

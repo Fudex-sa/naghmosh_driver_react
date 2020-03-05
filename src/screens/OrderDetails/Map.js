@@ -91,14 +91,18 @@ export default MapComponent = props => {
     return (
         <AppView flex stretch >
             <AppView flex stretch>
-                <AppView backgroundColor='#000' stretch center row borderRadius={25} paddingHorizontal={5}
-                    style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 10000, opacity: 0.7 }}
-                    onPress={() => { openGoogleMaps() }}
-                >
-                    <AppText color="white" bold marginVertical={5} stretch center size={7} backgroundColor='transparent'
-                    >{I18n.t('directions')}</AppText>
-                    <AppIcon name={'directions'} marginLeft={5} type='font-awesome5' size={12} color='white' />
-                </AppView>
+                {props.order.status === 'Delivered' || props.order.status === 'تم التسليم' ||
+                    props.order.status === 'Returned' || props.order.status === 'تم الإرجاع' ?
+                    null :
+                    <AppView backgroundColor='#000' stretch center row borderRadius={25} paddingHorizontal={5}
+                        style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 10000, opacity: 0.7 }}
+                        onPress={() => { openGoogleMaps() }}
+                    >
+                        <AppText color="white" bold marginVertical={5} stretch center size={7} backgroundColor='transparent'
+                        >{I18n.t('directions')}</AppText>
+                        <AppIcon name={'directions'} marginLeft={5} type='font-awesome5' size={12} color='white' />
+                    </AppView>
+                }
                 {renderMap()}
             </AppView>
         </AppView>

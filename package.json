@@ -7,7 +7,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@paytabscom/react-native-paytabs-library": "^1.0.7",
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/viewpager": "^3.3.0",

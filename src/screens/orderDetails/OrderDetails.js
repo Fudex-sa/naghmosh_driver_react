@@ -69,7 +69,7 @@ export default OrderDetails = props => {
         :
         <AppScrollView stretch>
           <AppView stretch height={35}>
-            <Map destination={order.order_map_location} />
+            <Map destination={order.order_map_location} order={order} />
           </AppView>
           <AppView stretch flex paddingTop={10}>
             <Row label={I18n.t('OrderNumber')} value={order.order_id} marginBottom={10} />

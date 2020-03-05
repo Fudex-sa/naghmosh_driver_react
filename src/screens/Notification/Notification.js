@@ -9,29 +9,51 @@ import {
   AppInput,
   AppButton,
   AppIcon,
-  AppList
+  AppList,
+  showError
 } from "../../common";
 
 import { AppHeader } from "../../components";
 import NotificationCard from "./NotificationCard";
+import { useSelector } from "react-redux";
 
-class Home extends Component {
-  render() {
-    return (
-      <AppView flex stretch>
-        <AppHeader title={I18n.t('notifications')} />
-        <AppList
-          staticData
-          data={[1, 2, 1, 2, 1, 2]}
-          rowRenderer={() => <NotificationCard />}
-          flatlist
-          flex
-          stretch
-          paddingTop={7}
-        />
-      </AppView>
-    );
-  }
-}
+const Notifications = () => {
+  const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null);
+  const ApiRequest = {
+    url: `driver/notifications/all?api_token=${token}`,
+    responseResolver: response => {
+      return {
+        data: response.data.data.length === 0 ? [] : response.data.data.data,
+        pageCount: response.data.data.length === 0 ? 1 : response.data.data.last_page,
+      }
+    },
+    onError: error => {
+      if (!error.response) {
+        showError(I18n.t("ui-networkConnectionError"));
+      } else {
+        showError(I18n.t("ui-error-happened"));
+      }
+      return I18n.t("ui-networkConnectionError");
+    }
+  };
 
-export default Home;
+  return (
+    <AppView flex stretch>
+      <AppHeader title={I18n.t('notifications')} />
+      <AppList
+        stretch
+        flex
+        center
+        flatlist
+        apiRequest={ApiRequest}
+        rowRenderer={data => (
+          <NotificationCard
+            data={data}
+          />
+        )}
+      />
+    </AppView>
+  );
+};
+
+export default Notifications;
