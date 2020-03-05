@@ -14,7 +14,7 @@ import Axios from 'axios';
 export default MenuItem = props => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
-    const [notif, setNotif] = useState(user.notifications === 'on' ? true : false);
+    const [notif, setNotif] = useState(user && user.notifications === 'on' ? true : false);
 
     const deleteToken = () => {
         Axios.post('drivertoken/delete', { api_token: user.api_token })
