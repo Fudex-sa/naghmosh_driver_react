@@ -72,7 +72,7 @@ export default FinishedOrders = props => {
         stretch
         flex
         flatlist
-        noResultsLabel={ordersCount === 0 && I18n.t('noFinishedOrders')}
+        noResultsLabel={ordersCount === 0 ? I18n.t('noFinishedOrders') : ''}
         noResultListHeight={10}
         apiRequest={ApiRequest}
         // refreshControl={refresh}

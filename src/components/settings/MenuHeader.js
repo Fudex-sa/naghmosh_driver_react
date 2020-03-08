@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ImageBackground } from 'react-native';
-import Images from '../../assets/imgs/index';
 import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppIcon } from "../../common";
 import I18n from "react-native-i18n";
 import colors from '../../common/defaults/colors';

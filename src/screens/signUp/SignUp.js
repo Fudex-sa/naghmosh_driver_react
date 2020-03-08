@@ -17,9 +17,12 @@ import { ActivityIndicator } from 'react-native';
 export default SignUp = props => {
     const [fcm, setFCM] = useState(null)
     const dispatch = useDispatch();
-    useEffect(async () => {
-        const fcmToken = await firebase.messaging().getToken();
-        if (fcmToken) { setFCM(fcmToken) }
+    useEffect(() => {
+        async function fetchToken() {
+            const fcmToken = await firebase.messaging().getToken();
+            if (fcmToken) { setFCM(fcmToken) }
+        }
+        fetchToken();
     }, []);
     const onSubmit = async (values, { setSubmitting }) => {
         setSubmitting(true)
@@ -99,6 +102,7 @@ export default SignUp = props => {
                         phone
                         height={7}
                         size={7}
+                        maxLength={12}
                         leftItems={<AppIcon name="phone" type="ant" flip size={9} marginHorizontal={5} />}
                         borderRadius={7}
                     />

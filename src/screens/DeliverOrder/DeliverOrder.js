@@ -19,7 +19,6 @@ export default DeliverOrder = props => {
     url: `driverorders/active?api_token=${token}`,
     responseResolver: response => {
       setOrdersCount(response.data.active_orders.length === 0 ? 0 : response.data.active_orders.total)
-      console.log(response.data.active_orders)
       return {
         data: response.data.active_orders.length === 0 ? [] : response.data.active_orders.data,
         pageCount: response.data.active_orders.length === 0 ? 1 : response.data.active_orders.last_page,
@@ -68,7 +67,7 @@ export default DeliverOrder = props => {
         stretch
         flex
         flatlist
-        noResultsLabel={ordersCount === 0 && I18n.t('noCurrentOrders')}
+        noResultsLabel={ordersCount === 0 ? I18n.t('noCurrentOrders') : ''}
         noResultListHeight={10}
         apiRequest={ApiRequest}
         refreshControl={refresh}

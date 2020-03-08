@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppState } from 'react-native';
-import backgroundImg from '../../assets/imgs/background.png';
-import homeTopImg from '../../assets/imgs/hometop.png';
-import Images from '../../assets/imgs/index';
-import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppIcon, showError } from "../../../src/common";
+import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppIcon, showError } from "../../common";
 import I18n from "react-native-i18n";
 import splashScreen from "react-native-splash-screen";
 import HomeCard from './HomeCard'
@@ -106,7 +102,7 @@ export default Home = props => {
           label={I18n.t('personalPage')}
           hint={I18n.t('personalPageDetalis')}
           onPress={() => {
-            AppNavigation.push("profile");
+            AppNavigation.push("Profile");
           }}
         />
         <HomeCard

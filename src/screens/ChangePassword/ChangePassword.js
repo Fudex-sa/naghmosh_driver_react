@@ -4,8 +4,6 @@ import {
     showSuccess, showError, AppInput, AppButton, AppIcon
 } from "../../common";
 import { AppHeader } from "../../components";
-import { ImageBackground } from "react-native";
-import backgroundImg from '../../assets/imgs/background.png';
 import I18n from "react-native-i18n";
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';

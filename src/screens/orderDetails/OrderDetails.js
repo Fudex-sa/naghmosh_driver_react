@@ -152,7 +152,7 @@ const Row = props => (
   >
     <AppText bold> {props.label}</AppText>
     <AppView stretch row>
-      <AppText color="foreground">{props.value}</AppText>
+      <AppText color={'gray'}>{props.value}</AppText>
       {props.real && <AppText> {I18n.t('sar')} </AppText>}
     </AppView>
   </AppView>
@@ -174,10 +174,10 @@ const RowDetails = props => (
     <AppText bold marginVertical={5} color="#4C4C4C">
       {props.labelHeader}
     </AppText>
-    {props.data.map(item => (
-      <AppView stretch row spaceBetween paddingBottom={5}>
+    {props.data.map((item, index) => (
+      <AppView stretch row spaceBetween paddingBottom={5} key={index}>
         <AppText > {item.label}</AppText>
-        <AppText color="#C9C9C9" numberOfLines={2}> {item.value}</AppText>
+        <AppText color="#C9C9C2" numberOfLines={2}> {item.value}</AppText>
       </AppView>
     ))}
   </AppView>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AppNavigation, AppView, AppText, AppImage, AppList, AppIcon, moderateScale, AppScrollView, showError, AppForm, AppButton, AppInput, showSuccess } from "../../../src/common";
-import { AppHeader } from "../../../src/components";
+import { AppNavigation, AppView, AppText, AppImage, AppList, AppIcon, moderateScale, AppScrollView, showError, AppForm, AppButton, AppInput, showSuccess } from "../../common";
+import { AppHeader } from "../../components";
 import { Alert, ActivityIndicator } from 'react-native';
 import I18n from "react-native-i18n";
 import { useSelector, useDispatch } from 'react-redux';

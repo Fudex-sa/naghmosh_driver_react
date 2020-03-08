@@ -3,12 +3,8 @@ import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppForm, AppI
 import logo from "../../assets/imgs/login.png";
 import { validationSchema } from './validation';
 import I18n from "react-native-i18n";
-import colors from '../../common/defaults/colors';
-import googleImg from "../../assets/imgs/go.png";
-import fbImg from "../../assets/imgs/fb.png";
 import { setUserData } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { ApiErrorTypes } from "../../api/errors";
 import AuthRepo from "../../repo/auth";
 import firebase from 'react-native-firebase';
 import { ActivityIndicator } from 'react-native';
@@ -16,9 +12,12 @@ import { ActivityIndicator } from 'react-native';
 export default Login = props => {
     const [fcm, setFCM] = useState(null)
     const dispatch = useDispatch();
-    useEffect(async () => {
-        const fcmToken = await firebase.messaging().getToken();
-        if (fcmToken) { setFCM(fcmToken) }
+    useEffect(() => {
+        async function fetchToken() {
+            const fcmToken = await firebase.messaging().getToken();
+            if (fcmToken) { setFCM(fcmToken) }
+        }
+        fetchToken();
     }, []);
     const onSubmit = async (values, { setSubmitting }) => {
         const authRepo = new AuthRepo();
