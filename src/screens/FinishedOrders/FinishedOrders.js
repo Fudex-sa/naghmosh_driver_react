@@ -27,6 +27,7 @@ export default FinishedOrders = props => {
       return {
         data: response.data.completed_orders.length === 0 ? [] : response.data.completed_orders.data,
         pageCount: response.data.completed_orders.length === 0 ? 1 : response.data.completed_orders.last_page,
+        nextPage: response.data.completed_orders.current_page,
       }
     },
     onError: error => {
@@ -79,6 +80,7 @@ export default FinishedOrders = props => {
         rowRenderer={data => (
           <OrderCard
             data={data}
+            finished
           />
         )}
       />

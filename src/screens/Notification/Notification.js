@@ -25,6 +25,7 @@ const Notifications = () => {
       return {
         data: response.data.data.length === 0 ? [] : response.data.data.data,
         pageCount: response.data.data.length === 0 ? 1 : response.data.data.last_page,
+        nextPage: response.data.data.current_page,
       }
     },
     onError: error => {

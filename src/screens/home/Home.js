@@ -18,18 +18,14 @@ export default Home = props => {
   const lang = useSelector(state => state.lang.lang);
   const refresh = useSelector(state => state.list.homeNotifCount);
   const [notifCount, setNotifCount] = useState(0)
-  console.log("spp ", AppState.currentState)
   PushNotification.configure({
     onNotification: function (notification) {
-      console.log('notification', notification);
-      // if (AppState.currentState === 'active') {
       if (notification.userInteraction === true) {
-        AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.order_id } });
+        AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.click_action } });
       }
-      // }
-      // else {
-      //   AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.order_id } });
-      // }
+      else if (notification.foreground === false) {
+        AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.click_action } });
+      }
     },
     // ANDROID: GCM or FCM Sender ID
     senderID: '56743868961',
@@ -49,7 +45,6 @@ export default Home = props => {
         }
         return I18n.t("ui-networkConnectionError");
       })
-    return (console.log("fffffffffffff ", AppState.currentState))
   }
     , [refresh]);
 

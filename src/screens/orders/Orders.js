@@ -19,6 +19,7 @@ export default Orders = props => {
       return {
         data: response.data.client_orders === [] ? [] : response.data.client_orders.data,
         pageCount: response.data.client_orders === [] ? 1 : response.data.client_orders.last_page,
+        nextPage: response.data.client_orders.current_page,
       }
     },
     onError: error => {

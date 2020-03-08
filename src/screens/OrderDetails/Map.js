@@ -91,8 +91,7 @@ export default MapComponent = props => {
     return (
         <AppView flex stretch >
             <AppView flex stretch>
-                {props.order.status === 'Delivered' || props.order.status === 'تم التسليم' ||
-                    props.order.status === 'Returned' || props.order.status === 'تم الإرجاع' ?
+                {props.finished ?
                     null :
                     <AppView backgroundColor='#000' stretch center row borderRadius={25} paddingHorizontal={5}
                         style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 10000, opacity: 0.7 }}

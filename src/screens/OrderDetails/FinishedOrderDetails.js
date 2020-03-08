@@ -10,7 +10,7 @@ import { ActivityIndicator, Linking } from 'react-native';
 import { refreshList } from '../../actions/list';
 
 
-export default OrderDetails = props => {
+export default FinishedOrderDetails = props => {
   const [loading, setLoading] = useState(false);
   const [loadingDelivered, setLoadingDelivered] = useState(false);
   const [loadingReturned, setLoadingReturned] = useState(false);
@@ -69,7 +69,7 @@ export default OrderDetails = props => {
         :
         <AppScrollView stretch>
           <AppView stretch height={35}>
-            <Map destination={order.order_map_location} order={order} finished={props.finished} />
+            <Map destination={order.order_map_location} order={order} />
           </AppView>
           <AppView stretch flex paddingTop={10}>
             <Row label={I18n.t('OrderNumber')} value={order.order_id} marginBottom={10} />
@@ -84,17 +84,17 @@ export default OrderDetails = props => {
             />
             <Row label={I18n.t('The amount required')} value={order.order_final_total_after_delivery} real />
           </AppView>
-          {props.finished ?
+          {order.status === 'Delivered' || order.status === 'تم التسليم' ||
+            order.status === 'Returned' || order.status === 'تم الإرجاع' ?
             <AppView
               flex
               stretch
-              center
               height={7}
               borderRadius={7}
               margin={5}
               backgroundColor="#23A636"
             >
-              <AppText color='white' stretch center bold>{order.status}</AppText>
+              <AppText color='white'>{order.status}</AppText>
             </AppView>
             :
             <AppView spaceBetween stretch row paddingHorizontal={7}>

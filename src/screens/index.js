@@ -30,12 +30,14 @@ import Notifications from "./Notification/Notification"
 import DeliverOrder from "./DeliverOrder/DeliverOrder";
 import FinishedOrders from "./FinishedOrders/FinishedOrders";
 import Informations from "./Informations/Informations";
+import FinishedOrderDetails from "./OrderDetails/FinishedOrderDetails";
 
 // register all screens of the app
 export default () => {
   AppNavigation.registerScreen("DeliverOrder", DeliverOrder);
   AppNavigation.registerScreen("FinishedOrders", FinishedOrders);
   AppNavigation.registerScreen("Informations", Informations);
+  AppNavigation.registerScreen("FinishedOrderDetails", FinishedOrderDetails);
 
   AppNavigation.registerScreen("Notifications", Notifications);
   AppNavigation.registerScreen("MapLocation", MapLocation);
