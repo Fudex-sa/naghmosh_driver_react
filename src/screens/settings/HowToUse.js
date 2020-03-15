@@ -15,7 +15,6 @@ export default HowToUse = props => {
                 setUse(res.data.data)
                 setLoading(false)
             }).catch((error) => {
-                console.log("ffff ", error, "ddxxx ", error.response)
                 setLoading(false)
                 if (!error.response) {
                     showError(I18n.t("ui-networkConnectionError"));

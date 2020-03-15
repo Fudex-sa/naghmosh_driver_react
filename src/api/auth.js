@@ -6,11 +6,7 @@ export default class Auth {
 
   signUp = async (data) => {
     try {
-      console.log("dayta ", data)
       const res = await axios.post("driverregister", data);
-      // .then((res) => console.log("reddd ", res))
-      // .catch((error) => console.log(error, "fff ", error.response))
-      console.log("res ", res)
       if (res.data.status === 200) { return res.data }
       else {
         throw new ApiErrorException(
@@ -43,8 +39,6 @@ export default class Auth {
         return
       }
     } catch (error) {
-      console.log(error)
-      console.log(error.response)
       showError(I18n.t("ui-error-happened"))
     }
   };

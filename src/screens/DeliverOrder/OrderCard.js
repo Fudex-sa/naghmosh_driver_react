@@ -24,7 +24,7 @@ export default OrderCard = (props) => {
       }}
     >
       <AppView flex={1.7} stretch center borderRightWidth={0.7} borderColor={'gray'} >
-        <AppText>{I18n.t('OrderNumber')}</AppText>
+        <AppText stretch center>{I18n.t('OrderNumber')}</AppText>
         <AppText size={7} color="#23A636">{props.data.order_id}</AppText>
       </AppView>
       <AppView flex={4} marginLeft={5}>

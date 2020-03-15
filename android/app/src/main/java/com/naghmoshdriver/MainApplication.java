@@ -30,6 +30,7 @@ import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage; // <-- Add this line
 
+import io.rumors.reactnativesettings.RNSettingsPackage;
 import android.content.IntentFilter;
 import io.rumors.reactnativesettings.RNSettingsPackage;
 import io.rumors.reactnativesettings.receivers.GpsLocationReceiver;
@@ -79,7 +80,8 @@ public class MainApplication extends NavigationApplication {
         new SnackbarPackage(),
         new AsyncStoragePackage(),
         new FastImageViewPackage(),
-        new MapsPackage()
+        new MapsPackage(),
+        new RNSettingsPackage()
     );
     }
            

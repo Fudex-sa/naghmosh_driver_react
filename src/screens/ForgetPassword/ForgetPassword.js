@@ -18,8 +18,6 @@ export default ForgetPassword = props => {
                 if (res.data.data !== 0) { AppNavigation.pop(); }
             })
             .catch((error) => {
-                console.log(error)
-                console.log(error.response)
                 setLoading(false)
                 if (!error.response) {
                     showError(I18n.t("ui-networkConnectionError"));

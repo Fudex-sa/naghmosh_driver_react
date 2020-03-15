@@ -9,38 +9,36 @@ import Permissions from 'react-native-permissions';
 import I18n from "react-native-i18n";
 // import MapViewDirections from 'react-native-maps-directions';
 import RNSettings from 'react-native-settings';
+import { useSelector } from 'react-redux';
 
 export default MapComponent = props => {
     const [loc, setLoc] = useState(null)
     const [initialRegion, setInitialRegion] = useState(null)
+    const rtl = useSelector(state => state.lang.rtl);
+
     const userLoc = (props.destination).split(',')
     useEffect(() => {
-        console.log("in use effect ")
         RNSettings.getSetting(RNSettings.LOCATION_SETTING).then(result => {
-            console.log("result ", result)
             if (result === RNSettings.ENABLED) {
-                console.log('location is enabled');
                 _requestPermission();
             } else {
-                console.log('location is disabled');
                 Alert.alert(
-                    'Alert',
+                    I18n.t('Alert'),
                     I18n.t('enableGPS'),
-                    [
-                        {
-                            text: 'settings', onPress: () => {
-                                RNSettings.openSetting(RNSettings.ACTION_LOCATION_SOURCE_SETTINGS).then(
-                                    result => {
-                                        console.log("fffffffffffff", result)
-                                        if (result === RNSettings.ENABLED) {
-                                            _requestPermission()
-                                        }
-                                        else {
-                                        }
-                                    },
-                                );
-                            }
-                        },
+                    [{
+                        text: I18n.t('Settings'),
+                        onPress: () => {
+                            RNSettings.openSetting(RNSettings.ACTION_LOCATION_SOURCE_SETTINGS).then(
+                                result => {
+                                    if (result === RNSettings.ENABLED) {
+                                        _requestPermission()
+                                    }
+                                    else {
+                                    }
+                                },
+                            );
+                        }
+                    },
                     ],
                     { cancelable: false },
                 );
@@ -51,7 +49,6 @@ export default MapComponent = props => {
 
     const _requestPermission = () => {
         Permissions.request('location').then(response => {
-            console.log("rrrrr ", response)
             if (
                 response === 'denied' ||
                 response === 'undetermined' ||
@@ -82,10 +79,8 @@ export default MapComponent = props => {
                         longitudeDelta: 0.0421,
                     }
                 )
-                // props.onLocationChange(latitude, longitude);
             },
             error => {
-                // console.log("error ", error)
                 getLatLng();
             }, { timeout: 10000 }
         );
@@ -127,7 +122,10 @@ export default MapComponent = props => {
             <AppView flex stretch>
                 {props.order.status === 'Shipped' || props.order.status === 'تم الشحن' ?
                     <AppView backgroundColor='#000' stretch center row borderRadius={25} paddingHorizontal={5}
-                        style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 10000, opacity: 0.7 }}
+                        style={{
+                            position: 'absolute', bottom: 10, left: rtl ? 10 : undefined,
+                            right: rtl ? undefined : 10, zIndex: 10000, opacity: 0.7
+                        }}
                         onPress={() => { openGoogleMaps() }}
                     >
                         <AppText color="white" bold marginVertical={5} stretch center size={7} backgroundColor='transparent'
@@ -136,8 +134,8 @@ export default MapComponent = props => {
                     </AppView>
                     : null
                 }
-                {/* {renderMap()} */}
+                {renderMap()}
             </AppView>
-        </AppView>
+        </AppView >
     );
 }
