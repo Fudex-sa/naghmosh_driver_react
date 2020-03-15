@@ -69,7 +69,7 @@ export default OrderDetails = props => {
         :
         <AppScrollView stretch>
           <AppView stretch height={35}>
-            <Map destination={order.order_map_location} order={order} finished={props.finished} />
+            <Map destination={order.order_map_location} order={order} />
           </AppView>
           <AppView stretch flex paddingTop={10}>
             <Row label={I18n.t('OrderNumber')} value={order.order_id} marginBottom={10} />
@@ -84,19 +84,7 @@ export default OrderDetails = props => {
             />
             <Row label={I18n.t('The amount required')} value={order.order_final_total_after_delivery} real />
           </AppView>
-          {props.finished ?
-            <AppView
-              flex
-              stretch
-              center
-              height={7}
-              borderRadius={7}
-              margin={5}
-              backgroundColor="#23A636"
-            >
-              <AppText color='white' stretch center bold>{order.status}</AppText>
-            </AppView>
-            :
+          {order.status === 'Shipped' || order.status === 'تم الشحن' ?
             <AppView spaceBetween stretch row paddingHorizontal={7}>
               <AppButton
                 title={I18n.t('deliverOrder')}
@@ -126,7 +114,18 @@ export default OrderDetails = props => {
                 }}
               />
             </AppView>
-
+            :
+            <AppView
+              flex
+              stretch
+              center
+              height={7}
+              borderRadius={7}
+              margin={5}
+              backgroundColor="#23A636"
+            >
+              <AppText color='white' stretch center bold>{order.status}</AppText>
+            </AppView>
           }
         </AppScrollView>
       }

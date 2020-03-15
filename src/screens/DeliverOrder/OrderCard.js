@@ -20,7 +20,7 @@ export default OrderCard = (props) => {
       borderRadius={5}
       marginBottom={7}
       onPress={() => {
-        AppNavigation.push({ name: "OrderDetails", passProps: { orderID: props.data.order_id, finished: props.finished } });
+        AppNavigation.push({ name: "OrderDetails", passProps: { orderID: props.data.order_id, } });
       }}
     >
       <AppView flex={1.7} stretch center borderRightWidth={0.7} borderColor={'gray'} >

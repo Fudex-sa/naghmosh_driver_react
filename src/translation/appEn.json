@@ -1,6 +1,7 @@
 {
   "home": "Home",
   "clientName": "Client name",
+  "enableGPS": "GPS location must be enabled",
   "payToNaghmosh": "Pay to Zuhair Al-Nagmoush Corporation",
   "orderDetails": "Order Detalis",
   "The amount required": "The amount required",

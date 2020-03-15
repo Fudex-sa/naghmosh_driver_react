@@ -31,7 +31,6 @@ export default FinishedOrders = props => {
       }
     },
     onError: error => {
-      con
       if (!error.response) {
         showError(I18n.t("ui-networkConnectionError"));
       } else {
@@ -80,7 +79,6 @@ export default FinishedOrders = props => {
         rowRenderer={data => (
           <OrderCard
             data={data}
-            finished
           />
         )}
       />

@@ -1,6 +1,7 @@
 {
   "home": "الرئيسية",
   "clientName": "إسم العميل",
+  "enableGPS": "يجب تفعيل الموقع الجغرافى للجهاز (GPS)",
   "payToNaghmosh": "الدفع لمؤسسة زهير النغموش",
   "orderDetails": "تفاصيل الطلب",
   "paymentMethod": "طريقة الدفع",

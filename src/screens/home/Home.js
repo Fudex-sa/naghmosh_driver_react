@@ -16,10 +16,13 @@ export default Home = props => {
   const [notifCount, setNotifCount] = useState(0)
   PushNotification.configure({
     onNotification: function (notification) {
+      console.log("noti", notification);
       if (notification.userInteraction === true) {
+        readNotifications(notification.notificationId)
         AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.click_action } });
       }
       else if (notification.foreground === false) {
+        readNotifications(notification.notificationId)
         AppNavigation.push({ name: "OrderDetails", passProps: { orderID: notification.click_action } });
       }
     },
@@ -28,6 +31,21 @@ export default Home = props => {
     popInitialNotification: true,
     requestPermissions: true,
   });
+  const readNotifications = (id) => {
+    Axios.post('driver/notifications/single/to_read',
+      {
+        api_token: user.api_token, notificationId: id,
+      })
+      .then((res) => {
+      })
+      .catch((error) => {
+        if (!error.response) {
+          showError(I18n.t("ui-networkConnectionError"));
+        } else {
+          showError(I18n.t("ui-error-happened"));
+        }
+      });
+  }
 
   useEffect(() => {
     Axios.get(`driver/notifications/unread?api_token=${user.api_token}`)

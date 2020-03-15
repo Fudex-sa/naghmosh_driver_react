@@ -1,28 +1,61 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MapView, { Marker } from "react-native-maps";
-import { StyleSheet, Linking } from 'react-native';
+import { StyleSheet, Linking, Alert } from 'react-native';
 import {
-    AppView, AppText, AppButton, showInfo, AppNavigation, showError, AppImage, AppIcon,
+    AppView, AppText, showError, AppIcon,
 } from '../../common';
 import Geolocation from '@react-native-community/geolocation';
 import Permissions from 'react-native-permissions';
 import I18n from "react-native-i18n";
-import MapViewDirections from 'react-native-maps-directions';
+// import MapViewDirections from 'react-native-maps-directions';
+import RNSettings from 'react-native-settings';
 
 export default MapComponent = props => {
     const [loc, setLoc] = useState(null)
     const [initialRegion, setInitialRegion] = useState(null)
     const userLoc = (props.destination).split(',')
     useEffect(() => {
-        _requestPermission();
+        console.log("in use effect ")
+        RNSettings.getSetting(RNSettings.LOCATION_SETTING).then(result => {
+            console.log("result ", result)
+            if (result === RNSettings.ENABLED) {
+                console.log('location is enabled');
+                _requestPermission();
+            } else {
+                console.log('location is disabled');
+                Alert.alert(
+                    'Alert',
+                    I18n.t('enableGPS'),
+                    [
+                        {
+                            text: 'settings', onPress: () => {
+                                RNSettings.openSetting(RNSettings.ACTION_LOCATION_SOURCE_SETTINGS).then(
+                                    result => {
+                                        console.log("fffffffffffff", result)
+                                        if (result === RNSettings.ENABLED) {
+                                            _requestPermission()
+                                        }
+                                        else {
+                                        }
+                                    },
+                                );
+                            }
+                        },
+                    ],
+                    { cancelable: false },
+                );
+            }
+        });
+
     }, [])
 
     const _requestPermission = () => {
         Permissions.request('location').then(response => {
+            console.log("rrrrr ", response)
             if (
                 response === 'denied' ||
                 response === 'undetermined' ||
-                response === 'denied'
+                response === 'restricted'
             ) {
                 _requestPermission();
             } else {
@@ -52,8 +85,9 @@ export default MapComponent = props => {
                 // props.onLocationChange(latitude, longitude);
             },
             error => {
+                // console.log("error ", error)
                 getLatLng();
-            },
+            }, { timeout: 10000 }
         );
     }
 
@@ -91,8 +125,7 @@ export default MapComponent = props => {
     return (
         <AppView flex stretch >
             <AppView flex stretch>
-                {props.finished ?
-                    null :
+                {props.order.status === 'Shipped' || props.order.status === 'تم الشحن' ?
                     <AppView backgroundColor='#000' stretch center row borderRadius={25} paddingHorizontal={5}
                         style={{ position: 'absolute', bottom: 10, left: 10, zIndex: 10000, opacity: 0.7 }}
                         onPress={() => { openGoogleMaps() }}
@@ -101,8 +134,9 @@ export default MapComponent = props => {
                         >{I18n.t('directions')}</AppText>
                         <AppIcon name={'directions'} marginLeft={5} type='font-awesome5' size={12} color='white' />
                     </AppView>
+                    : null
                 }
-                {renderMap()}
+                {/* {renderMap()} */}
             </AppView>
         </AppView>
     );

@@ -40,6 +40,8 @@ target 'NaghmoshDriver' do
 
   pod 'RNPaytabsLibrary', :path => '../node_modules/@paytabscom/react-native-paytabs-library'
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'NaghmoshDriverTests' do
     inherit! :search_paths
     # Pods for testing

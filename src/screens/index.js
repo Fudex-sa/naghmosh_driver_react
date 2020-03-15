@@ -3,7 +3,7 @@ import Home from "./Home/Home";
 import Settings from "./Settings/Settings";
 import OrderDetails from './OrderDetails/OrderDetails';
 import Profile from "./Profile/Profile";
-import SignUp from "./signUp/SignUp";
+import SignUp from "./SignUp/SignUp";
 import Login from "./Login/Login";
 import Language from "./Settings/Language";
 import ChangePassword from "./ChangePassword/ChangePassword";

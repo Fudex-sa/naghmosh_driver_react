@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppForm, AppInput, AppButton, AppIcon, AppSpinner, showError, showSuccess } from "../../common";
-import logo from "../../assets/imgs/logo.png";
 import { validationSchema } from './validation';
 import I18n from "react-native-i18n";
-import colors from '../../common/defaults/colors';
 import { setUserData } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { ApiErrorTypes } from "../../api/errors";
-import AuthRepo from "../../repo/auth";
 import { AppHeader } from '../../components';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';

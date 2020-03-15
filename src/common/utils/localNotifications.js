@@ -6,42 +6,42 @@ import { getThemeColor } from './colors';
 
 export const showInfo = message => {
   Snackbar.show({
-    title: message,
+    text: message,
     duration: Snackbar.LENGTH_SHORT,
     backgroundColor: getThemeColor(
       getTheme().localNotifications.info.backgroundColor,
     ),
     action: {
-      title: I18n.t('ui-close'),
-      color: getThemeColor(getTheme().localNotifications.info.closeColor),
+      text: I18n.t('ui-close'),
+      textColor: getThemeColor(getTheme().localNotifications.info.closeColor),
     },
   });
 };
 
 export const showSuccess = message => {
   Snackbar.show({
-    title: message,
+    text: message,
     duration: Snackbar.LENGTH_SHORT,
     backgroundColor: getThemeColor(
       getTheme().localNotifications.success.backgroundColor,
     ),
     action: {
-      title: I18n.t('ui-close'),
-      color: getThemeColor(getTheme().localNotifications.success.closeColor),
+      text: I18n.t('ui-close'),
+      textColor: getThemeColor(getTheme().localNotifications.success.closeColor),
     },
   });
 };
 
 export const showError = message => {
   Snackbar.show({
-    title: message,
+    text: message,
     duration: Snackbar.LENGTH_LONG,
     backgroundColor: getThemeColor(
       getTheme().localNotifications.error.backgroundColor,
     ),
     action: {
-      title: I18n.t('ui-close'),
-      color: getThemeColor(getTheme().localNotifications.error.closeColor),
+      text: I18n.t('ui-close'),
+      textColor: getThemeColor(getTheme().localNotifications.error.closeColor),
     },
   });
 };
