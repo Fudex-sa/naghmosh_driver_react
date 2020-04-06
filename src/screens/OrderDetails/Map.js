@@ -10,12 +10,14 @@ import I18n from "react-native-i18n";
 // import MapViewDirections from 'react-native-maps-directions';
 import RNSettings from 'react-native-settings';
 import { useSelector } from 'react-redux';
+import colors from '../../common/defaults/colors';
 
 export default MapComponent = props => {
     const [loc, setLoc] = useState(null)
-    const [initialRegion, setInitialRegion] = useState(null)
+    const [initialRegion, setInitialRegion] = useState(null);
+    let mapRef = useRef(null);
     const rtl = useSelector(state => state.lang.rtl);
-
+    const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
     const userLoc = (props.destination).split(',')
     useEffect(() => {
         RNSettings.getSetting(RNSettings.LOCATION_SETTING).then(result => {
@@ -79,6 +81,12 @@ export default MapComponent = props => {
                         longitudeDelta: 0.0421,
                     }
                 )
+                mapRef.current.animateToRegion({
+                    latitude: parseFloat(userLoc[0]),
+                    longitude: parseFloat(userLoc[1]),
+                    latitudeDelta: 0.9022,
+                    longitudeDelta: 0.0421,
+                })
             },
             error => {
                 getLatLng();
@@ -95,18 +103,30 @@ export default MapComponent = props => {
         return (
             <MapView
                 style={{ ...StyleSheet.absoluteFillObject }}
+                ref={mapRef}
                 provider="google"
                 initialRegion={initialRegion}
             >
-                {loc && <Marker coordinate={loc} />}
+                {loc && <Marker coordinate={loc} >
+                    <AppView center >
+                        <AppText borderRadius={15} color='white' ph={3} backgroundColor={'#E3000F'}>{`${user.first_name} ${user.last_name}`}</AppText>
+                        <AppIcon name='map-marker-alt' type='font-awesome5' size={10} color={'#E3000F'} />
+                    </AppView>
+                </Marker>
+                }
                 {userLoc && <Marker
                     coordinate={{
                         latitude: parseFloat(userLoc[0]),
                         longitude: parseFloat(userLoc[1]),
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
-                    }}
-                />}
+                    }}>
+                    <AppView center >
+                        <AppText borderRadius={15} color='white' ph={3} backgroundColor={colors.primary}>{`${props.order.order_client_first_name} ${props.order.order_client_last_name}`}</AppText>
+                        <AppIcon name='map-marker-alt' type='font-awesome5' size={10} color={colors.primary} />
+                    </AppView>
+                </Marker>
+                }
                 {/* <MapViewDirections
                     origin={loc}
                     destination={{ latitude: (userLoc[0]), longitude: (userLoc[1]) }}

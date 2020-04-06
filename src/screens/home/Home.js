@@ -6,14 +6,16 @@ import HomeCard from './HomeCard'
 import { AppHeader } from '../../components';
 import PushNotification from 'react-native-push-notification';
 // import RNPaytabsLibrary from '@paytabscom/react-native-paytabs-library';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
+import { refreshList } from '../../actions/list';
 
 export default Home = props => {
   const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
   const lang = useSelector(state => state.lang.lang);
   const refresh = useSelector(state => state.list.homeNotifCount);
-  const [notifCount, setNotifCount] = useState(0)
+  const [notifCount, setNotifCount] = useState(0);
+  const dispatch = useDispatch();
   PushNotification.configure({
     onNotification: function (notification) {
       console.log("noti", notification);
@@ -37,6 +39,7 @@ export default Home = props => {
         api_token: user.api_token, notificationId: id,
       })
       .then((res) => {
+        dispatch(refreshList('homeNotifCount'))
       })
       .catch((error) => {
         if (!error.response) {

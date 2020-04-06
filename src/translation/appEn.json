@@ -1,6 +1,12 @@
 {
   "home": "Home",
   "clientName": "Client name",
+  "Receive money": "Receive money",
+  "Cash": "Cash",
+  "Mada card": "Mada card",
+  "done": "Done",
+  "selectPaymentWay": "Choose the method of receiving money from the customer",
+  "choosePaymentWay": "Choose the method of receiving cash",
   "enableGPS": "GPS location must be enabled",
   "payToNaghmosh": "Pay to Zuhair Al-Nagmoush Corporation",
   "orderDetails": "Order Detalis",

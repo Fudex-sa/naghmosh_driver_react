@@ -35,12 +35,13 @@ export default OrderDetails = props => {
   }
     , []);
 
-  const OrderStatusUpdate = (id, status) => {
+  const OrderStatusUpdate = (id, status, paymentWay) => {
     Axios.post('driver/orderstatus/update',
       {
         api_token: token,
         orderId: id,
         orderStatus: status,
+        // paymentWay:paymentWay,
       })
       .then(async (res) => {
         showSuccess(res.data.message);
@@ -95,8 +96,16 @@ export default OrderDetails = props => {
                 backgroundColor="#23A636"
                 processing={loadingDelivered}
                 onPress={() => {
-                  setLoadingDelivered(true)
-                  OrderStatusUpdate(order.order_id, 'delivered ')
+                  AppNavigation.push({
+                    name: 'PaymentWay',
+                    passProps: {
+                      onDone: (paymentWay) => {
+                        console.log("*******************", paymentWay)
+                        setLoadingDelivered(true)
+                        OrderStatusUpdate(order.order_id, 'delivered ', paymentWay)
+                      }
+                    }
+                  })
                 }}
               />
               <AppView width={5} />

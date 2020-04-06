@@ -13,6 +13,7 @@ import Notifications from "./Notification/Notification"
 import DeliverOrder from "./DeliverOrder/DeliverOrder";
 import FinishedOrders from "./FinishedOrders/FinishedOrders";
 import Informations from "./Informations/Informations";
+import PaymentWay from "./PaymentWay/PaymentWay";
 
 // register all screens of the app
 export default () => {
@@ -30,4 +31,5 @@ export default () => {
   AppNavigation.registerScreen("OrderDetails", OrderDetails);
   AppNavigation.registerScreen("Profile", Profile);
   AppNavigation.registerScreen("signUp", SignUp);
+  AppNavigation.registerScreen("PaymentWay", PaymentWay);
 };

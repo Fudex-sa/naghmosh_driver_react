@@ -12,8 +12,6 @@ import {
   getColors,
   AppImage,
 } from '../common';
-import colors from '../common/defaults/colors';
-import { Navigation } from 'react-native-navigation';
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 54 : 56;
 

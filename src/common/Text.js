@@ -31,10 +31,11 @@ class Text extends PureComponent {
   };
 
   render() {
-    const { rtl, children, style, translateNumbers, ...rest } = this.props;
+    const { rtl, children, style, translateNumbers, numberOfLines, ...rest } = this.props;
 
     return (
       <NativeText
+        dataDetectorType={numberOfLines ? 'none' : 'all'}
         {...rest}
         style={[
           fontSizeStyles(this.props),
@@ -52,13 +53,13 @@ class Text extends PureComponent {
           },
           typeof children === 'string'
             ? {
-                writingDirection: isASCII(children) ? 'ltr' : 'rtl',
-              }
+              writingDirection: isASCII(children) ? 'ltr' : 'rtl',
+            }
             : {},
           this.props.lineHeight
             ? {
-                lineHeight: responsiveFontSize(this.props.lineHeight),
-              }
+              lineHeight: responsiveFontSize(this.props.lineHeight),
+            }
             : {},
           style,
         ]}
