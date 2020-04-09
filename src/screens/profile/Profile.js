@@ -14,12 +14,14 @@ export default Profile = props => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [CollectedOrders, setCollectedOrders] = useState(null);
+    const [totalCommission, setTotalCommission] = useState(null);
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
     useEffect(() => {
         setLoading(true)
         Axios.get(`driverprofile?api_token=${user.api_token}`)
             .then((res) => {
-                setCollectedOrders(res.data.profile_data.collected_orders)
+                setCollectedOrders(res.data.profile_data.collected_orders);
+                setTotalCommission(res.data.profile_data.total_commission);
                 setLoading(false)
             }).catch((error) => {
                 setLoading(false)
@@ -154,7 +156,7 @@ export default Profile = props => {
                             backgroundColor={'#E95B06'}
                             paddingHorizontal={5}
                         >
-                            <AppText color='white' size={7} >
+                            <AppText color='white' size={7} numberOfLines={1}>
                                 {`${CollectedOrders}`}
                                 <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
                             </AppText>
@@ -166,11 +168,11 @@ export default Profile = props => {
                             linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
                         >
                             <AppView stretch flex center>
-                                {/* <AppText color='white' size={7} >
-                                    {`${'1,235'}`}
+                                <AppText color='white' size={7} numberOfLines={1}>
+                                    {`${totalCommission}`}
                                     <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
                                 </AppText>
-                                <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText> */}
+                                <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText>
                             </AppView>
                             <AppView stretch flex>
                                 <AppImage source={require('../../assets/imgs/cc.png')} flex stretch resizeMode={'contain'} />

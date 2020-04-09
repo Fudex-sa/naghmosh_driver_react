@@ -35,14 +35,15 @@ export default OrderDetails = props => {
   }
     , []);
 
-  const OrderStatusUpdate = (id, status, paymentWay) => {
-    Axios.post('driver/orderstatus/update',
-      {
-        api_token: token,
-        orderId: id,
-        orderStatus: status,
-        // paymentWay:paymentWay,
-      })
+  const OrderStatusUpdate = (id, status, paymentWay = null) => {
+    let values = {
+      api_token: token,
+      orderId: id,
+      orderStatus: status,
+      collectMethod: paymentWay,
+    };
+    if (values.collectMethod === null) { delete values.collectMethod }
+    Axios.post('driver/orderstatus/update', values)
       .then(async (res) => {
         showSuccess(res.data.message);
         setLoadingDelivered(false);
@@ -96,16 +97,21 @@ export default OrderDetails = props => {
                 backgroundColor="#23A636"
                 processing={loadingDelivered}
                 onPress={() => {
-                  AppNavigation.push({
-                    name: 'PaymentWay',
-                    passProps: {
-                      onDone: (paymentWay) => {
-                        console.log("*******************", paymentWay)
-                        setLoadingDelivered(true)
-                        OrderStatusUpdate(order.order_id, 'delivered ', paymentWay)
+                  if (order.order_payment_id === 2) {
+                    setLoadingDelivered(true)
+                    OrderStatusUpdate(order.order_id, 'delivered ')
+                  }
+                  else {
+                    AppNavigation.push({
+                      name: 'PaymentWay',
+                      passProps: {
+                        onDone: (paymentWay) => {
+                          setLoadingDelivered(true)
+                          OrderStatusUpdate(order.order_id, 'delivered ', paymentWay)
+                        }
                       }
-                    }
-                  })
+                    })
+                  }
                 }}
               />
               <AppView width={5} />

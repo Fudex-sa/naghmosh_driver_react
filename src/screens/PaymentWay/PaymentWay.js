@@ -17,7 +17,7 @@ export default PaymentWay = props => {
             >
                 <AppText bold marginHorizontal={5} size={8} color='white' stretch>
                     {I18n.t('Cash')}
-                 </AppText>
+                </AppText>
                 <AppIcon
                     name={PaymentWay === 'cash' ? "check-box" : 'check-box-outline-blank'}
                     type="material"
@@ -36,12 +36,12 @@ export default PaymentWay = props => {
                     {I18n.t('Mada card')}
                 </AppText>
                 <AppIcon
-                    name={PaymentWay === 'mada' ? "check-box" : 'check-box-outline-blank'}
+                    name={PaymentWay === 'mada_card' ? "check-box" : 'check-box-outline-blank'}
                     type="material"
-                    color={PaymentWay === 'mada' ? 'white' : colors.darkgrey}
+                    color={PaymentWay === 'mada_card' ? 'white' : colors.darkgrey}
                     size={10}
                     onPress={() => {
-                        setPaymentWay('mada')
+                        setPaymentWay('mada_card')
                     }}
                 />
             </AppView>

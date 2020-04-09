@@ -81,12 +81,14 @@ export default MapComponent = props => {
                         longitudeDelta: 0.0421,
                     }
                 )
-                mapRef.current.animateToRegion({
-                    latitude: parseFloat(userLoc[0]),
-                    longitude: parseFloat(userLoc[1]),
-                    latitudeDelta: 0.9022,
-                    longitudeDelta: 0.0421,
-                })
+                if (props.order.status === 'Shipped' || props.order.status === 'تم الشحن') {
+                    mapRef.current.animateToRegion({
+                        latitude: parseFloat(userLoc[0]),
+                        longitude: parseFloat(userLoc[1]),
+                        latitudeDelta: 0.9022,
+                        longitudeDelta: 0.0421,
+                    })
+                }
             },
             error => {
                 getLatLng();
@@ -107,7 +109,7 @@ export default MapComponent = props => {
                 provider="google"
                 initialRegion={initialRegion}
             >
-                {loc && <Marker coordinate={loc} >
+                {props.order.status === 'Shipped' || props.order.status === 'تم الشحن' && loc && <Marker coordinate={loc} >
                     <AppView center >
                         <AppText borderRadius={15} color='white' ph={3} backgroundColor={'#E3000F'}>{`${user.first_name} ${user.last_name}`}</AppText>
                         <AppIcon name='map-marker-alt' type='font-awesome5' size={10} color={'#E3000F'} />
