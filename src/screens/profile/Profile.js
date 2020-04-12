@@ -168,11 +168,11 @@ export default Profile = props => {
                             linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
                         >
                             <AppView stretch flex center>
-                                <AppText color='white' size={7} numberOfLines={1}>
+                                {/* <AppText color='white' size={7} numberOfLines={1}>
                                     {`${totalCommission}`}
                                     <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
                                 </AppText>
-                                <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText>
+                                <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText> */}
                             </AppView>
                             <AppView stretch flex>
                                 <AppImage source={require('../../assets/imgs/cc.png')} flex stretch resizeMode={'contain'} />

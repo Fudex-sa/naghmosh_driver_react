@@ -85,7 +85,7 @@ export default MapComponent = props => {
                     mapRef.current.animateToRegion({
                         latitude: parseFloat(userLoc[0]),
                         longitude: parseFloat(userLoc[1]),
-                        latitudeDelta: 0.9022,
+                        latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     })
                 }
@@ -109,13 +109,13 @@ export default MapComponent = props => {
                 provider="google"
                 initialRegion={initialRegion}
             >
-                {props.order.status === 'Shipped' || props.order.status === 'تم الشحن' && loc && <Marker coordinate={loc} >
+                {/* {props.order.status === 'Shipped' || props.order.status === 'تم الشحن' && loc && <Marker coordinate={loc} >
                     <AppView center >
                         <AppText borderRadius={15} color='white' ph={3} backgroundColor={'#E3000F'}>{`${user.first_name} ${user.last_name}`}</AppText>
                         <AppIcon name='map-marker-alt' type='font-awesome5' size={10} color={'#E3000F'} />
                     </AppView>
                 </Marker>
-                }
+                } */}
                 {userLoc && <Marker
                     coordinate={{
                         latitude: parseFloat(userLoc[0]),

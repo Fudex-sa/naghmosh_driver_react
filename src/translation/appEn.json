@@ -5,6 +5,7 @@
   "Cash": "Cash",
   "Mada card": "Mada card",
   "done": "Done",
+  "totalCommission": "Total commission",
   "selectPaymentWay": "Choose the method of receiving money from the customer",
   "choosePaymentWay": "Choose the method of receiving cash",
   "enableGPS": "GPS location must be enabled",

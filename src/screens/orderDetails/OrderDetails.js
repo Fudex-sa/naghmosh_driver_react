@@ -77,12 +77,24 @@ export default OrderDetails = props => {
             <Row label={I18n.t('OrderNumber')} value={order.order_id} marginBottom={10} />
             <RowDetails
               labelHeader={I18n.t('orderDetails')}
-              data={[
-                { label: I18n.t('clientName'), value: `${order.order_client_first_name} ${order.order_client_last_name}` },
-                { label: I18n.t('address'), value: order.order_full_address },
-                { label: I18n.t('signup-phone'), value: order.order_client_mobile },
-                { label: I18n.t('paymentMethod'), value: order.payment_way }
-              ]}
+              data={
+                order.status === 'Returned' || order.status === 'تم الإرجاع'
+                  || order.status === 'Shipped' || order.status === 'تم الشحن' ?
+                  [
+                    { label: I18n.t('clientName'), value: `${order.order_client_first_name} ${order.order_client_last_name}` },
+                    { label: I18n.t('address'), value: order.order_full_address },
+                    { label: I18n.t('signup-phone'), value: order.order_client_mobile },
+                    { label: I18n.t('paymentMethod'), value: order.payment_way }
+                  ]
+                  :
+                  [
+                    { label: I18n.t('clientName'), value: `${order.order_client_first_name} ${order.order_client_last_name}` },
+                    { label: I18n.t('address'), value: order.order_full_address },
+                    { label: I18n.t('signup-phone'), value: order.order_client_mobile },
+                    { label: I18n.t('paymentMethod'), value: order.payment_way },
+                    { label: I18n.t('totalCommission'), value: order.order_driver_commission }
+                  ]
+              }
             />
             <Row label={I18n.t('The amount required')} value={order.order_final_total_after_delivery} real />
           </AppView>
@@ -137,7 +149,7 @@ export default OrderDetails = props => {
               height={7}
               borderRadius={7}
               margin={5}
-              backgroundColor="#23A636"
+              backgroundColor={order.status === 'Returned' || order.status === 'تم الإرجاع' ? '#E3000F' : "#23A636"}
             >
               <AppText color='white' stretch center bold>{order.status}</AppText>
             </AppView>

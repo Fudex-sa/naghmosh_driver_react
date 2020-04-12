@@ -38,7 +38,7 @@ export default OrderCard = (props) => {
           stretch
           borderRadius={7}
           padding={2} center
-          backgroundColor={"#23A636"}
+          backgroundColor={props.data.status === 'Returned' || props.data.status === 'تم الإرجاع' ? '#E3000F' : "#23A636"}
           paddingHorizontal={2}
         >
           <AppText color="white">{props.data.status}</AppText>
