@@ -67,12 +67,12 @@ export default MapComponent = props => {
         Geolocation.getCurrentPosition(
             position => {
                 const { latitude, longitude } = position.coords;
-                setInitialRegion({
-                    latitude: latitude,
-                    longitude: longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                })
+                // setInitialRegion({
+                //     latitude: latitude,
+                //     longitude: longitude,
+                //     latitudeDelta: 0.0922,
+                //     longitudeDelta: 0.0421,
+                // })
                 setLoc(
                     {
                         latitude: latitude,
@@ -81,14 +81,14 @@ export default MapComponent = props => {
                         longitudeDelta: 0.0421,
                     }
                 )
-                if (props.order.status === 'Shipped' || props.order.status === 'تم الشحن') {
-                    mapRef.current.animateToRegion({
-                        latitude: parseFloat(userLoc[0]),
-                        longitude: parseFloat(userLoc[1]),
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    })
-                }
+                // if (props.order.status === 'Shipped' || props.order.status === 'تم الشحن') {
+                //     mapRef.current.animateToRegion({
+                //         latitude: parseFloat(userLoc[0]),
+                //         longitude: parseFloat(userLoc[1]),
+                //         latitudeDelta: 0.0922,
+                //         longitudeDelta: 0.0421,
+                //     })
+                // }
             },
             error => {
                 getLatLng();
@@ -107,7 +107,12 @@ export default MapComponent = props => {
                 style={{ ...StyleSheet.absoluteFillObject }}
                 ref={mapRef}
                 provider="google"
-                initialRegion={initialRegion}
+                initialRegion={{
+                    latitude: parseFloat(userLoc[0]),
+                    longitude: parseFloat(userLoc[1]),
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }}
             >
                 {/* {props.order.status === 'Shipped' || props.order.status === 'تم الشحن' && loc && <Marker coordinate={loc} >
                     <AppView center >

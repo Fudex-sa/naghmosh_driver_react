@@ -73,8 +73,8 @@ export default OrderDetails = props => {
           <AppView stretch height={35}>
             <Map destination={order.order_map_location} order={order} />
           </AppView>
-          <AppView stretch flex paddingTop={10}>
-            <Row label={I18n.t('OrderNumber')} value={order.order_id} marginBottom={10} />
+          <AppView stretch flex paddingTop={5}>
+            <Row label={I18n.t('OrderNumber')} value={order.order_id} />
             <RowDetails
               labelHeader={I18n.t('orderDetails')}
               data={
@@ -99,7 +99,7 @@ export default OrderDetails = props => {
             <Row label={I18n.t('The amount required')} value={order.order_final_total_after_delivery} real />
           </AppView>
           {order.status === 'Shipped' || order.status === 'تم الشحن' ?
-            <AppView spaceBetween stretch row paddingHorizontal={7}>
+            <AppView spaceBetween stretch row paddingHorizontal={7} marginTop={5}>
               <AppButton
                 title={I18n.t('deliverOrder')}
                 flex
@@ -171,7 +171,6 @@ const Row = props => (
     spaceBetween
     centerY
     borderRadius={7}
-    marginBottom={10}
     paddingHorizontal={7}
     borderWidth={0.5}
     {...props.rest}
@@ -194,16 +193,23 @@ const RowDetails = props => (
     borderWidth={0.5}
     borderRadius={7}
     paddingHorizontal={7}
-    marginBottom={10}
+    marginVertical={5}
+    paddingBottom={5}
     {...props.rest}
   >
     <AppText bold marginVertical={5} color="#4C4C4C">
       {props.labelHeader}
     </AppText>
     {props.data.map((item, index) => (
-      <AppView stretch row spaceBetween paddingBottom={5} key={index}>
-        <AppText > {item.label}</AppText>
-        <AppText color="#C9C9C2" numberOfLines={2}> {item.value}</AppText>
+      <AppView stretch row spaceBetween
+        // borderTopWidth={0.7} borderColor={'gray'}
+        key={index}>
+        <AppView flex={1} padding={2} stretch >
+          <AppText > {item.label}</AppText>
+        </AppView>
+        <AppView padding={2} flex={2.5} stretch>
+          <AppText color="#C9C9C2" numberOfLines={index === 1 ? 2 : undefined}> {item.value}</AppText>
+        </AppView>
       </AppView>
     ))}
   </AppView>
