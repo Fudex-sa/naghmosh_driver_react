@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { AppNavigation, AppView, AppText, AppImage, AppScrollView, AppForm, AppInput, AppButton, AppIcon, AppSpinner, showError } from "../../common";
-import logo from "../../assets/imgs/login.png";
+import logo from "../../assets/imgs/logo.png";
 import { validationSchema } from './validation';
 import I18n from "react-native-i18n";
 import { setUserData } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import AuthRepo from "../../repo/auth";
 import firebase from 'react-native-firebase';
-import { ActivityIndicator } from 'react-native';
 
 export default Login = props => {
     const [fcm, setFCM] = useState(null)
@@ -114,7 +113,7 @@ export default Login = props => {
 
             {!fcm ?
                 <AppView flex stretch center>
-                    <ActivityIndicator />
+                    <AppSpinner />
                 </AppView>
                 : <AppForm
                     schema={{

@@ -127,7 +127,7 @@ export default Home = props => {
           }}
         />
         <HomeCard
-          source={require('../../assets/imgs/service.png')}
+          source={lang === 'ar' ? require('../../assets/imgs/serviceAr.png') : require('../../assets/imgs/serviceEn.png')}
           label={I18n.t('notifications')}
           hint={I18n.t('notificationsDetalis')}
           notification
@@ -137,7 +137,7 @@ export default Home = props => {
           }}
         />
         <HomeCard
-          source={require('../../assets/imgs/current.png')}
+          source={lang === 'ar' ? require('../../assets/imgs/currentAr.png') : require('../../assets/imgs/currentEn.png')}
           label={I18n.t('Delivery requests')}
           hint={I18n.t('DeliveryDetails')}
           onPress={() => {
@@ -145,7 +145,7 @@ export default Home = props => {
           }}
         />
         <HomeCard
-          source={require('../../assets/imgs/finished.png')}
+          source={lang === 'ar' ? require('../../assets/imgs/finishedAr.png') : require('../../assets/imgs/finishedEn.png')}
           label={I18n.t('Completed requests')}
           hint={I18n.t('CompletedDetails')}
           onPress={() => {
@@ -153,7 +153,7 @@ export default Home = props => {
           }}
         />
         <HomeCard
-          source={require('../../assets/imgs/settings.png')}
+          source={lang === 'ar' ? require('../../assets/imgs/settingsAr.png') : require('../../assets/imgs/settingsEn.png')}
           label={I18n.t('Settings')}
           hint={I18n.t('SettingsDetalis')}
           onPress={() => {
@@ -161,7 +161,7 @@ export default Home = props => {
           }}
         />
         <HomeCard
-          source={require('../../assets/imgs/information.png')}
+          source={lang === 'ar' ? require('../../assets/imgs/informationAr.png') : require('../../assets/imgs/informationEn.png')}
           label={I18n.t('informations')}
           hint={I18n.t('informationsDetails')}
           onPress={() => {

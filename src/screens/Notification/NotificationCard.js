@@ -4,8 +4,10 @@ import { AppView, AppText, AppImage, AppIcon, showSuccess, showError, AppNavigat
 import Axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { refreshList } from "../../actions/list";
+import colors from "../../common/defaults/colors";
 
 const NotificationCard = (props) => {
+  const lang = useSelector(state => state.lang.lang);
   const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null)
   const dispatch = useDispatch();
   const readNotifications = () => {
@@ -32,10 +34,13 @@ const NotificationCard = (props) => {
     <AppView
       stretch
       row
-      backgroundColor="white"
+      linearBackgroundGradient={{
+        colors: [colors.black, colors.thirdly],
+        start: { x: lang === 'ar' ? 1 : 0, y: lang === 'ar' ? 1 : 0 },
+        end: { x: lang === 'ar' ? 0 : 1, y: lang === 'ar' ? 0 : 1 }
+      }}
       marginHorizontal={10}
-      elevation={3}
-      marginVertical={5}
+      marginVertical={4}
       borderRadius={5}
       onPress={() => {
         props.data.is_read === 1 ?
@@ -48,9 +53,9 @@ const NotificationCard = (props) => {
         <AppImage source={require('../../assets/imgs/logo.png')} equalSize={20} resizeMode={'contain'} />
       </AppView>
       <AppView stretch centerY flex top>
-        <AppText bold size={7}>{props.data.title}</AppText>
-        <AppText size={6} numberOfLines={1}>{props.data.content}</AppText>
-        <AppText color='primary' numberOfLines={1}>{props.data.created_since}</AppText>
+        <AppText color={colors.secondary} bold size={7}>{props.data.title}</AppText>
+        <AppText color={colors.secondary} size={6} numberOfLines={1}>{props.data.content}</AppText>
+        <AppText color={colors.primary} numberOfLines={1}>{props.data.created_since}</AppText>
       </AppView>
 
       {

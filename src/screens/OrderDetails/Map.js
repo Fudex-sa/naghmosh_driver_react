@@ -13,12 +13,12 @@ import { useSelector } from 'react-redux';
 import colors from '../../common/defaults/colors';
 
 export default MapComponent = props => {
-    const [loc, setLoc] = useState(null)
+    const [userLocation, setUserLocation] = useState(null)
     const [initialRegion, setInitialRegion] = useState(null);
     let mapRef = useRef(null);
     const rtl = useSelector(state => state.lang.rtl);
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
-    const userLoc = (props.destination).split(',')
+    const orderLocation = (props.destination).split(',')
     useEffect(() => {
         RNSettings.getSetting(RNSettings.LOCATION_SETTING).then(result => {
             if (result === RNSettings.ENABLED) {
@@ -73,7 +73,7 @@ export default MapComponent = props => {
                 //     latitudeDelta: 0.0922,
                 //     longitudeDelta: 0.0421,
                 // })
-                setLoc(
+                setUserLocation(
                     {
                         latitude: latitude,
                         longitude: longitude,
@@ -83,8 +83,8 @@ export default MapComponent = props => {
                 )
                 // if (props.order.status === 'Shipped' || props.order.status === 'تم الشحن') {
                 //     mapRef.current.animateToRegion({
-                //         latitude: parseFloat(userLoc[0]),
-                //         longitude: parseFloat(userLoc[1]),
+                //         latitude: parseFloat(orderLocation[0]),
+                //         longitude: parseFloat(orderLocation[1]),
                 //         latitudeDelta: 0.0922,
                 //         longitudeDelta: 0.0421,
                 //     })
@@ -97,7 +97,7 @@ export default MapComponent = props => {
     }
 
     const openGoogleMaps = () => {
-        const url = `https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&origin=${loc.latitude},${loc.longitude}&destination=${userLoc[0]},${userLoc[1]}`;
+        const url = `https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&origin=${userLocation.latitude},${userLocation.longitude}&destination=${orderLocation[0]},${orderLocation[1]}`;
         Linking.openURL(url).catch((err) => { showError(I18n.t('error')) });
     }
 
@@ -108,8 +108,8 @@ export default MapComponent = props => {
                 ref={mapRef}
                 provider="google"
                 initialRegion={{
-                    latitude: parseFloat(userLoc[0]),
-                    longitude: parseFloat(userLoc[1]),
+                    latitude: parseFloat(orderLocation[0]),
+                    longitude: parseFloat(orderLocation[1]),
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
@@ -121,22 +121,22 @@ export default MapComponent = props => {
                     </AppView>
                 </Marker>
                 } */}
-                {userLoc && <Marker
+                {orderLocation && <Marker
                     coordinate={{
-                        latitude: parseFloat(userLoc[0]),
-                        longitude: parseFloat(userLoc[1]),
+                        latitude: parseFloat(orderLocation[0]),
+                        longitude: parseFloat(orderLocation[1]),
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}>
                     <AppView center >
-                        <AppText borderRadius={15} color='white' ph={3} backgroundColor={colors.primary}>{`${props.order.order_client_first_name} ${props.order.order_client_last_name}`}</AppText>
-                        <AppIcon name='map-marker-alt' type='font-awesome5' size={10} color={colors.primary} />
+                        <AppText borderRadius={15} color={colors.primary} ph={3} backgroundColor={colors.black}>{`${props.order.order_client_first_name} ${props.order.order_client_last_name}`}</AppText>
+                        <AppIcon name='map-marker-alt' type='font-awesome5' size={11} color={colors.black} />
                     </AppView>
                 </Marker>
                 }
                 {/* <MapViewDirections
                     origin={loc}
-                    destination={{ latitude: (userLoc[0]), longitude: (userLoc[1]) }}
+                    destination={{ latitude: (orderLocation[0]), longitude: (orderLocation[1]) }}
                     apikey={'AIzaSyCay9xEcxxoHTh8Qpm1DridNz3YJxQNtAY'}
                     strokeWidth={4}
                     strokeColor="#000"
@@ -148,16 +148,16 @@ export default MapComponent = props => {
         <AppView flex stretch >
             <AppView flex stretch>
                 {props.order.status === 'Shipped' || props.order.status === 'تم الشحن' ?
-                    <AppView backgroundColor='#000' stretch center row borderRadius={25} paddingHorizontal={5}
+                    <AppView backgroundColor={colors.black} stretch center row borderRadius={25} paddingHorizontal={5}
                         style={{
                             position: 'absolute', bottom: 10, left: rtl ? 10 : undefined,
                             right: rtl ? undefined : 10, zIndex: 10000, opacity: 0.7
                         }}
                         onPress={() => { openGoogleMaps() }}
                     >
-                        <AppText color="white" bold marginVertical={5} stretch center size={7} backgroundColor='transparent'
+                        <AppText color={colors.white} bold marginVertical={5} stretch center size={7} backgroundColor='transparent'
                         >{I18n.t('directions')}</AppText>
-                        <AppIcon name={'directions'} marginLeft={5} type='font-awesome5' size={12} color='white' />
+                        <AppIcon name={'directions'} marginLeft={5} type='font-awesome5' size={12} color={colors.white} />
                     </AppView>
                     : null
                 }

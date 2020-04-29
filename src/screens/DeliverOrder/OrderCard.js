@@ -7,8 +7,25 @@ import {
   AppNavigation
 } from "../../common";
 import I18n from 'react-native-i18n'
+import colors from "../../common/defaults/colors";
 
 export default OrderCard = (props) => {
+  let bg = colors.black
+  let statusColor = colors.primary
+  const { status } = props.data;
+  if (status === 'Returned' || status === 'تم الإرجاع') {
+    bg = colors.error;
+    statusColor = colors.white
+  }
+  if (status === "انتهى" || status === 'Done') {
+    bg = colors.black;
+    statusColor = colors.primary
+  }
+  if (status === 'تم التسليم' || status === 'Delivered') {
+    bg = "#B4E3FF"
+    statusColor = "#047AC0"
+  }
+
   return (
     <AppView
       stretch
@@ -24,12 +41,12 @@ export default OrderCard = (props) => {
       }}
     >
       <AppView flex={1.7} stretch center borderRightWidth={0.7} borderColor={'gray'} >
-        <AppText stretch center>{I18n.t('OrderNumber')}</AppText>
-        <AppText size={7} color="#23A636">{props.data.order_id}</AppText>
+        <AppText stretch center color={colors.black}>{I18n.t('OrderNumber')}</AppText>
+        <AppText size={7} color={colors.primary}>{props.data.order_id}</AppText>
       </AppView>
       <AppView flex={4} marginLeft={5}>
-        <AppText bold size={6.5}>{`${props.data.order_client_first_name} ${props.data.order_client_last_name}`}</AppText>
-        <AppText size={5} numberOfLines={1}>
+        <AppText bold size={6.5} color={colors.black}>{`${props.data.order_client_first_name} ${props.data.order_client_last_name}`}</AppText>
+        <AppText size={5} numberOfLines={1} color={colors.darkgrey}>
           {props.data.order_full_address}
         </AppText>
       </AppView>
@@ -38,10 +55,10 @@ export default OrderCard = (props) => {
           stretch
           borderRadius={7}
           padding={2} center
-          backgroundColor={props.data.status === 'Returned' || props.data.status === 'تم الإرجاع' ? '#E3000F' : "#23A636"}
+          backgroundColor={bg}
           paddingHorizontal={2}
         >
-          <AppText color="white">{props.data.status}</AppText>
+          <AppText color={statusColor}>{props.data.status}</AppText>
         </AppView>
       </AppView>
     </AppView>

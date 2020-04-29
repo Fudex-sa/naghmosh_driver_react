@@ -10,8 +10,10 @@ import {
 import { useSelector } from 'react-redux';
 import { AppHeader } from "../../components";
 import OrderCard from "./OrderCard";
+import colors from "../../common/defaults/colors";
 
 export default DeliverOrder = props => {
+  const lang = useSelector(state => state.lang.lang);
   const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null);
   const [ordersCount, setOrdersCount] = useState(0);
   const refresh = useSelector(state => state.list.refreshDeliveredOrderList)
@@ -46,7 +48,11 @@ export default DeliverOrder = props => {
       >
         <AppView
           stretch flex={2} center
-          backgroundColor={'#E95B06'}
+          linearBackgroundGradient={{
+            colors: [colors.black, colors.thirdly],
+            start: { x: lang === 'ar' ? 1 : 0, y: lang === 'ar' ? 1 : 0 },
+            end: { x: lang === 'ar' ? 0 : 1, y: lang === 'ar' ? 0 : 1 }
+          }}
           paddingHorizontal={5}
         >
           <AppText color='white' size={8} >{`${ordersCount}`}</AppText>
@@ -55,10 +61,12 @@ export default DeliverOrder = props => {
         </AppView>
         <AppView
           stretch flex={1} center row spaceBetween
-          linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
+          backgroundColor={colors.thirdly}
         >
           <AppView stretch flex>
-            <AppImage source={require('../../assets/imgs/finishedorders.png')} flex stretch resizeMode={'contain'} />
+            <AppImage
+              source={lang === 'ar' ? require('../../assets/imgs/currentAr.png') : require('../../assets/imgs/currentEn.png')}
+              flex stretch resizeMode={'contain'} />
           </AppView>
         </AppView>
       </AppView>

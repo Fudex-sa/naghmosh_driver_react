@@ -13,17 +13,20 @@ export default Language = props => {
         <AppView flex stretch>
             <AppHeader title={I18n.t('lang')} hideCart />
             <AppView
-                linearBackgroundGradient={{ colors: ['#23A636', '#88C80A'], start: { x: 1, y: 1 }, end: { x: 0, y: 0 } }}
-                stretch row height={6.5} spaceBetween borderWidth={1} borderColor={colors.darkgrey}
+                linearBackgroundGradient={{
+                    colors: [colors.black, colors.thirdly],
+                    start: { x: lang === 'ar' ? 1 : 0, y: lang === 'ar' ? 1 : 0 },
+                    end: { x: lang === 'ar' ? 0 : 1, y: lang === 'ar' ? 0 : 1 }
+                }} stretch row height={6.5} spaceBetween
                 centerY paddingHorizontal={10} marginHorizontal={7} marginVertical={5} borderRadius={7}
             >
-                <AppText bold marginHorizontal={5} size={8} color='white' stretch>
+                <AppText bold marginHorizontal={5} size={8} color={colors.primary} stretch>
                     {'عربى'}
                 </AppText>
                 <AppIcon
                     name={lang === 'ar' ? "check-box" : 'check-box-outline-blank'}
                     type="material"
-                    color={lang === 'ar' ? 'white' : colors.darkgrey}
+                    color={lang === 'ar' ? colors.primary : colors.white}
                     size={10}
                     onPress={() => {
                         lang === 'en' ? dispatch(setLang('ar', true)) : undefined;
@@ -32,16 +35,19 @@ export default Language = props => {
                 />
             </AppView>
             <AppView
-                linearBackgroundGradient={{ colors: ['#23A636', '#88C80A'], start: { x: 1, y: 1 }, end: { x: 0, y: 0 } }}
-                stretch row height={6.5} spaceBetween borderWidth={1} borderColor={colors.darkgrey}
+                linearBackgroundGradient={{
+                    colors: [colors.black, colors.thirdly],
+                    start: { x: lang === 'ar' ? 1 : 0, y: lang === 'ar' ? 1 : 0 },
+                    end: { x: lang === 'ar' ? 0 : 1, y: lang === 'ar' ? 0 : 1 }
+                }} stretch row height={6.5} spaceBetween
                 centerY paddingHorizontal={10} marginHorizontal={7} marginVertical={5} borderRadius={7}>
-                <AppText bold marginHorizontal={5} size={8} color='white' stretch>
+                <AppText bold marginHorizontal={5} size={8} color={colors.primary} stretch>
                     {'English'}
                 </AppText>
                 <AppIcon
                     name={lang === 'en' ? "check-box" : 'check-box-outline-blank'}
                     type="material"
-                    color={lang === 'en' ? 'white' : colors.darkgrey}
+                    color={lang === 'en' ? colors.primary : colors.white}
                     size={10}
                     onPress={() => {
                         lang === 'ar' ? dispatch(setLang('en', false)) : undefined;

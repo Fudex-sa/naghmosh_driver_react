@@ -10,6 +10,7 @@ import Axios from 'axios';
 import { validationSchema } from './validation';
 import { setUserData } from '../../actions/auth';
 import AsyncStorage from '@react-native-community/async-storage';
+import colors from '../../common/defaults/colors';
 
 
 export default ChangePassword = props => {
@@ -84,6 +85,7 @@ export default ChangePassword = props => {
                     height={7}
                     onPress={handleSubmit}
                     center
+                    color={colors.black}
                     processing={loading}
                 />
             </AppView>

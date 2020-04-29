@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppNavigation, AppView, AppText, AppScrollView, AppButton, showSuccess, showError } from "../../common";
+import { AppNavigation, AppView, AppText, AppScrollView, AppButton, showSuccess, showError, AppSpinner } from "../../common";
 import { AppHeader } from "../../components";
 import I18n from "react-native-i18n";
 import colors from '../../common/defaults/colors';
@@ -16,12 +16,27 @@ export default OrderDetails = props => {
   const [loadingReturned, setLoadingReturned] = useState(false);
   const [order, setOrder] = useState(null);
   const dispatch = useDispatch();
-  const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null)
+  const token = useSelector(state => state.auth.userData ? state.auth.userData.data.api_token : null);
+  const [bg, setbg] = useState(colors.black);
+  const [statusColor, setStatusColor] = useState(colors.primary);
   useEffect(() => {
     setLoading(true)
     Axios.get(`driverorderdetails?api_token=${token}&orderId=${props.orderID}`)
       .then((res) => {
         setOrder(res.data.data)
+        const status = res.data.data.status;
+        if (status === 'Returned' || status === 'تم الإرجاع') {
+          setbg(colors.error);
+          setStatusColor(colors.white)
+        }
+        if (status === "انتهى" || status === 'Done') {
+          setbg(colors.black);
+          setStatusColor(colors.primary)
+        }
+        if (status === 'تم التسليم' || status === 'Delivered') {
+          setbg("#B4E3FF")
+          setStatusColor("#047AC0")
+        }
         setLoading(false)
       }).catch((error) => {
         setLoading(false)
@@ -61,12 +76,13 @@ export default OrderDetails = props => {
         }
       });
   }
+
   return (
     <AppView flex stretch>
       <AppHeader title={I18n.t('orderDetails')} transparent />
       {!order ?
         <AppView flex stretch center>
-          <ActivityIndicator />
+          <AppSpinner />
         </AppView>
         :
         <AppScrollView stretch>
@@ -106,7 +122,7 @@ export default OrderDetails = props => {
                 stretch
                 height={7}
                 borderRadius={7}
-                backgroundColor="#23A636"
+                color={colors.black}
                 processing={loadingDelivered}
                 onPress={() => {
                   if (order.order_payment_id === 2) {
@@ -149,9 +165,9 @@ export default OrderDetails = props => {
               height={7}
               borderRadius={7}
               margin={5}
-              backgroundColor={order.status === 'Returned' || order.status === 'تم الإرجاع' ? '#E3000F' : "#23A636"}
+              backgroundColor={bg}
             >
-              <AppText color='white' stretch center bold>{order.status}</AppText>
+              <AppText color={statusColor} stretch center bold>{order.status}</AppText>
             </AppView>
           }
         </AppScrollView>
@@ -176,10 +192,7 @@ const Row = props => (
     {...props.rest}
   >
     <AppText bold> {props.label}</AppText>
-    <AppView stretch row>
-      <AppText color={'gray'}>{props.value}</AppText>
-      {props.real && <AppText> {I18n.t('sar')} </AppText>}
-    </AppView>
+    <AppText color={colors.primary}>{`${props.value}  ${I18n.t('sar')}`}</AppText>
   </AppView>
 );
 
@@ -197,7 +210,7 @@ const RowDetails = props => (
     paddingBottom={5}
     {...props.rest}
   >
-    <AppText bold marginVertical={5} color="#4C4C4C">
+    <AppText bold marginVertical={5} color={colors.black}>
       {props.labelHeader}
     </AppText>
     {props.data.map((item, index) => (
@@ -208,7 +221,7 @@ const RowDetails = props => (
           <AppText > {item.label}</AppText>
         </AppView>
         <AppView padding={2} flex={2.5} stretch>
-          <AppText color="#C9C9C2" numberOfLines={index === 1 ? 2 : undefined}> {item.value}</AppText>
+          <AppText color={colors.darkgrey} numberOfLines={index === 1 ? 2 : undefined}> {item.value}</AppText>
         </AppView>
       </AppView>
     ))}

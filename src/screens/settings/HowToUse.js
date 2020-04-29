@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { AppNavigation, AppView, AppText, AppImage, responsiveWidth, moderateScale, AppIcon, AppList, showError, AppScrollView } from "../../common";
+import { AppNavigation, AppView, AppText, AppImage, responsiveWidth, moderateScale, AppIcon, AppList, showError, AppScrollView, AppSpinner } from "../../common";
 import I18n from "react-native-i18n";
 import { AppHeader } from '../../components';
 import Axios from 'axios';
-import { ActivityIndicator } from 'react-native';
 
 export default HowToUse = props => {
     const [loading, setLoading] = useState(false);
@@ -31,7 +30,7 @@ export default HowToUse = props => {
             <AppHeader title={use ? use.name : ''} hideCart />
             {!use || loading ?
                 <AppView flex stretch center>
-                    <ActivityIndicator />
+                    <AppSpinner />
                 </AppView>
                 :
                 <AppScrollView flex stretch>

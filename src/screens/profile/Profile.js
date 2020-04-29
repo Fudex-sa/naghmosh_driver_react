@@ -6,12 +6,13 @@ import I18n from "react-native-i18n";
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { validationSchema } from './validation';
-import MenuItem from '../../components/settings/MenuItem';
 import AsyncStorage from '@react-native-community/async-storage';
 import { setUserData } from '../../actions/auth';
+import colors from '../../common/defaults/colors';
 
 export default Profile = props => {
     const dispatch = useDispatch();
+    const lang = useSelector(state => state.lang.lang);
     const [loading, setLoading] = useState(false);
     const [CollectedOrders, setCollectedOrders] = useState(null);
     const [totalCommission, setTotalCommission] = useState(null);
@@ -72,18 +73,17 @@ export default Profile = props => {
                     row
                     stretch
                     spaceBetween
-                    paddingHorizontal={7}
                     marginBottom={10}
                 >
-                    <AppText>{I18n.t('Personal account information')}</AppText>
+                    <AppText color={colors.black}>{I18n.t('Personal account information')}</AppText>
 
                     <AppButton
                         title={I18n.t('save')}
-                        color="primary"
+                        color={colors.primary}
                         transparent
                         processing={isSubmitting}
                         onPress={handleSubmit}
-                        stretch
+                        stretch bold
                         paddingHorizontal={0}
                     />
                 </AppView>
@@ -122,14 +122,14 @@ export default Profile = props => {
                     borderRadius={7}
                 />
                 <AppView
-                    stretch borderWidth={1.5} borderColor={'#E95B06'} padding={5}
+                    stretch borderWidth={1.5} borderColor={colors.statusBar} padding={5}
                     row
                     spaceBetween borderRadius={7}
                     marginTop={5}
                     onPress={() => { AppNavigation.push('ChangePassword') }}
                 >
                     <AppText>{I18n.t('editPassword')}</AppText>
-                    <AppIcon name="ios-arrow-forward" type="ion" flip color="grey" />
+                    <AppIcon name="ios-arrow-forward" type="ion" flip />
                 </AppView>
             </AppView>
         )
@@ -140,7 +140,7 @@ export default Profile = props => {
             <AppHeader title={I18n.t('personalPage')} transparent />
             {loading ?
                 <AppView flex stretch center >
-                    <ActivityIndicator />
+                    <AppSpinner />
                 </AppView>
                 :
                 <AppScrollView stretch>
@@ -152,30 +152,32 @@ export default Profile = props => {
                         borderRadius={5}
                     >
                         <AppView
-                            stretch flex={1} center
-                            backgroundColor={'#E95B06'}
-                            paddingHorizontal={5}
-                        >
-                            <AppText color='white' size={7} numberOfLines={1}>
-                                {`${CollectedOrders}`}
-                                <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
-                            </AppText>
-                            <AppText color='white' size={5} >{`${I18n.t('Applications received')}`}</AppText>
-
-                        </AppView>
-                        <AppView
                             stretch flex={2} center row spaceBetween
-                            linearBackgroundGradient={{ colors: ['#E3000F', '#E95B06'], start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }}
-                        >
-                            <AppView stretch flex center>
-                                {/* <AppText color='white' size={7} numberOfLines={1}>
-                                    {`${totalCommission}`}
-                                    <AppText size={6} color='white'>{`  ${I18n.t('sar')}`}</AppText>
+                            linearBackgroundGradient={{
+                                colors: [colors.black, colors.thirdly],
+                                start: { x: lang === 'ar' ? 1 : 0, y: lang === 'ar' ? 1 : 0 },
+                                end: { x: lang === 'ar' ? 0 : 1, y: lang === 'ar' ? 0 : 1 }
+                            }}                        >
+                            <AppView
+                                stretch flex={1} center
+                                paddingHorizontal={5}
+                            >
+                                <AppText color={colors.secondary} size={7} numberOfLines={1}>
+                                    {`${CollectedOrders}`}
+                                    <AppText size={6} color={colors.secondary}>{`  ${I18n.t('sar')}`}</AppText>
                                 </AppText>
-                                <AppText color='white' size={5} >{`${I18n.t('Driver credit')}`}</AppText> */}
+                                <AppText color={colors.secondary} size={5} >{`${I18n.t('Applications received')}`}</AppText>
+
+                            </AppView>
+                            <AppView stretch flex center>
+                                {/* <AppText color={colors.secondary} size={7} numberOfLines={1}>
+                                    {`${totalCommission}`}
+                                    <AppText size={6} color={colors.secondary}>{`  ${I18n.t('sar')}`}</AppText>
+                                </AppText>
+                                <AppText color={colors.secondary} size={5} >{`${I18n.t('Driver credit')}`}</AppText> */}
                             </AppView>
                             <AppView stretch flex>
-                                <AppImage source={require('../../assets/imgs/cc.png')} flex stretch resizeMode={'contain'} />
+                                <AppImage source={require('../../assets/imgs/person.png')} flex stretch resizeMode={'contain'} />
                             </AppView>
                         </AppView>
                     </AppView>

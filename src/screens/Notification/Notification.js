@@ -46,6 +46,7 @@ const Notifications = () => {
         flex
         center
         flatlist
+        marginTop={5}
         apiRequest={ApiRequest}
         rowRenderer={data => (
           <NotificationCard

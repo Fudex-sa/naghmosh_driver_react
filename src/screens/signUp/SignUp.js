@@ -8,7 +8,6 @@ import { AppHeader } from '../../components';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
-import { ActivityIndicator } from 'react-native';
 
 export default SignUp = props => {
     const [fcm, setFCM] = useState(null)
@@ -146,7 +145,7 @@ export default SignUp = props => {
                 </AppText>
                 {!fcm ?
                     <AppView flex stretch center>
-                        <ActivityIndicator />
+                        <AppSpinner />
                     </AppView>
                     : <AppForm
                         schema={{

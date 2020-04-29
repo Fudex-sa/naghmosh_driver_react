@@ -12,13 +12,14 @@ import Axios from 'axios';
 
 export default MenuItem = props => {
     const dispatch = useDispatch();
+    const lang = useSelector(state => state.lang.lang);
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
     const [notif, setNotif] = useState(user && user.notifications === 'on' ? true : false);
 
     const deleteToken = () => {
         Axios.post('drivertoken/delete', { api_token: user.api_token })
             .then(async (res) => {
-                showSuccess(res.data.message)
+                // showSuccess(res.data.message)
             })
             .catch((error) => {
                 if (!error.response) {
@@ -79,8 +80,11 @@ export default MenuItem = props => {
 
     return (
         <AppView
-            linearBackgroundGradient={{ colors: ['#23A636', '#88C80A'], start: { x: 1, y: 1 }, end: { x: 0, y: 0 } }}
-            stretch row height={7} spaceBetween borderWidth={1} borderColor={colors.darkgrey}
+            linearBackgroundGradient={{
+                colors: [colors.black, colors.thirdly],
+                start: { x: lang === 'ar' ? 1 : 0, y: lang === 'ar' ? 1 : 0 },
+                end: { x: lang === 'ar' ? 0 : 1, y: lang === 'ar' ? 0 : 1 }
+            }} stretch row height={7} spaceBetween
             centerY paddingHorizontal={10} marginHorizontal={7} marginVertical={5} borderRadius={7}
             onPress={props.noti ? undefined : () => {
                 if (props.screenName === 'Logout') {
@@ -94,28 +98,28 @@ export default MenuItem = props => {
                 <AppIcon
                     name={props.iconName}
                     type={props.iconType || "custom"}
-                    size={9} color='white'
+                    size={9} color={colors.primary}
                 />
-                <AppText bold marginHorizontal={5} size={8} color={'white'}>
+                <AppText bold marginHorizontal={5} size={8} color={colors.primary}>
                     {props.name}
                 </AppText>
             </AppView>
             {props.noti ?
                 <Switch
-                    trackColor={notif ? 'white' : '#E95B06'}
+                    trackColor={notif ? colors.secondary : colors.primary}
                     onValueChange={value => {
                         setNotif(value)
                         if (value) { notificationOnOff('driver/notifications/on') }
                         else { notificationOnOff('driver/notifications/off') }
                     }}
-                    thumbColor={notif ? '#E95B06' : 'white'}
+                    thumbColor={notif ? colors.primary : colors.white}
                     value={notif}
                 />
                 :
                 <AppIcon
                     name="chevron-right"
                     type="entypo"
-                    color={'white'}
+                    color={colors.primary}
                     flip
                     size={10}
                 />

@@ -12,6 +12,7 @@ import {
   getColors,
   AppImage,
 } from '../common';
+import colors from '../common/defaults/colors';
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 54 : 56;
 
@@ -119,7 +120,7 @@ class Header extends Component {
             name="md-arrow-back"
             type="ion"
             size={12}
-            color="black"
+            color={colors.primary}
           />
         </AppButton>
       </AppView>
@@ -129,33 +130,23 @@ class Header extends Component {
   render() {
     const { title } = this.props;
     return (
-      // <SafeAreaView
-      //   style={{
-      //     alignSelf: 'stretch',
-      //     backgroundColor: getColors().primary,
-      //   }}
-      // >
       <AppView
         stretch
         style={{
           height: APPBAR_HEIGHT,
-          // marginTop: StatusBar.currentHeight
         }}
         row
         spaceBetween
-        backgroundColor={"white"}
-        borderBottomWidth={0.5}
-        borderBottomColor="grey"
+        backgroundColor={colors.statusBar}
       >
         {this.renderLeft()}
         <AppView flex={4} center marginRight={5}  >
-          <AppText size={9} bold numberOfLines={1} color="black">
+          <AppText size={9} bold numberOfLines={1} color={colors.primary}>
             {title}
           </AppText>
         </AppView>
         {this.renderRight()}
       </AppView>
-      // </SafeAreaView>
     );
   }
 }

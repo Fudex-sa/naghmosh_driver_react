@@ -32,6 +32,7 @@ import {
   responsiveHeight,
   responsiveFontSize
 } from "./utils/responsiveDimensions";
+import colors from "./defaults/colors";
 
 const { CancelToken } = axios;
 
@@ -363,7 +364,7 @@ class Input extends PureComponent {
 
   getColor = () => {
     if (this.state.isFocused) {
-      return '#23A636'
+      return colors.primary
     }
     if (this.props.borderColor) {
       return this.props.borderColor;

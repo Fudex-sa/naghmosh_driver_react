@@ -1,8 +1,9 @@
 export default {
-  statusBar: "white",
-  primary: '#3DA90E',
+  statusBar: "#262626",
+  primary: '#FFB011',
+  secondary: "#FCFCFC",
   primaryAccent: '#E54300',
-  thirdly: '#8DBF3F',
+  thirdly: '#363636',
   primaryLight: '#00397A',
   safe: '#007F41',
   warning: '#FFC107',
@@ -16,11 +17,11 @@ export default {
   star: '#FFC850',
   online: '#6EC245',
   offline: '#D70707',
-  dividerbg:'#e5e5e5',
-  white:'#FFFFFF',
-  blueC:'#007BE2',
-  graytextC:'rgb(168,168,168)',
-  grayC:'rgb(240,240,240)',
-  black:'#000'
+  dividerbg: '#e5e5e5',
+  white: '#FFFFFF',
+  blueC: '#007BE2',
+  graytextC: 'rgb(168,168,168)',
+  grayC: 'rgb(240,240,240)',
+  black: '#000000'
 
 };
