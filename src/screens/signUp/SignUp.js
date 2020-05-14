@@ -8,6 +8,9 @@ import { AppHeader } from '../../components';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
+import { ImageBackground } from 'react-native';
+import backgroundImg from "../../assets/imgs/background1.png";
+import colors from '../../common/defaults/colors';
 
 export default SignUp = props => {
     const [fcm, setFCM] = useState(null)
@@ -128,42 +131,44 @@ export default SignUp = props => {
                     processing={isSubmitting}
                     onPress={handleSubmit}
                     title={I18n.t("sign-up-create-account")}
-                    backgroundColor="#23A636"
-                />
+                    color={colors.black} />
 
             </AppView>
         );
     return (
         <AppView flex stretch>
             <AppHeader title={I18n.t("sign-up-new-account")} />
-            <AppScrollView flex stretch paddingHorizontal={8} paddingTop={5} center >
-                <AppText marginTop={10} bold size={8} color="darkgrey">
-                    {I18n.t("dont-have-an-account")}
-                </AppText>
-                <AppText marginTop={1} color="darkgrey" size={7} marginBottom={15}>
-                    {I18n.t("sign-up-hint")}
-                </AppText>
-                {!fcm ?
-                    <AppView flex stretch center>
-                        <AppSpinner />
-                    </AppView>
-                    : <AppForm
-                        schema={{
-                            first_name: "",
-                            last_name: "",
-                            email: "",
-                            mobile: "",
-                            password: "",
-                            job_description: '',
-                            password_confirmation: "",
-                            deviceToken: fcm,
-                        }}
-                        validationSchema={validationSchema}
-                        render={renderForm}
-                        onSubmit={onSubmit}
-                    />
-                }
-            </AppScrollView>
+            <ImageBackground source={backgroundImg} style={{ flex: 1, width: '100%' }}>
+
+                <AppScrollView flex stretch paddingHorizontal={8} paddingTop={5} center >
+                    <AppText marginTop={10} bold size={8} color={colors.white}>
+                        {I18n.t("dont-have-an-account")}
+                    </AppText>
+                    <AppText marginTop={1} color={colors.white} size={7} marginBottom={15}>
+                        {I18n.t("sign-up-hint")}
+                    </AppText>
+                    {!fcm ?
+                        <AppView flex stretch center>
+                            <AppSpinner />
+                        </AppView>
+                        : <AppForm
+                            schema={{
+                                first_name: "",
+                                last_name: "",
+                                email: "",
+                                mobile: "",
+                                password: "",
+                                job_description: '',
+                                password_confirmation: "",
+                                deviceToken: fcm,
+                            }}
+                            validationSchema={validationSchema}
+                            render={renderForm}
+                            onSubmit={onSubmit}
+                        />
+                    }
+                </AppScrollView>
+            </ImageBackground>
         </AppView>
     );
 }

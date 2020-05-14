@@ -5,6 +5,9 @@ import { validationSchema } from './validation';
 import I18n from "react-native-i18n";
 import { AppHeader } from '../../components';
 import Axios from 'axios';
+import backgroundImg from "../../assets/imgs/background1.png";
+import { ImageBackground } from 'react-native';
+import colors from '../../common/defaults/colors';
 
 export default ForgetPassword = props => {
     const [loading, setLoading] = useState(false);
@@ -34,7 +37,7 @@ export default ForgetPassword = props => {
         setFieldValue
     }) => (
             <AppView flex stretch >
-                <AppText color="#000" bold marginHorizontal={5} marginBottom={5} >{I18n.t("Add your email")}</AppText>
+                <AppText color={colors.white} bold marginHorizontal={5} marginBottom={5} >{I18n.t("Add your email")}</AppText>
                 <AppInput
                     {...injectFormProps("email")}
                     placeholder={I18n.t("email")}
@@ -50,34 +53,38 @@ export default ForgetPassword = props => {
                     size={7}
                     height={7}
                     onPress={handleSubmit}
-                    borderRadius={35}
+                    borderRadius={7}
                     center
                     paddingHorizontal={8}
                     marginBottom={3}
                     processing={loading}
+                    color={colors.black}
                 />
             </AppView>
         );
     return (
         <AppView flex stretch >
             <AppHeader title={I18n.t('forget-password1')} />
-            <AppScrollView flex stretch paddingHorizontal={8} paddingTop={5} center >
-                <AppImage
-                    width={50}
-                    height={40}
-                    source={logo}
-                    resizeMode="contain"
-                    marginBottom={10}
-                />
-                <AppForm
-                    schema={{
-                        email: "",
-                    }}
-                    validationSchema={validationSchema}
-                    render={renderForm}
-                    onSubmit={onSubmit}
-                />
-            </AppScrollView>
+            <ImageBackground source={backgroundImg} style={{ flex: 1,width:'100%' }}>
+
+                <AppScrollView flex stretch paddingHorizontal={8} paddingTop={5} center >
+                    <AppImage
+                        width={50}
+                        height={40}
+                        source={logo}
+                        resizeMode="contain"
+                        marginBottom={10}
+                    />
+                    <AppForm
+                        schema={{
+                            email: "",
+                        }}
+                        validationSchema={validationSchema}
+                        render={renderForm}
+                        onSubmit={onSubmit}
+                    />
+                </AppScrollView>
+            </ImageBackground>
         </AppView>
     );
 }

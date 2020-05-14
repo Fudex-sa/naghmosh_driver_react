@@ -37,7 +37,7 @@ export default {
     sizeScale: 0.7
   },
   input: {
-    size: 6,
+    size: 7,
     activeColor: "#8A8A8A",
     inactiveColor: "grey",
     color: "#484848",

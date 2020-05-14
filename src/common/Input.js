@@ -373,7 +373,7 @@ class Input extends PureComponent {
       return "#8A8A8A";
     }
     if (this.props.error) return "#E3000F";
-    return "green";
+    return colors.primary;
   };
 
   render() {
@@ -564,6 +564,7 @@ class Input extends PureComponent {
               placeholderTextColor={placeholderColor}
               blurOnSubmit
               ref={this.inputRef}
+              multiline={this.state.secure ? false : true}
               value={this.state.text}
               underlineColorAndroid="transparent"
               secureTextEntry={this.state.secure}

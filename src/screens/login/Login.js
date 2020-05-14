@@ -7,6 +7,9 @@ import { setUserData } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import AuthRepo from "../../repo/auth";
 import firebase from 'react-native-firebase';
+import { ImageBackground } from 'react-native';
+import backgroundImg from "../../assets/imgs/background1.png";
+import colors from '../../common/defaults/colors';
 
 export default Login = props => {
     const [fcm, setFCM] = useState(null)
@@ -57,7 +60,7 @@ export default Login = props => {
 
                 <AppButton
                     transparent
-                    color={'gray'}
+                    color={colors.white}
                     onPress={() => {
                         AppNavigation.push({
                             name: "ForgetPassword"
@@ -73,16 +76,15 @@ export default Login = props => {
                     processing={isSubmitting}
                     onPress={handleSubmit}
                     title={I18n.t("login")}
-                    backgroundColor="#23A636"
-                />
+                    color={colors.black} />
                 <AppView stretch marginTop={10} center>
-                    <AppText> {I18n.t('Not a registered member?')}</AppText>
+                    <AppText color={colors.white}> {I18n.t('Not a registered member?')}</AppText>
                     <AppButton
                         paddingVertical={1}
                         paddingHorizontal={0}
                         marginBottom={1}
                         transparent
-                        color={'#E3000F'}
+                        color={colors.primary}
                         onPress={() => {
                             AppNavigation.push({
                                 name: "signUp"
@@ -98,34 +100,36 @@ export default Login = props => {
             </AppView>
         );
     return (
-        <AppScrollView flex stretch paddingHorizontal={8} center >
-            <AppImage
-                equalSize={70}
-                source={logo}
-                resizeMode="contain"
-            >
-                <AppText
-                    style={{ position: 'absolute', bottom: 20, left: 0, right: 0 }}
-                    size={7} bold stretch center
-                    color={'#000000'}
-                >{I18n.t("welcome again")}</AppText>
-            </AppImage>
+        <ImageBackground source={backgroundImg} style={{ flex: 1 }}>
+            <AppScrollView flex stretch paddingHorizontal={8} center >
+                <AppImage
+                    equalSize={70}
+                    source={logo}
+                    resizeMode="contain"
+                >
+                    <AppText
+                        style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}
+                        size={7} bold stretch center
+                        color={colors.primary}
+                    >{I18n.t("welcome again")}</AppText>
+                </AppImage>
 
-            {!fcm ?
-                <AppView flex stretch center>
-                    <AppSpinner />
-                </AppView>
-                : <AppForm
-                    schema={{
-                        mobile: "",
-                        password: "",
-                        deviceToken: fcm,
-                    }}
-                    validationSchema={validationSchema}
-                    render={renderForm}
-                    onSubmit={onSubmit}
-                />
-            }
-        </AppScrollView >
+                {!fcm ?
+                    <AppView flex stretch center>
+                        <AppSpinner />
+                    </AppView>
+                    : <AppForm
+                        schema={{
+                            mobile: "",
+                            password: "",
+                            deviceToken: fcm,
+                        }}
+                        validationSchema={validationSchema}
+                        render={renderForm}
+                        onSubmit={onSubmit}
+                    />
+                }
+            </AppScrollView >
+        </ImageBackground>
     );
 }
