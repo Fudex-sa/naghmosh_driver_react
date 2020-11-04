@@ -3,13 +3,14 @@ import { AppNavigation, AppView, AppText, AppImage, responsiveWidth, moderateSca
 import I18n from "react-native-i18n";
 import { AppHeader } from '../../components';
 import Axios from 'axios';
+import { BASE_URLV1 } from '../../api/urls';
 
 export default HowToUse = props => {
     const [loading, setLoading] = useState(false);
     const [use, setUse] = useState(null);
     useEffect(() => {
         setLoading(true)
-        Axios.get(`http://api-ksa.com/demo/nghmoshy/api/v1/${props.url}`)
+        Axios.get(`${BASE_URLV1}${props.url}`)
             .then((res) => {
                 setUse(res.data.data)
                 setLoading(false)

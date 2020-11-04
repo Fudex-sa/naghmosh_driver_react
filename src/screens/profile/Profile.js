@@ -16,14 +16,19 @@ export default Profile = props => {
     const [loading, setLoading] = useState(false);
     const [CollectedOrders, setCollectedOrders] = useState(null);
     const [totalCommission, setTotalCommission] = useState(null);
+    const [credit_collected, set_credit_collected] = useState(null);
+    const [cash_collected, set_cash_collected] = useState(null);
     const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
     useEffect(() => {
         setLoading(true)
         Axios.get(`driverprofile?api_token=${user.api_token}`)
             .then((res) => {
+                console.log("res.data.profile_data", res.data.profile_data)
                 setCollectedOrders(res.data.profile_data.collected_orders);
                 setTotalCommission(res.data.profile_data.total_commission);
-                setLoading(false)
+                set_credit_collected(res.data.profile_data.credit_collected);
+                set_cash_collected(res.data.profile_data.cash_collected);
+                setLoading(false);
             }).catch((error) => {
                 setLoading(false)
                 if (!error.response) {
@@ -159,17 +164,28 @@ export default Profile = props => {
                                 end: { x: lang === 'ar' ? 0 : 1, y: lang === 'ar' ? 0 : 1 }
                             }}                        >
                             <AppView
-                                stretch flex={1} center
+                                stretch flex centerY
                                 paddingHorizontal={5}
                             >
+
+                                <AppText color={colors.secondary} size={7}>{`${I18n.t('Applications received')}`}</AppText>
+                                <AppText color={colors.secondary} size={7} >{`${I18n.t('Cash')}`}</AppText>
+                                <AppText color={colors.secondary} size={7} >{`${I18n.t('Mada card')}`}</AppText>
+
+                            </AppView>
+                            <AppView stretch flex center>
                                 <AppText color={colors.secondary} size={7} numberOfLines={1}>
                                     {`${CollectedOrders}`}
                                     <AppText size={6} color={colors.secondary}>{`  ${I18n.t('sar')}`}</AppText>
                                 </AppText>
-                                <AppText color={colors.secondary} size={5} >{`${I18n.t('Applications received')}`}</AppText>
-
-                            </AppView>
-                            <AppView stretch flex center>
+                                <AppText color={colors.secondary} size={7} numberOfLines={1}>
+                                    {`${cash_collected}`}
+                                    <AppText size={6} color={colors.secondary}>{`  ${I18n.t('sar')}`}</AppText>
+                                </AppText>
+                                <AppText color={colors.secondary} size={7} numberOfLines={1}>
+                                    {`${credit_collected}`}
+                                    <AppText size={6} color={colors.secondary}>{`  ${I18n.t('sar')}`}</AppText>
+                                </AppText>
                                 {/* <AppText color={colors.secondary} size={7} numberOfLines={1}>
                                     {`${totalCommission}`}
                                     <AppText size={6} color={colors.secondary}>{`  ${I18n.t('sar')}`}</AppText>

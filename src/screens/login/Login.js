@@ -10,8 +10,10 @@ import firebase from 'react-native-firebase';
 import { ImageBackground } from 'react-native';
 import backgroundImg from "../../assets/imgs/background1.png";
 import colors from '../../common/defaults/colors';
+import SplashScreen from 'react-native-splash-screen';
 
 export default Login = props => {
+    SplashScreen.hide();
     const [fcm, setFCM] = useState(null)
     const dispatch = useDispatch();
     useEffect(() => {

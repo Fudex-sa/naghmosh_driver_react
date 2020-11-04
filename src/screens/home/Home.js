@@ -11,6 +11,7 @@ import Axios from 'axios';
 import { refreshList } from '../../actions/list';
 
 export default Home = props => {
+  splashScreen.hide();
   const user = useSelector(state => state.auth.userData ? state.auth.userData.data : null);
   const lang = useSelector(state => state.lang.lang);
   const refresh = useSelector(state => state.list.homeNotifCount);
